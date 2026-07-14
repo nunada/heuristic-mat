@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HEURISTIC-MAT | Klinik AI</title>
+    
+    <!-- Script MathJax untuk Render Persamaan Matematika -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            },
+            startup: {
+                typeset: true
+            }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+
+    <style>
+        /* Global Styles */
+        body { font-family: Tahoma, sans-serif; font-size: 1.1em; line-height: 1.8; color: #333333; margin: 0; padding: 0; background-color: #f4f7f6; }
+        h1, h2, h3, h4 { color: #1a365d; margin-bottom: 15px; line-height: 1.3; }
+        h2 { font-size: 1.8rem; border-bottom: 3px solid #e2e8f0; padding-bottom: 12px; margin-top: 20px; }
+        
+        header { background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%); color: white; padding: 50px 20px 40px 20px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        .logo-container { display: inline-flex; justify-content: center; align-items: center; gap: 25px; margin-bottom: 25px; background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); padding: 15px 30px; border-radius: 50px; border: 1px solid rgba(255, 255, 255, 0.2); }
+        .logo-container img { height: 80px; width: auto; filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.3)); }
+        header h1 { color: #ffffff !important; margin: 0; font-size: 2.5rem; letter-spacing: 2px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+        
+        nav { background-color: #1a365d; display: flex; justify-content: center; padding: 15px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 5px rgba(0,0,0,0.1); flex-wrap: wrap; }
+        nav a { color: #f8fafc; text-decoration: none; margin: 5px 15px; font-weight: bold; font-size: 1.05em; transition: color 0.3s ease; }
+        nav a:hover, nav a.active { color: #fbbf24; }
+        
+        .container { max-width: 1000px; margin: 40px auto; padding: 0 20px; }
+        .card { background-color: white; border-radius: 12px; padding: 35px; margin-bottom: 35px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-top: 5px solid #2b6cb0; }
+        
+        footer { background-color: #1e293b; color: #94a3b8; padding: 35px 20px; text-align: center; margin-top: 50px; }
+        .footer-shortcuts { margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #334155; display: flex; justify-content: center; flex-wrap: wrap; gap: 15px; }
+        .footer-shortcuts a { color: #fbbf24; text-decoration: none; font-size: 0.95em; font-weight: bold; transition: color 0.2s; }
+        .footer-shortcuts a:hover { color: #ffffff; }
+        .footer-copy { font-size: 0.95em; line-height: 1.6; }
+        .footer-copy strong { color: #ffffff; }
+
+        /* Etika & Info Box */
+        .intro-text { text-align: center; font-size: 1.15em; color: #475569; margin-bottom: 30px; }
+        .info-box { background-color: #eff6ff; border-left: 6px solid #3b82f6; padding: 20px; border-radius: 8px; margin-bottom: 20px; color: #1e3a8a; font-size: 1.05em; }
+        .info-box strong { font-size: 1.15rem; color: #1e40af; display: block; margin-bottom: 8px; }
+        .step-container { display: flex; flex-direction: column; gap: 15px; margin-bottom: 20px; margin-top: 15px; }
+        .step-card { background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.04); border-left: 6px solid #22c55e; }
+        .step-title { font-size: 1.1rem; font-weight: bold; color: #166534; margin-bottom: 8px; }
+
+        /* Interactive Prompt Builder */
+        .builder-container { background-color: #f8fafc; border: 1px solid #cbd5e1; border-radius: 12px; padding: 25px; margin-bottom: 30px; }
+        .builder-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px; }
+        .builder-step { display: flex; flex-direction: column; gap: 10px; }
+        .builder-step-label { font-weight: bold; color: #1e3a8a; font-size: 0.95em; text-transform: uppercase; letter-spacing: 1px; }
+        .builder-btn { background-color: white; border: 1px solid #cbd5e1; padding: 10px 15px; border-radius: 8px; cursor: pointer; text-align: left; font-size: 0.9em; transition: 0.2s; color: #475569; }
+        .builder-btn:hover { border-color: #3b82f6; background-color: #eff6ff; }
+        .builder-btn.selected { background-color: #3b82f6; color: white; border-color: #2563eb; font-weight: bold; }
+        .builder-input { width: 100%; box-sizing: border-box; padding: 10px 15px; border-radius: 8px; border: 1px solid #cbd5e1; font-family: Tahoma, sans-serif; font-size: 0.9em; margin-top: 5px; outline: none; transition: 0.3s; }
+        .builder-input:focus { border-color: #3b82f6; box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2); }
+        .builder-result-area { margin-top: 20px; }
+        .builder-textarea { width: 100%; box-sizing: border-box; padding: 15px; border-radius: 8px; border: 2px dashed #94a3b8; font-family: monospace; font-size: 1em; background-color: #ffffff; color: #334155; min-height: 150px; resize: vertical; outline: none; transition: border-color 0.3s; }
+        .builder-textarea:focus { border-color: #f97316; border-style: solid; }
+        .action-btns { display: flex; gap: 10px; margin-top: 15px; }
+        .btn-primary { background-color: #f97316; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.2s; display: flex; align-items: center; gap: 8px; }
+        .btn-primary:hover { background-color: #c2410c; }
+        
+        /* Area Chat */
+        .chat-container { border: 1px solid #cbd5e1; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; height: 600px; background-color: #ffffff; }
+        .chat-header { background-color: #1a365d; color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
+        .chat-header h3 { color: white; margin: 0; font-size: 1.2rem; }
+        
+        .mode-toggle { display: flex; background-color: #2b6cb0; border-radius: 20px; overflow: hidden; }
+        .mode-label { padding: 6px 15px; cursor: pointer; font-size: 0.9em; font-weight: bold; color: #93c5fd; transition: 0.3s; }
+        .mode-label input { display: none; }
+        .mode-label.active { background-color: #f97316; color: white; }
+
+        .chat-box { flex-grow: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; background-color: #f8fafc; }
+        
+        .message { max-width: 85%; padding: 12px 18px; border-radius: 12px; line-height: 1.6; font-size: 1em; animation: fadeIn 0.3s ease-in-out; }
+        .message-user { align-self: flex-end; background-color: #dbeafe; color: #1e3a8a; border-bottom-right-radius: 2px; }
+        .message-ai { align-self: flex-start; background-color: #ffffff; color: #333333; border: 1px solid #e2e8f0; border-bottom-left-radius: 2px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        .message-system { align-self: center; background-color: #fef3c7; color: #b45309; font-size: 0.9em; padding: 8px 15px; border-radius: 20px; max-width: 90%; text-align: center; }
+        
+        /* Fix tampilan list dalam chat */
+        .message-ai ul, .message-ai ol { margin-top: 5px; margin-bottom: 5px; padding-left: 20px; }
+        .message-ai li { margin-bottom: 4px; }
+        .message-ai p { margin-top: 0; margin-bottom: 10px; }
+        .message-ai p:last-child { margin-bottom: 0; }
+
+        .chat-input-area { padding: 15px 20px; background-color: white; border-top: 1px solid #e2e8f0; display: flex; gap: 10px; align-items: flex-end; }
+        .chat-input { flex-grow: 1; border: 1px solid #cbd5e1; border-radius: 8px; padding: 12px; font-family: Tahoma, sans-serif; font-size: 1em; resize: none; min-height: 80px; max-height: 250px; overflow-y: auto; outline: none; }
+        .chat-input:focus { border-color: #2b6cb0; box-shadow: 0 0 0 2px rgba(43, 108, 176, 0.2); }
+        .send-btn { background-color: #f97316; color: white; border: none; width: 50px; height: 50px; border-radius: 50%; cursor: pointer; display: flex; justify-content: center; align-items: center; transition: background-color 0.2s; flex-shrink: 0; }
+        .send-btn:hover { background-color: #c2410c; }
+        .send-btn:disabled { background-color: #cbd5e1; cursor: not-allowed; }
+        .send-btn svg { width: 24px; height: 24px; fill: currentColor; }
+
+        .typing-indicator { display: none; align-self: flex-start; background-color: #ffffff; padding: 12px 18px; border-radius: 12px; border: 1px solid #e2e8f0; border-bottom-left-radius: 2px; gap: 5px; align-items: center; margin-bottom: 15px; }
+        .typing-dot { width: 8px; height: 8px; background-color: #94a3b8; border-radius: 50%; animation: bounce 1.4s infinite ease-in-out both; }
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
+
+        @media (max-width: 768px) { 
+            .logo-container img { height: 60px; } 
+            header h1 { font-size: 2rem; } 
+            nav { flex-direction: column; align-items: center; gap: 10px; } 
+            .chat-container { height: 500px; }
+            .chat-header { flex-direction: column; gap: 10px; align-items: stretch; }
+            .mode-toggle { justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-container">
+            <img src="https://i.ibb.co.com/Gv1xXFQG/logo-Unesa.png" alt="Logo Unesa">
+            <img src="https://i.ibb.co.com/b51mpVLL/logo-kemenag-png-7673.png" alt="Logo Kemenag Jombang">
+        </div>
+        <h1>HEURISTIC-MAT</h1>
+    </header>
+
+    <nav>
+        <a href="index.html">Beranda</a>
+        <a href="teori.html">Teori Heuristik</a>
+        <a href="penyelesaian.html">Penyelesaian Soal</a>
+        <a href="pembelajaran.html">Cara Membelajarkan</a>
+        <a href="klinik_ai.html" class="active">Klinik AI</a>
+    </nav>
+
+    <div class="container">
+        
+        <div class="card" style="background-color: #1a365d; color: #ffffff; text-align: center; border-top: none;">
+            <p style="font-size: 1.25rem; line-height: 1.6; margin: 0;">
+                Klinik AI adalah asisten virtual Anda. Sebelum berinteraksi, mari pahami etika penggunaan dan cara menyusun perintah (<i>prompt</i>) yang efektif.
+            </p>
+        </div>
+
+        <div class="card">
+            <h2>Etika Penggunaan AI bagi Guru</h2>
+            <p>Kecerdasan Buatan (AI) adalah alat bantu yang sangat mempercepat pekerjaan guru, namun penggunaannya di ruang lingkup pendidikan wajib mematuhi batasan etika berikut:</p>
+            
+            <div class="step-container">
+                <div class="step-card" style="border-left-color: #ef4444;">
+                    <div class="step-title" style="color: #b91c1c;">1. Jaga Privasi Data Murid (Hindari PII)</div>
+                    <div style="color: #333333;"><strong>JANGAN</strong> pernah memasukkan Data Pribadi Identitas (<i>Personally Identifiable Information/PII</i>) ke dalam AI. Hindari mengetikkan nama asli murid, NISN, atau nilai rapot otentik. Gunakan nama samaran (misal: "Murid A") jika ingin meminta AI menganalisis kasus di kelas.</div>
+                </div>
+                <div class="step-card" style="border-left-color: #f59e0b;">
+                    <div class="step-title" style="color: #b45309;">2. Waspada Halusinasi (Verifikasi Hitungan Mat)</div>
+                    <div style="color: #333333;">Model Bahasa AI dilatih untuk memprediksi kata, bukan bertindak sebagai kalkulator mutlak. AI kadang melakukan kesalahan hitung matematika kompleks (<i>halusinasi</i>). <strong>SELALU</strong> verifikasi hasil perhitungan AI secara mandiri sebelum memberikannya kepada murid.</div>
+                </div>
+                <div class="step-card" style="border-left-color: #3b82f6;">
+                    <div class="step-title" style="color: #1d4ed8;">3. AI sebagai Co-Pilot, Bukan Pengambil Keputusan</div>
+                    <div style="color: #333333;">Gunakan AI untuk merancang soal, mencari ide, atau menyusun <em>scaffolding</em> (pancingan). Namun, keputusan pedagogis (seperti pendekatan apa yang cocok untuk kondisi psikologis murid tertentu) mutlak berada di tangan Anda sebagai pendidik.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Seni Menyusun <i>Prompt</i> (Instruksi untuk AI)</h2>
+            <p>Banyak guru merasa jawaban AI kurang pas atau "terlalu umum". Hal ini terjadi karena instruksi (<i>prompt</i>) yang dimasukkan kurang spesifik. Sama seperti manusia, AI membutuhkan informasi yang lengkap agar bisa memberikan bantuan yang tepat.</p>
+            
+            <h3 style="font-size: 1.2rem; color: #f97316; margin-top: 25px;">Formula 4 Pilar Prompt</h3>
+            <p>Agar AI bekerja maksimal untuk kebutuhan mengajar, selalu gunakan 4 komponen ini dalam satu kalimat perintah Anda:</p>
+            <ol class="step-container" style="list-style-type: none; padding-left: 0; counter-reset: item;">
+                <li class="step-card" style="display: flex; gap: 15px; border-left-color: #3b82f6; padding: 15px;">
+                    <div style="background-color: #3b82f6; color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0;">1</div>
+                    <div><strong>Peran (Role):</strong> Beritahu AI harus bersikap sebagai siapa. Apakah sebagai pakar matematika, sebagai murid yang kebingungan, atau sebagai evaluator.</div>
+                </li>
+                <li class="step-card" style="display: flex; gap: 15px; border-left-color: #10b981; padding: 15px;">
+                    <div style="background-color: #10b981; color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0;">2</div>
+                    <div><strong>Konteks (Context):</strong> Berikan latar belakang situasi Anda. Sebutkan jenjang kelas murid, materi yang sedang dibahas, dan letak kebingungan murid tersebut.</div>
+                </li>
+                <li class="step-card" style="display: flex; gap: 15px; border-left-color: #f59e0b; padding: 15px;">
+                    <div style="background-color: #f59e0b; color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0;">3</div>
+                    <div><strong>Tugas (Task):</strong> Instruksikan apa yang harus dibuat oleh AI (misalnya: membuat soal latihan baru, menganalisis kesalahan, atau merancang pertanyaan pancingan).</div>
+                </li>
+                <li class="step-card" style="display: flex; gap: 15px; border-left-color: #8b5cf6; padding: 15px;">
+                    <div style="background-color: #8b5cf6; color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0;">4</div>
+                    <div><strong>Format (Format):</strong> Tentukan bentuk jawaban yang Anda inginkan (misalnya: tulis dalam bentuk poin-poin, buatkan tabel, atau buat skenario dialog).</div>
+                </li>
+            </ol>
+            
+            <h3 style="font-size: 1.2rem; color: #1a365d; margin-top: 35px; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px;">Kalkulator Prompt Interaktif</h3>
+            <p>Mari praktikkan teori di atas! Klik pilihan di bawah ini (atau ketik sendiri konteks Anda) untuk merangkai kalimat <i>prompt</i> secara otomatis:</p>
+
+            <div class="builder-container">
+                <div class="builder-grid">
+                    <!-- Kolom 1: Peran -->
+                    <div class="builder-step">
+                        <div class="builder-step-label">1. Peran AI</div>
+                        <button class="builder-btn" onclick="selectOption('peran', 'Bertindaklah sebagai ahli pendidikan matematika tingkat MTs/SMP.', this)">Pakar Matematika MTs</button>
+                        <button class="builder-btn" onclick="selectOption('peran', 'Bertindaklah sebagai guru mentor ahli pemecahan masalah (Problem Solving).', this)">Mentor Ahli Heuristik</button>
+                    </div>
+                    <!-- Kolom 2: Konteks Terbuka -->
+                    <div class="builder-step" style="grid-column: span 2;">
+                        <div class="builder-step-label">2. Konteks Masalah (Pilih atau Ketik Sendiri)</div>
+                        <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                            <button class="builder-btn" style="flex: 1;" onclick="selectOption('konteks', 'Murid kelas 8 saya kebingungan membedakan luas dan keliling pada bangun datar.', this)">Bingung Geometri (Kls 8)</button>
+                            <button class="builder-btn" style="flex: 1;" onclick="selectOption('konteks', 'Murid kelas 7 saya sering menganggap bahwa 3a + 4b = 7ab (miskonsepsi aljabar).', this)">Miskonsepsi Aljabar (Kls 7)</button>
+                        </div>
+                        <input type="text" id="custom-konteks" class="builder-input" placeholder="Atau ketik sendiri konteks/masalah murid Anda di kelas..." oninput="updateCustomContext(this.value)" onfocus="clearContextSelection()">
+                    </div>
+                </div>
+                
+                <div class="builder-grid">
+                    <!-- Kolom 3: Tugas (Diperluas 3 Opsi) -->
+                    <div class="builder-step">
+                        <div class="builder-step-label">3. Tugas AI (Sesuai Heuristik)</div>
+                        <button class="builder-btn" onclick="selectOption('tugas', 'Buatkan 3 soal problem solving kontekstual (cerita keseharian) untuk melatih nalar mereka.', this)">1. Buat Soal Penalaran Baru</button>
+                        <button class="builder-btn" onclick="selectOption('tugas', 'Buatkan skenario 3 pertanyaan pancingan (scaffolding) untuk membimbing mereka tanpa memberi tahu rumus/jawaban langsung.', this)">2. Rancang Skenario Scaffolding</button>
+                        <button class="builder-btn" onclick="selectOption('tugas', 'Analisis mengapa miskonsepsi ini bisa terjadi dan berikan ide aktivitas kelas untuk meluruskannya.', this)">3. Analisis Akar Miskonsepsi</button>
+                    </div>
+                    <!-- Kolom 4: Format -->
+                    <div class="builder-step">
+                        <div class="builder-step-label">4. Format Jawaban</div>
+                        <button class="builder-btn" onclick="selectOption('format', 'Tuliskan jawaban dalam format poin-poin yang terstruktur, singkat, dan bahasa yang ramah.', this)">Poin-Poin Terstruktur</button>
+                        <button class="builder-btn" onclick="selectOption('format', 'Sajikan dalam bentuk simulasi percakapan langsung antara Guru dan Murid.', this)">Simulasi Dialog</button>
+                    </div>
+                </div>
+
+                <div class="builder-result-area">
+                    <div class="builder-step-label" style="margin-bottom: 10px;">Hasil Rangkaian Prompt:</div>
+                    <textarea id="prompt-result" class="builder-textarea" placeholder="Pilih opsi di atas, atau ketik langsung prompt Anda di sini..."></textarea>
+                    
+                    <div class="action-btns">
+                        <button class="btn-primary" onclick="sendPromptToChat()">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                            Kirim ke Ruang Chat
+                        </button>
+                        <button class="builder-btn" onclick="clearBuilder()" style="margin-left:auto;">Reset Pilihan</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card" style="padding: 0; overflow: hidden; border-top: none;" id="chat-section">
+            <div class="chat-container">
+                <div class="chat-header">
+                    <h3>Ruang Klinik AI</h3>
+                    
+                    <div class="mode-toggle">
+                        <label class="mode-label active" id="label-flash">
+                            <input type="radio" name="ai-mode" value="flash" checked onchange="updateModeUI()">
+                            ⚡ Flash (Ringkas)
+                        </label>
+                        <label class="mode-label" id="label-mendalam">
+                            <input type="radio" name="ai-mode" value="mendalam" onchange="updateModeUI()">
+                            🧠 Mendalam (Detail)
+                        </label>
+                    </div>
+                </div>
+
+                <div class="chat-box" id="chat-box">
+                    <div class="message-system">
+                        Sistem terhubung. Gunakan Kalkulator Prompt di atas, atau ketik pertanyaan langsung di kolom bawah. <br> Mode AI: <strong>Flash</strong> (Jawaban ringkas & praktis).
+                    </div>
+                </div>
+
+                <div class="typing-indicator" id="typing-indicator">
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                </div>
+
+                <div class="chat-input-area">
+                    <textarea class="chat-input" id="chat-input" placeholder="Tuliskan pertanyaan atau masukkan soal matematika di sini..." rows="2" onkeydown="handleEnter(event)"></textarea>
+                    <button class="send-btn" id="send-btn" onclick="sendChatMessage()" aria-label="Kirim Pesan">
+                        <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <footer>
+        <div class="footer-shortcuts">
+            <a href="index.html">Beranda</a>
+            <a href="teori.html">Teori Heuristik</a>
+            <a href="penyelesaian.html">Penyelesaian Soal</a>
+            <a href="pembelajaran.html">Cara Membelajarkan</a>
+            <a href="klinik_ai.html">Klinik AI</a>
+        </div>
+        <div class="footer-copy">
+            &copy; 2026 <strong>Tim Pengabdian Masyarakat Universitas Negeri Surabaya</strong><br>
+            Program HEURISTIC-MAT | Guru MTs Kabupaten Jombang
+        </div>
+    </footer>
+
+    <script>
+        // --- 1. Logika Kalkulator Prompt ---
+        const promptState = {
+            peran: "",
+            konteks: "",
+            tugas: "",
+            format: ""
+        };
+
+        function updateCustomContext(val) {
+            promptState['konteks'] = val.trim() ? `Konteksnya: ${val.trim()}.` : "";
+            updatePromptResult();
+        }
+
+        function clearContextSelection() {
+            // Hapus pilihan aktif dari tombol konteks jika pengguna mulai mengetik
+            const konteksBtns = document.querySelectorAll('.builder-step:nth-child(2) .builder-btn');
+            konteksBtns.forEach(btn => btn.classList.remove('selected'));
+        }
+
+        function selectOption(category, text, btnElement) {
+            promptState[category] = text;
+            
+            // Jika memilih opsi dari tombol konteks, kosongkan input teks
+            if(category === 'konteks') {
+                document.getElementById('custom-konteks').value = '';
+            }
+
+            // Hapus kelas 'selected' dari tombol lain di kategori yang sama
+            const parent = btnElement.parentElement;
+            const buttons = parent.querySelectorAll('.builder-btn');
+            buttons.forEach(btn => btn.classList.remove('selected'));
+            
+            // Tambahkan kelas 'selected' ke tombol yang diklik
+            btnElement.classList.add('selected');
+            
+            updatePromptResult();
+        }
+
+        function updatePromptResult() {
+            const parts = [];
+            if (promptState.peran) parts.push(promptState.peran);
+            if (promptState.konteks) parts.push(promptState.konteks);
+            if (promptState.tugas) parts.push(promptState.tugas);
+            if (promptState.format) parts.push(promptState.format);
+            
+            document.getElementById('prompt-result').value = parts.join(" ");
+        }
+
+        function clearBuilder() {
+            promptState.peran = "";
+            promptState.konteks = "";
+            promptState.tugas = "";
+            promptState.format = "";
+            
+            const buttons = document.querySelectorAll('.builder-grid .builder-btn');
+            buttons.forEach(btn => btn.classList.remove('selected'));
+            
+            document.getElementById('custom-konteks').value = "";
+            document.getElementById('prompt-result').value = "";
+        }
+
+        function sendPromptToChat() {
+            const text = document.getElementById('prompt-result').value.trim();
+            if (text === "") {
+                alert("Silakan rangkai atau ketik prompt Anda terlebih dahulu.");
+                return;
+            }
+            
+            // Pindahkan teks ke input chat
+            document.getElementById('chat-input').value = text;
+            // Scroll ke area chat
+            document.getElementById('chat-section').scrollIntoView({ behavior: 'smooth' });
+            // Fokuskan ke input
+            document.getElementById('chat-input').focus();
+        }
+
+        const chatBox = document.getElementById('chat-box');
+        const chatInput = document.getElementById('chat-input');
+        const sendBtn = document.getElementById('send-btn');
+        const typingIndicator = document.getElementById('typing-indicator');
+        
+        function handleEnter(e) {
+            // Jika menekan tombol Enter tanpa shift, kirim pesan
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendChatMessage();
+            }
+        }
+
+        function updateModeUI() {
+            const mode = document.querySelector('input[name="ai-mode"]:checked').value;
+            const labelFlash = document.getElementById('label-flash');
+            const labelMendalam = document.getElementById('label-mendalam');
+            const msgSystem = document.querySelector('.message-system');
+            
+            if (mode === 'flash') {
+                labelFlash.classList.add('active');
+                labelMendalam.classList.remove('active');
+                if(msgSystem) msgSystem.innerHTML = "Sistem terhubung. Gunakan Kalkulator Prompt di atas, atau ketik pertanyaan langsung di kolom bawah. <br> Mode AI: <strong>Flash</strong> (Jawaban ringkas & praktis).";
+            } else {
+                labelMendalam.classList.add('active');
+                labelFlash.classList.remove('active');
+                if(msgSystem) msgSystem.innerHTML = "Sistem terhubung. Gunakan Kalkulator Prompt di atas, atau ketik pertanyaan langsung di kolom bawah. <br> Mode AI: <strong>Mendalam</strong> (Analisis pedagogis terstruktur).";
+            }
+        }
+
+        function scrollToBottom() {
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        // Fungsi manual untuk mengganti markdown menjadi HTML agar tidak bergantung pada library eksternal
+        function parseSimpleMarkdown(text) {
+            let html = text;
+            
+            // 1. Amankan tag HTML yang mungkin ada
+            html = html.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+            
+            // 2. Ubah baris baru menjadi <br>
+            html = html.replace(/\n/g, '<br>');
+            
+            // 3. Hapus SEMUA tanda asterisk (*) agar tidak ada sisa markdown yang bocor
+            // Karena sistem kita tidak mendukung markdown, kita buang saja agar teks tetap bersih
+            html = html.replace(/\*/g, '');
+            
+            // 4. List Sederhana: Ubah - di awal baris (setelah <br>) menjadi bullet
+            html = html.replace(/(?:^|<br>)\s*\-\s+(.*?)(?=(<br>|$))/g, '<br>&#8226; $1');
+            
+            // Perbaiki <br> ganda di awal list
+            html = html.replace(/^<br>/, '');
+
+            return html;
+        }
+
+        function appendMessage(sender, text, isAiResponse = false) {
+            const msgDiv = document.createElement('div');
+            msgDiv.classList.add('message');
+            msgDiv.classList.add(sender === 'user' ? 'message-user' : 'message-ai');
+            
+            if (isAiResponse) {
+                // Gunakan parser manual kita jika AI membandel mengirimkan markdown
+                msgDiv.innerHTML = parseSimpleMarkdown(text);
+                
+                // Render MathJax
+                if (window.MathJax) {
+                    MathJax.typesetPromise([msgDiv]).catch(function (err) {
+                        console.error('MathJax error:', err.message);
+                    });
+                }
+            } else {
+                // Untuk user, tampilkan teks apa adanya (amankan dari XSS ringan)
+                msgDiv.textContent = text; 
+            }
+            
+            chatBox.appendChild(msgDiv);
+            scrollToBottom();
+        }
+
+        // --- Perbaikan Bug: Hapus tanda // agar variabel ini aktif ---
+        let chatHistory = [];
+        const apiKey = ""; // API key dikosongkan agar ditangani oleh platform Immersive Canvas
+
+        async function sendChatMessage() {
+            const text = chatInput.value.trim();
+            if (!text) return;
+
+            appendMessage('user', text);
+            chatInput.value = '';
+            chatInput.disabled = true;
+            sendBtn.disabled = true;
+            
+            // Simpan riwayat dari user untuk menjaga konteks percakapan
+            chatHistory.push({
+                role: 'user',
+                parts: [{ text: text }]
+            });
+
+            typingIndicator.style.display = 'flex';
+            chatBox.appendChild(typingIndicator);
+            scrollToBottom();
+
+            const mode = document.querySelector('input[name="ai-mode"]:checked').value;
+            
+            // INSTRUKSI PENTING: Larang penggunaan markdown ** secara ekstrem
+            let formattingRule = `\n\nATURAN FORMATTING WAJIB (SANGAT PENTING):
+            1. DILARANG KERAS menggunakan markdown asterisk (* atau **) untuk menebalkan huruf. Sistem web tidak mendukungnya.
+            2. DILARANG KERAS menggunakan hashtag (#) untuk judul.
+            3. Jika Anda ingin memberikan penekanan pada sebuah kata, gunakan HURUF KAPITAL SAJA.
+            4. Gunakan spasi baris ganda antar paragraf agar mudah dibaca.
+            5. Untuk daftar/poin, HANYA gunakan tanda hubung (-).
+            6. Untuk rumus matematika, WAJIB gunakan format LaTeX murni ($...$ untuk sebaris, $$...$$ untuk blok).`;
+
+            let systemInstructionText = "";
+            if (mode === 'flash') {
+                systemInstructionText = `Anda adalah asisten AI ahli pendidikan matematika yang membantu guru MTs/SMP di Indonesia. 
+                Fokus Anda adalah pendekatan HEURISTIK (problem solving). 
+                Jawablah pertanyaan guru dengan SINGKAT, PADAT, TEPAT SASARAN, dan SANGAT PRAKTIS untuk diterapkan di kelas. 
+                Langsung berikan inti idenya tanpa pengantar yang bertele-tele.` + formattingRule;
+            } else {
+                systemInstructionText = `Anda adalah pakar pendidikan matematika ahli heuristik dan problem solving yang membimbing guru MTs/SMP di Indonesia. 
+                Jawablah dengan sangat MENDALAM, TERSTRUKTUR, dan PEDAGOGIS. Jika ditanya tentang soal, selalu berikan:
+                - Mengapa soal/materi ini bagus untuk melatih nalar murid.
+                - Langkah penyelesaian (dengan pendekatan George Polya atau teori problem solving).
+                - Prediksi letak miskonsepsi murid dan contoh skenario pertanyaan pancingan (scaffolding) yang bisa diucapkan guru.` + formattingRule;
+            }
+
+            // Kirim seluruh riwayat obrolan beserta instruksi sistem
+            const payload = {
+                contents: chatHistory,
+                systemInstruction: {
+                    parts: [{ text: systemInstructionText }]
+                }
+            };
+
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+
+            try {
+                const response = await fetchWithRetry(apiUrl, payload);
+                const result = await response.json();
+                
+                let aiResponseText = "Maaf, terjadi kesalahan dalam memproses respon.";
+                
+                if (result.candidates && result.candidates.length > 0 && 
+                    result.candidates[0].content && result.candidates[0].content.parts && 
+                    result.candidates[0].content.parts.length > 0) {
+                    
+                    aiResponseText = result.candidates[0].content.parts[0].text;
+                    
+                    // Simpan balasan AI ke dalam riwayat agar AI mengingat percakapan ini
+                    chatHistory.push({
+                        role: 'model',
+                        parts: [{ text: aiResponseText }]
+                    });
+                } else if (result.error) {
+                     aiResponseText = `Error dari server: ${result.error.message}`;
+                     chatHistory.pop(); // Hapus pesan user terakhir jika error agar tidak merusak riwayat
+                } else {
+                     chatHistory.pop();
+                }
+
+                typingIndicator.style.display = 'none';
+                appendMessage('ai', aiResponseText, true);
+
+            } catch (error) {
+                console.error("Fetch error:", error);
+                typingIndicator.style.display = 'none';
+                chatHistory.pop(); // Hapus pesan user terakhir jika error
+                appendMessage('system', 'Mohon maaf, koneksi ke server AI terputus. Silakan coba beberapa saat lagi.');
+            } finally {
+                chatInput.disabled = false;
+                sendBtn.disabled = false;
+                chatInput.focus();
+            }
+        }
+
+        async function fetchWithRetry(url, payload, retries = 3, delay = 1000) {
+            for (let i = 0; i < retries; i++) {
+                try {
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    if (!response.ok && response.status === 429) {
+                        await new Promise(resolve => setTimeout(resolve, delay));
+                        delay *= 2; 
+                        continue;
+                    }
+                    return response;
+                } catch (e) {
+                    if (i === retries - 1) throw e; 
+                    await new Promise(resolve => setTimeout(resolve, delay));
+                    delay *= 2;
+                }
+            }
+        }
+    </script>
+</body>
+</html>

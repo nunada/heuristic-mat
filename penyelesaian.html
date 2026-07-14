@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HEURISTIC-MAT | Penyelesaian Soal</title>
+    
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            },
+            startup: {
+                typeset: true
+            }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+
+    <style>
+        body { font-family: Tahoma, sans-serif; font-size: 1.1em; line-height: 1.8; color: #333333; margin: 0; padding: 0; background-color: #f4f7f6; }
+        h1, h2, h3, h4 { color: #1a365d; margin-bottom: 15px; line-height: 1.3; }
+        h2 { font-size: 1.8rem; border-bottom: 3px solid #e2e8f0; padding-bottom: 12px; margin-top: 20px; }
+        
+        header { background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%); color: white; padding: 50px 20px 40px 20px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        .logo-container { display: inline-flex; justify-content: center; align-items: center; gap: 25px; margin-bottom: 25px; background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); padding: 15px 30px; border-radius: 50px; border: 1px solid rgba(255, 255, 255, 0.2); }
+        .logo-container img { height: 80px; width: auto; filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.3)); }
+        header h1 { color: #ffffff !important; margin: 0; font-size: 2.5rem; letter-spacing: 2px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+        
+        nav { background-color: #1a365d; display: flex; justify-content: center; padding: 15px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 5px rgba(0,0,0,0.1); flex-wrap: wrap; }
+        nav a { color: #f8fafc; text-decoration: none; margin: 5px 15px; font-weight: bold; font-size: 1.05em; transition: color 0.3s ease; }
+        nav a:hover, nav a.active { color: #fbbf24; }
+        
+        .container { max-width: 1000px; margin: 40px auto; padding: 0 20px; }
+        .card { background-color: white; border-radius: 12px; padding: 35px; margin-bottom: 35px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-top: 5px solid #2b6cb0; }
+        
+        .problem-box { background-color: #f8fafc; border: 2px solid #cbd5e1; border-left: 6px solid #2b6cb0; padding: 20px; border-radius: 8px; margin-bottom: 25px; font-size: 1.1em; color: #1e293b; }
+        .problem-title { font-weight: bold; color: #1a365d; margin-bottom: 10px; font-size: 1.2rem; }
+        .problem-badge { display: inline-block; padding: 5px 12px; border-radius: 20px; font-size: 0.9em; font-weight: bold; color: white; background-color: #f97316; margin-bottom: 15px; }
+
+        .step-container { display: flex; flex-direction: column; gap: 20px; }
+        .step-card { background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px 20px 20px 25px; box-shadow: 0 3px 6px rgba(0,0,0,0.04); border-left: 6px solid #f97316; }
+        .step-title { font-size: 1.2rem; font-weight: bold; color: #1e3a8a; margin-bottom: 5px; }
+        .step-subtitle { font-size: 0.95rem; color: #c2410c; font-weight: bold; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px dashed #cbd5e1; }
+        .step-content { color: #333333; text-align: justify; }
+        
+        .math-box { background-color: #f0fdf4; border: 1px dashed #22c55e; padding: 15px; border-radius: 6px; margin-top: 15px; font-size: 1.05em; color: #14532d; }
+        
+        .svg-container { width: 100%; text-align: center; margin: 25px 0; padding: 10px 0; }
+        .svg-graphic { width: 100%; max-width: 800px; height: auto; display: block; margin: 0 auto; }
+
+        .references { margin-top: 60px; padding-top: 20px; border-top: 2px solid #cbd5e1; font-size: 0.9em; }
+        .ref-item { padding-left: 30px; text-indent: -30px; margin-bottom: 12px; color: #475569; word-wrap: break-word; }
+        
+        footer { background-color: #1e293b; color: #94a3b8; padding: 35px 20px; text-align: center; margin-top: 50px; }
+        .footer-shortcuts { margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #334155; display: flex; justify-content: center; flex-wrap: wrap; gap: 15px; }
+        .footer-shortcuts a { color: #fbbf24; text-decoration: none; font-size: 0.95em; font-weight: bold; transition: color 0.2s; }
+        .footer-shortcuts a:hover { color: #ffffff; }
+        .footer-copy { font-size: 0.95em; line-height: 1.6; }
+        .footer-copy strong { color: #ffffff; }
+        
+        @media (max-width: 768px) { 
+            .logo-container img { height: 60px; } 
+            header h1 { font-size: 2rem; } 
+            nav { flex-direction: column; align-items: center; gap: 10px; } 
+            .card { padding: 25px 20px; } 
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-container">
+            <img src="https://i.ibb.co.com/Gv1xXFQG/logo-Unesa.png" alt="Logo Unesa">
+            <img src="https://i.ibb.co.com/b51mpVLL/logo-kemenag-png-7673.png" alt="Logo Kemenag Jombang">
+        </div>
+        <h1>HEURISTIC-MAT</h1>
+    </header>
+
+    <nav>
+        <a href="index.html">Beranda</a>
+        <a href="teori.html">Teori Heuristik</a>
+        <a href="penyelesaian.html" class="active">Penyelesaian Soal</a>
+        <a href="pembelajaran.html">Cara Membelajarkan</a>
+        <a href="klinik_ai.html">Klinik AI</a>
+    </nav>
+
+    <div class="container">
+        
+        <div class="card">
+            <h2>Penerapan Penyelesaian Soal TKA Tingkat MTs</h2>
+            <p>Penerapan teori heuristik akan lebih mudah dipahami jika kita melihat contoh pengerjaannya secara langsung. Pada soal-soal TKA, murid diwajibkan untuk menggunakan nalar dalam memecahkan masalah (<i>problem solving</i>) yang didasari pada literasi bacaan<!--[cite: 1]-->.</p>
+            <p>Halaman ini menyajikan enam contoh soal murni yang disesuaikan dengan tingkat kesulitan SMP/MTs (Kelas VII, VIII, dan IX). Materi ini mencakup Bilangan, Aljabar, Geometri, Bangun Ruang, dan Statistika/Peluang. Kita akan menyelesaikan soal-soal tersebut menggunakan pola pikir Polya dan langkah penulisan Krulik-Rudnick.</p>
+        </div>
+
+        <!-- KASUS 1 -->
+        <div class="card">
+            <h2>Kasus 1: Bilangan Pecahan (Konteks Warisan)</h2>
+            <div class="problem-box">
+                <span class="problem-badge">Materi Kelas VII - Bilangan</span>
+                <div class="problem-title">Soal TKA:</div>
+                Seorang kiai di Jombang mewariskan tanah seluas $12.000\text{ m}^2$. Anak pertama mendapat bagian $\frac{1}{3}$ dari total tanah, anak kedua mendapat $\frac{1}{4}$ bagian, dan sisanya akan diwakafkan untuk pembangunan madrasah. Berapakah luas tanah yang diwakafkan untuk madrasah tersebut?
+            </div>
+
+            <div class="step-container">
+                <div class="step-card">
+                    <div class="step-title">Fase Polya: Memahami Masalah</div>
+                    <div class="step-subtitle">Langkah Operasional: <i>Read &amp; Explore</i></div>
+                    <div class="step-content">
+                        <strong>Pola Pikir:</strong> Mencari angka pecahan dan ukuran utuh dari soal cerita.<br><br>
+                        <strong>Tindakan Teknis:</strong> Murid membaca teks dan mencatat: Total luas tanah $12.000\text{ m}^2$. Anak pertama mendapat $\frac{1}{3}$ bagian, anak kedua $\frac{1}{4}$ bagian. Yang ditanyakan adalah luas sisa tanah untuk madrasah. Murid bisa menggambar sebuah kotak besar yang diibaratkan sebagai nilai 1 utuh untuk memudahkan pemahaman.
+                    </div>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-title">Fase Polya: Menyusun Rencana</div>
+                    <div class="step-subtitle">Langkah Operasional: <i>Select a Strategy</i></div>
+                    <div class="step-content">
+                        <strong>Pola Pikir:</strong> Mencari urutan hitungan pecahan yang tepat.<br><br>
+                        <strong>Tindakan Teknis:</strong> Murid menggunakan strategi <strong>Penyederhanaan Masalah</strong>. Urutannya: 1) Hitung jumlah pecahan milik kedua anak, 2) Kurangi nilai 1 utuh dengan jumlah milik anak untuk mendapat porsi madrasah, 3) Kalikan porsi pecahan madrasah tersebut dengan angka luas tanah total ($12.000\text{ m}^2$).
+                    </div>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-title">Fase Polya: Melaksanakan Rencana</div>
+                    <div class="step-subtitle">Langkah Operasional: <i>Solve</i></div>
+                    <div class="step-content">
+                        <strong>Pola Pikir:</strong> Menghitung pecahan dengan menyamakan angka penyebut.<br><br>
+                        <strong>Tindakan Teknis:</strong> Murid menjalankan perhitungan sesuai urutan rencana.
+                        <div class="math-box">
+                            <strong>1. Menjumlahkan Porsi Anak:</strong><br>
+                            $\frac{1}{3} + \frac{1}{4} = \frac{4}{12} + \frac{3}{12} = \frac{7}{12}$ bagian.<br><br>
+                            
+                            <strong>2. Mencari Porsi Madrasah:</strong><br>
+                            Tanah Utuh (1) - Porsi Anak = $\frac{12}{12} - \frac{7}{12} = \frac{5}{12}$ bagian.<br><br>
+
+                            <strong>3. Menghitung Luas Madrasah:</strong><br>
+                            $\frac{5}{12} \times 12.000 = 5 \times 1.000 =$ <strong>$5.000\text{ m}^2$</strong>.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-title">Fase Polya: Melihat Kembali</div>
+                    <div class="step-subtitle">Langkah Operasional: <i>Reflect and Extend</i></div>
+                    <div class="step-content">
+                        <strong>Pola Pikir:</strong> Memastikan jumlah luas seluruh pembagian tanah tepat 12.000.<br><br>
+                        <strong>Tindakan Teknis:</strong> Murid mengecek kembali nilai luas untuk anak pertama ($4.000\text{ m}^2$) dan anak kedua ($3.000\text{ m}^2$). Jika ditotal: $4.000 + 3.000 + 5.000 = 12.000\text{ m}^2$ (Hitungannya benar).
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- KASUS 2 -->
+        <div class="card">
+            <h2>Kasus 2: Persamaan Linear (Sistem Hewan)</h2>
+            <div class="problem-box">
+                <span class="problem-badge">Materi Kelas VII/VIII - Aljabar</span>
+                <div class="problem-title">Soal TKA:</div>
+                Di area peternakan milik sebuah pondok pesantren, terdapat sekumpulan ayam dan kambing. Total hewan di peternakan tersebut memiliki 70 kepala dan 200 kaki. Berapa banyak jumlah ayam dan jumlah kambing di dalam peternakan tersebut?
+            </div>
+
+            <div class="step-container">
+                <div class="step-card">
+                    <div class="step-title">Fase Polya: Memahami Masalah</div>
+                    <div class="step-subtitle">Langkah Operasional: <i>Read &amp; Explore</i></div>
+                    <div class="step-content">
+                        <strong>Pola Pikir:</strong> Mengidentifikasi data dari teks cerita yang tidak disebutkan angkanya secara langsung.<br><br>
+                        <strong>Tindakan Teknis:</strong> Murid membaca teks dan mencatat fakta bahwa seekor ayam memiliki dua kaki, dan kambing memiliki empat kaki. Jika total ada 70 kepala, artinya jumlah hewannya adalah persis 70 ekor. Total keseluruhan kaki adalah 200.
+                    </div>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-title">Fase Polya: Menyusun Rencana</div>
+                    <div class="step-subtitle">Langkah Operasional: <i>Select a Strategy</i></div>
+                    <div class="step-content">
+                        <strong>Pola Pikir:</strong> Menghubungkan informasi jumlah kepala dan kaki untuk mencari jumlah hewan.<br><br>
+                        <strong>Tindakan Teknis:</strong> Murid menggunakan strategi <strong>Tebak dan Uji</strong>. Strategi ini digabungkan dengan <strong>Membuat Daftar Teratur</strong> dengan cara menyusun angka tebakannya di dalam tabel agar terlihat rapi.
+                    </div>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-title">Fase Polya: Melaksanakan Rencana</div>
+                    <div class="step-subtitle">Langkah Operasional: <i>Solve</i></div>
+                    <div class="step-content">
+                        <strong>Pola Pikir:</strong> Melakukan hitungan perkalian dengan teliti.<br><br>
+                        <strong>Tindakan Teknis:</strong> Murid menebak pembagian jumlah hewan sampai hasil kakinya persis bernilai 200.
+                        <div class="math-box">
+                            <strong>Tebakan Pertama:</strong> Membagi jumlah hewan setengah-setengah.<br>
+                            Sebanyak 35 ekor ayam dan 35 ekor kambing (Total kepala 70 ekor).<br>
+                            Hitungan Kaki: $(35 \times 2) + (35 \times 4) = 70 + 140 = 210$ kaki.<br>
+                            <em>Evaluasi: Terlalu banyak 10 kaki. Berarti jumlah hewan yang kakinya banyak (kambing) harus dikurangi.</em><br><br>
+                            <strong>Tebakan Kedua:</strong> Mengurangi 5 ekor jumlah kambing.<br>
+                            Sebanyak 40 ekor ayam dan 30 ekor kambing (Total kepala 70 ekor).<br>
+                            Hitungan Kaki: $(40 \times 2) + (30 \times 4) = 80 + 120 = 200$ kaki.<br>
+                            <em>Evaluasi: Tepat 200 kaki. Jawabannya adalah <strong>40 ayam dan 30 kambing</strong>.</em>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-title">Fase Polya: Melihat Kembali</div>
+                    <div class="step-subtitle">Langkah Operasional: <i>Reflect and Extend</i></div>
+                    <div class="step-content">
+                        <strong>Pola Pikir:</strong> Memastikan hasil tebakan sesuai dengan syarat jumlah kepala.<br><br>
+                        <strong>Tindakan Teknis:</strong> Murid mengecek apakah 40 ayam ditambah 30 kambing jumlah kepalanya memang 70. Guru bisa memberikan pertanyaan modifikasi: <em>"Bagaimana jika total kepalanya tetap 70 ekor, namun total kakinya berubah menjadi 220?"</em>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- KASUS 3 -->
+        <div class="card">
+            <h2>Kasus 3: Geometri Bangun Datar Gabungan</h2>
+            <div class="problem-box">
+                <span class="problem-badge">Materi Kelas VIII - Geometri</span>
+                <div class="problem-title">Soal TKA:</div>
+                Sebuah dinding pameran berbentuk gabungan bangun datar menyerupai bentuk rumah. Bagian dasar merupakan tembok dengan alas sepanjang 10 meter. Sisi kiri yang tegak lurus memiliki ketinggian total 10 meter. Di samping kanan dinding terdapat tambahan tembok setinggi 2 meter dan selebar 4 meter. Titik atap segitiganya berjarak sejauh 10 meter lurus dari lantai dasar. Hitunglah luas total dinding pameran ini!
+            </div>
+
+            <div class="step-container">
+                <div class="step-card">
+                    <div class="step-title">Fase Polya: Memahami Masalah</div>
+                    <div class="step-subtitle">Langkah Operasional: <i>Read &amp; Explore</i></div>
+                    <div class="step-content">
+                        <strong>Pola Pikir:</strong> Membayangkan bentuk bangunan dari kalimat cerita.<br><br>
+                        <strong>Tindakan Teknis:</strong> Menghitung luas dinding yang bentuknya gabungan ini tidak bisa menggunakan satu rumus saja. Murid menggambar sketsa. Fakta ukuran yang dicatat pada gambar: alas total 10 meter, sisi tegak sebelah kiri 10 meter, tembok tambahan tinggi 2 meter dan lebar 4 meter.
+                    </div>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-title">Fase Polya: Menyusun Rencana</div>
+                    <div class="step-subtitle">Langkah Operasional: <i>Select a Strategy</i></div>
+                    <div class="step-content">
+                        <strong>Pola Pikir:</strong> Memecah bangun yang sulit menjadi beberapa bangun dasar (persegi panjang dan segitiga).<br><br>
+                        <strong>Tindakan Teknis:</strong> Murid menggunakan strategi <strong>Membagi dan Menaklukkan</strong>. Murid memberikan garis bayangan untuk membelah gambar tersebut menjadi tiga bagian: area segitiga atap (A), area pilar kiri (B), dan tembok kecil di kanan (C).
+                    </div>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-title">Fase Polya: Melaksanakan Rencana</div>
+                    <div class="step-subtitle">Langkah Operasional: <i>Solve</i></div>
+                    <div class="step-content">
+                        <strong>Pola Pikir:</strong> Mencari tahu ukuran panjang dan lebar dari tiap bagian yang sudah dipotong, lalu menghitung luasnya.<br><br>
+                        <strong>Tindakan Teknis:</strong> Murid menghitung luas tiap potongan secara terpisah, lalu menjumlahkan ketiganya di akhir.
+                        
+                        <div class="svg-container">
+                            <svg class="svg-graphic" viewBox="0 0 1000 350" xmlns="http://www.w3.org/2000/svg">
+                                <g style="transform-origin: 450px 100px;">
+                                    <polygon points="200,130 300,30 400,130" fill="#3b82f6" stroke="#1e3a8a" stroke-width="3"/>
+                                    <text x="300" y="100" font-family="Tahoma" font-weight="bold" font-size="20" fill="white" text-anchor="middle">A</text>
+                                </g>
+
+                                <g style="transform-origin: 450px 200px;">
+                                    <rect x="200" y="130" width="200" height="140" fill="#2b6cb0" stroke="#1e3a8a" stroke-width="3"/>
+                                    <text x="300" y="205" font-family="Tahoma" font-weight="bold" font-size="20" fill="white" text-anchor="middle">B</text>
+                                </g>
+
+                                <g style="transform-origin: 610px 240px;">
+                                    <rect x="400" y="210" width="120" height="60" fill="#60a5fa" stroke="#1e3a8a" stroke-width="3"/>
+                                    <text x="460" y="245" font-family="Tahoma" font-weight="bold" font-size="20" fill="white" text-anchor="middle">C</text>
+                                </g>
+
+                                <line x1="180" y1="30" x2="180" y2="270" stroke="#64748b" stroke-width="3"/>
+                                <line x1="165" y1="30" x2="195" y2="30" stroke="#64748b" stroke-width="3"/>
+                                <line x1="165" y1="270" x2="195" y2="270" stroke="#64748b" stroke-width="3"/>
+                                <text x="150" y="155" font-family="Tahoma" font-weight="bold" font-size="16" fill="#333333" text-anchor="end">10 m</text>
+
+                                <line x1="545" y1="210" x2="545" y2="270" stroke="#64748b" stroke-width="3"/>
+                                <line x1="530" y1="210" x2="560" y2="210" stroke="#64748b" stroke-width="3"/>
+                                <line x1="530" y1="270" x2="560" y2="270" stroke="#64748b" stroke-width="3"/>
+                                <text x="570" y="245" font-family="Tahoma" font-weight="bold" font-size="16" fill="#333333">2 m</text>
+
+                                <line x1="200" y1="300" x2="520" y2="300" stroke="#64748b" stroke-width="3"/>
+                                <line x1="200" y1="285" x2="200" y2="315" stroke="#64748b" stroke-width="3"/>
+                                <line x1="520" y1="285" x2="520" y2="315" stroke="#64748b" stroke-width="3"/>
+                                <text x="360" y="335" font-family="Tahoma" font-weight="bold" font-size="16" fill="#333333" text-anchor="middle">10 m</text>
+                            </svg>
+                        </div>
+
+                        <div class="math-box">
+                            <strong>1. Menentukan Ukuran Bangun Datar yang Dipotong</strong><br>
+                            Lebar bidang B = Lebar alas total (10 m) dikurangi bagian kanan (4 m) = 6 m.<br>
+                            Tinggi bidang B = Tinggi dinding utuh (10 m) dikurangi tinggi atap (4 m) = 6 m.<br><br>
+                            
+                            <strong>2. Menghitung Luas Tiap Area</strong><br>
+                            Luas A (Segitiga) = $\frac{1}{2} \times \text{alas} \times \text{tinggi} = \frac{1}{2} \times 6 \times 4 = 12\text{ m}^2$<br>
+                            Luas B (Persegi) = $\text{sisi} \times \text{sisi} = 6 \times 6 = 36\text{ m}^2$<br>
+                            Luas C (Persegi Panjang) = $\text{panjang} \times \text{lebar} = 4 \times 2 = 8\text{ m}^2$<br><br>
+
+                            <strong>3. Penjumlahan Akhir</strong><br>
+                            Luas Total = $12 + 36 + 8 =$ <strong>56 meter persegi.</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-title">Fase Polya: Melihat Kembali</div>
+                    <div class="step-subtitle">Langkah Operasional: <i>Reflect and Extend</i></div>
+                    <div class="step-content">
+                        <strong>Pola Pikir:</strong> Mengecek apakah ukuran potongan gambarnya sudah masuk akal.<br><br>
+                        <strong>Tindakan Teknis:</strong> Murid mengecek apakah lebar bidang B (6 meter) ditambah lebar bidang C (4 meter) sudah pas dengan angka alas total 10 meter.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- KASUS 4 -->
+        <div class="card">
+            <h2>Kasus 4: Statistika (Rata-rata Gabungan)</h2>
+            <div class="problem-box">
+                <span class="problem-badge">Materi Kelas VIII - Statistika</span>
+                <div class="problem-title">Soal TKA:</div>
+                Rata-rata nilai ulangan matematika dari 10 orang santri adalah 75. Setelah nilai 2 orang santri susulan dimasukkan ke dalam daftar, rata-rata kelas tersebut berubah menjadi 77. Berapakah rata-rata nilai dari kedua santri yang mengikuti susulan tersebut?
+            </div>
+
+            <div class="step-container">
+                <div class="step-card">
+                    <div class="step-title">Fase Polya: Memahami Masalah</div>
+                    <div class="step-subtitle">Langkah Operasional: <i>Read &amp; Explore</i></div>
+                    <div class="step-content">
+                        <strong>Pola Pikir:</strong> Mencari jumlah awal dan jumlah akhir dari soal cerita.<br><br>
+                        <strong>Tindakan Teknis:</strong> Murid mencatat fakta: Ada 10 anak dengan rata-rata 75. Kemudian ada tambahan 2 anak, sehingga total anak menjadi 12 orang. Rata-rata yang baru untuk 12 orang tersebut adalah 77. Tujuan soal adalah mencari rata-rata nilai dari 2 anak susulan tersebut.
+                    </div>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-title">Fase Polya: Menyusun Rencana</div>
+                    <div class="step-subtitle">Langkah Operasional: <i>Select a Strategy</i></div>
+                    <div class="step-content">
+                        <strong>Pola Pikir:</strong> Mencari total nilai secara utuh sebelum menghitung selisihnya.<br><br>
+                        <strong>Tindakan Teknis:</strong> Murid menggunakan strategi <strong>Bekerja Mundur</strong> atau <strong>Penyederhanaan Masalah</strong>. Rencananya: 1) Hitung total nilai 10 anak pertama, 2) Hitung total nilai seluruh 12 anak, 3) Kurangi total 12 anak dengan total 10 anak untuk mendapat total nilai 2 anak susulan, 4) Bagi hasil tersebut dengan angka 2 untuk mendapat nilai rata-ratanya.
+                    </div>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-title">Fase Polya: Melaksanakan Rencana</div>
+                    <div class="step-subtitle">Langkah Operasional: <i>Solve</i></div>
+                    <div class="step-content">
+                        <strong>Pola Pikir:</strong> Menghitung perkalian dan pengurangan dengan teliti.<br><br>
+                        <strong>Tindakan Teknis:</strong> Murid menjalankan perhitungan sesuai urutan rencana.
+                        <div class="math-box">
+                            <strong>1. Total Nilai Awal (10 anak):</strong><br>
+                            $10 \times 75 = 750$<br><br>
+                            
+                            <strong>2. Total Nilai Akhir (12 anak):</strong><br>
+                            $12 \times 77 = 924$<br><br>
+
+                            <strong>3. Total Nilai 2 Anak Susulan:</strong><br>
+                            $924 - 750 = 174$<br><br>
+                            
+                            <strong>4. Rata-rata 2 Anak Susulan:</strong><br>
+                            $174 \div 2 =$ <strong>87</strong>.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-title">Fase Polya: Melihat Kembali</div>
+                    <div class="step-subtitle">Langkah Operasional: <i>Reflect and Extend</i></div>
+                    <div class="step-content">
+                        <strong>Pola Pikir:</strong> Memastikan angka rata-ratanya masuk akal secara logika.<br><br>
+                        <strong>Tindakan Teknis:</strong> Murid mengecek: Jika rata-rata kelas naik dari 75 menjadi 77, itu artinya nilai anak susulan pasti lebih besar dari 75. Nilai 87 sangat masuk akal karena terbukti menarik rata-rata kelas ke atas.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- KASUS 5 -->
+        <div class="card">
+            <h2>Kasus 5: Volume Bangun Ruang Sisi Lengkung</h2>
+            <div class="problem-box">
+                <span class="problem-badge">Materi Kelas IX - Bangun Ruang</span>
+                <div class="problem-title">Soal TKA:</div>
+                Takmir Masjid Agung sedang memasang tandon air yang baru. Tandon berbentuk silinder (tabung) ini memiliki tinggi 3 meter. Bagian atas tandon berbentuk setengah bola yang menutupi bagian tabung. Jika ukuran diameter tandon tersebut adalah 2 meter, berapa liter air maksimal yang bisa ditampung hingga penuh? (Gunakan angka $\pi \approx 3,14$).
+            </div>
+
+            <div class="step-container">
+                <div class="step-card">
+                    <div class="step-title">Fase Polya: Memahami Masalah</div>
+                    <div class="step-subtitle">Langkah Operasional: <i>Read &amp; Explore</i></div>
+                    <div class="step-content">
+                        <strong>Pola Pikir:</strong> Mencatat angka dan memisahkan bentuk bangun ruang.<br><br>
+                        <strong>Tindakan Teknis:</strong> Bangun ini adalah gabungan antara tabung dan setengah bola. Tinggi tabung ($t$) adalah 3 meter. Diameternya 2 meter, berarti ukuran jari-jarinya ($r$) adalah 1 meter. Pertanyaan utama soal adalah kapasitas volume total dalam satuan liter. Murid menggambar sketsa tandon.
+                    </div>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-title">Fase Polya: Menyusun Rencana</div>
+                    <div class="step-subtitle">Langkah Operasional: <i>Select a Strategy</i></div>
+                    <div class="step-content">
+                        <strong>Pola Pikir:</strong> Menghitung bagian-bagiannya lalu mengubah satuan meter menjadi liter.<br><br>
+                        <strong>Tindakan Teknis:</strong> Murid menggunakan strategi <strong>Membagi dan Menaklukkan</strong>. Urutannya: menghitung volume tabung, menghitung volume setengah bola, menjumlahkan keduanya, lalu di tahap akhir mengubah angka meter kubik tersebut menjadi liter. (Catatan: $1\text{ m}^3 = 1.000\text{ liter}$).
+                    </div>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-title">Fase Polya: Melaksanakan Rencana</div>
+                    <div class="step-subtitle">Langkah Operasional: <i>Solve</i></div>
+                    <div class="step-content">
+                        <strong>Pola Pikir:</strong> Melakukan perhitungan aljabar yang memiliki nilai desimal.<br><br>
+                        <strong>Tindakan Teknis:</strong> Murid menyelesaikan perhitungan secara terpisah agar mudah diperiksa jika ada kesalahan.
+                        
+                        <div class="math-box">
+                            <strong>1. Volume Tabung Silinder ($V_1$)</strong><br>
+                            $V_1 = \pi \times r^2 \times t$<br>
+                            $V_1 = 3,14 \times (1)^2 \times 3 = 3,14 \times 3 = 9,42\text{ m}^3$<br><br>
+                            
+                            <strong>2. Volume Setengah Bola Atap ($V_2$)</strong><br>
+                            $V_2 = \frac{1}{2} \times \left( \frac{4}{3} \times \pi \times r^3 \right) = \frac{2}{3} \times \pi \times r^3$<br>
+                            $V_2 = \frac{2}{3} \times 3,14 \times (1)^3 \approx 2,09\text{ m}^3$<br><br>
+
+                            <strong>3. Penjumlahan Total dan Mengubah ke Liter</strong><br>
+                            Total Volume = $9,42 + 2,09 = 11,51\text{ m}^3$<br>
+                            Ubah Satuan = $11,51 \times 1.000 =$ <strong>11.510 liter air.</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-title">Fase Polya: Melihat Kembali</div>
+                    <div class="step-subtitle">Langkah Operasional: <i>Reflect and Extend</i></div>
+                    <div class="step-content">
+                        <strong>Pola Pikir:</strong> Memeriksa apakah pengubahan satuan ukurnya sudah benar.<br><br>
+                        <strong>Tindakan Teknis:</strong> Murid mengecek kembali hitungan perkalian angka seribunya. Guru kemudian memberikan soal latihan penalaran berikutnya: <em>"Jika keran air mampu mengisi sebanyak 50 liter per menit, berapa jam waktu yang dibutuhkan untuk mengisi tandon ini sampai penuh?"</em>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="references">
+            <h3 style="font-family: Tahoma; font-size: 1.2rem; color: #475569; margin-bottom: 15px;">Referensi</h3>
+            <div class="ref-item">
+                Kementerian Pendidikan Dasar dan Menengah. (n.d.). <em>Kerangka asesmen tes kemampuan akademik jenjang SMP/MTs/Sederajat: Matematika</em>. Pusmendik BSKAP. Retrieved from https://pusmendik.kemendikdasmen.go.id/tka/tka/view/mata-pelajaran-wajib/smp/Matematika
+            </div>
+            <div class="ref-item">
+                Krulik, S., & Rudnick, J. A. (1988). <em>Problem solving: A handbook for elementary school teachers</em>. Allyn and Bacon.
+            </div>
+        </div>
+
+    </div>
+
+    <footer>
+        <div class="footer-shortcuts">
+            <a href="index.html">Beranda</a>
+            <a href="teori.html">Teori Heuristik</a>
+            <a href="penyelesaian.html">Penyelesaian Soal</a>
+            <a href="pembelajaran.html">Cara Membelajarkan</a>
+            <a href="klinik_ai.html">Klinik AI</a>
+        </div>
+        <div class="footer-copy">
+            &copy; 2026 <strong>Tim Pengabdian Masyarakat Universitas Negeri Surabaya</strong><br>
+            Program HEURISTIC-MAT | Guru MTs Kabupaten Jombang
+        </div>
+    </footer>
+
+</body>
+</html>

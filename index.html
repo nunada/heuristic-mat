@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HEURISTIC-MAT | Beranda</title>
+    
+    <!-- Script MathJax untuk Render Persamaan Matematika -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            },
+            startup: {
+                typeset: true
+            }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+
+    <style>
+        body { font-family: Tahoma, sans-serif; font-size: 1.1em; line-height: 1.8; color: #333333; margin: 0; padding: 0; background-color: #f4f7f6; }
+        h1, h2, h3, h4 { color: #1a365d; margin-bottom: 15px; line-height: 1.3; }
+        h2 { font-size: 1.8rem; border-bottom: 3px solid #e2e8f0; padding-bottom: 12px; margin-top: 20px; }
+        
+        header { background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%); color: white; padding: 50px 20px 40px 20px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        .logo-container { display: inline-flex; justify-content: center; align-items: center; gap: 25px; margin-bottom: 25px; background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); padding: 15px 30px; border-radius: 50px; border: 1px solid rgba(255, 255, 255, 0.2); }
+        .logo-container img { height: 80px; width: auto; filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.3)); }
+        header h1 { color: #ffffff; margin: 0; font-size: 2.5rem; letter-spacing: 2px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+        
+        nav { background-color: #1a365d; display: flex; justify-content: center; padding: 15px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 5px rgba(0,0,0,0.1); flex-wrap: wrap; }
+        nav a { color: #f8fafc; text-decoration: none; margin: 5px 15px; font-weight: bold; font-size: 1.05em; transition: color 0.3s ease; }
+        nav a:hover, nav a.active { color: #fbbf24; }
+        
+        .container { max-width: 1000px; margin: 40px auto; padding: 0 20px; }
+        .card { background-color: white; border-radius: 12px; padding: 35px; margin-bottom: 35px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-top: 5px solid #2b6cb0; }
+        
+        .callout { background-color: #eff6ff; border-left: 6px solid #3b82f6; padding: 20px; border-radius: 8px; margin: 25px 0; color: #1e3a8a; }
+        .callout strong { display: block; font-size: 1.15rem; margin-bottom: 8px; color: #1e3a8a; }
+        
+        .svg-container { width: 100%; text-align: center; margin: 35px 0; padding: 10px 0; overflow-x: auto; }
+        .svg-graphic { width: 100%; max-width: 950px; height: auto; display: block; margin: 0 auto; }
+        
+        .styled-table { width: 100%; border-collapse: collapse; margin: 25px 0; font-size: 1em; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .styled-table thead tr { background-color: #1a365d; color: #ffffff; text-align: left; }
+        .styled-table th, .styled-table td { padding: 15px 20px; border-bottom: 1px solid #e2e8f0; vertical-align: top; }
+        .styled-table tbody tr:nth-of-type(even) { background-color: #f8fafc; }
+        .styled-table tbody tr:hover { background-color: #f1f5f9; }
+        .badge { display: inline-block; padding: 5px 12px; border-radius: 20px; font-size: 0.9em; font-weight: bold; color: white; background-color: #f97316; margin-bottom: 10px; }
+        
+        ul.custom-bullet { list-style: none; padding-left: 0; margin-top: 15px; }
+        ul.custom-bullet li { position: relative; padding-left: 35px; margin-bottom: 15px; }
+        ul.custom-bullet li::before { content: "\2713"; position: absolute; left: 0; top: -2px; color: #22c55e; font-weight: bold; font-size: 1.3rem; }
+        
+        .references { margin-top: 60px; padding-top: 20px; border-top: 2px solid #cbd5e1; font-size: 0.9em; }
+        .ref-item { padding-left: 30px; text-indent: -30px; margin-bottom: 12px; color: #475569; word-wrap: break-word; }
+        
+        footer { background-color: #1e293b; color: #94a3b8; padding: 35px 20px; text-align: center; margin-top: 50px; }
+        .footer-shortcuts { margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #334155; display: flex; justify-content: center; flex-wrap: wrap; gap: 15px; }
+        .footer-shortcuts a { color: #fbbf24; text-decoration: none; font-size: 0.95em; font-weight: bold; transition: color 0.2s; }
+        .footer-shortcuts a:hover { color: #ffffff; }
+        .footer-copy { font-size: 0.95em; line-height: 1.6; }
+        .footer-copy strong { color: #ffffff; }
+        
+        @media (max-width: 768px) { .logo-container img { height: 60px; } header h1 { font-size: 2rem; } nav { flex-direction: column; align-items: center; gap: 10px; } .card { padding: 25px 20px; } .styled-table th, .styled-table td { padding: 12px 10px; font-size: 0.9em; } .svg-graphic { min-width: 600px; } }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-container">
+            <img src="https://i.ibb.co.com/Gv1xXFQG/logo-Unesa.png" alt="Logo Unesa">
+            <img src="https://i.ibb.co.com/b51mpVLL/logo-kemenag-png-7673.png" alt="Logo Kemenag Jombang">
+        </div>
+        <h1>HEURISTIC-MAT</h1>
+    </header>
+
+    <nav>
+        <a href="index.html" class="active">Beranda</a>
+        <a href="teori.html">Teori Heuristik</a>
+        <a href="penyelesaian.html">Penyelesaian Soal</a>
+        <a href="pembelajaran.html">Cara Membelajarkan</a>
+        <a href="klinik_ai.html">Klinik AI</a>
+    </nav>
+
+    <div class="container">
+        
+        <!-- Penjelasan Definisi -->
+        <div class="card" style="background-color: #1a365d; color: #ffffff; text-align: center; border-top: none;">
+            <p style="font-size: 1.25rem; line-height: 1.6; margin: 0;">
+                HEURISTIC-MAT merupakan model pelatihan guru yang mengintegrasikan strategi heuristik pemecahan masalah dengan pemanfaatan Artificial Intelligence (AI) untuk mendukung pembelajaran matematika.
+            </p>
+        </div>
+
+        <div class="card">
+            <h2>Latar Belakang: Menghadapi Tuntutan TKA</h2>
+            <p>Pendidikan matematika saat ini menggunakan standar evaluasi baru, yaitu Tes Kemampuan Akademik (TKA). Matriks soal TKA mewajibkan murid menguasai materi secara utuh, mulai dari bilangan, aljabar, geometri, hingga peluang<!--[cite: 1]-->.</p>
+            
+            <p>Perubahan ini membuat cara mengajar di ruang kelas Madrasah Tsanawiyah (MTs) juga harus ikut menyesuaikan diri:</p>
+
+            <div class="svg-container">
+                <svg class="svg-graphic" viewBox="0 0 1000 150" xmlns="http://www.w3.org/2000/svg">
+                    <line x1="160" y1="75" x2="210" y2="75" stroke="#94a3b8" stroke-width="4" stroke-dasharray="6,6" />
+                    <polygon points="205,68 215,75 205,82" fill="#94a3b8" />
+
+                    <line x1="370" y1="75" x2="410" y2="75" stroke="#94a3b8" stroke-width="4" stroke-dasharray="6,6" />
+                    <polygon points="405,68 415,75 405,82" fill="#94a3b8" />
+
+                    <line x1="570" y1="75" x2="610" y2="75" stroke="#94a3b8" stroke-width="4" stroke-dasharray="6,6" />
+                    <polygon points="605,68 615,75 605,82" fill="#94a3b8" />
+
+                    <line x1="770" y1="75" x2="810" y2="75" stroke="#94a3b8" stroke-width="4" stroke-dasharray="6,6" />
+                    <polygon points="805,68 815,75 805,82" fill="#94a3b8" />
+
+                    <g style="transform-origin: 90px 75px;">
+                        <circle cx="90" cy="75" r="60" fill="#1e293b" stroke="#0f172a" stroke-width="3"/>
+                        <text x="90" y="80" font-family="Tahoma" font-weight="bold" font-size="20" fill="white" text-anchor="middle">TKA</text>
+                    </g>
+
+                    <g style="transform-origin: 290px 75px;">
+                        <rect x="220" y="35" width="140" height="80" rx="10" fill="#fef2f2" stroke="#ef4444" stroke-width="3"/>
+                        <text x="290" y="65" font-family="Tahoma" font-weight="bold" font-size="14" fill="#7f1d1d" text-anchor="middle">Karakter Soal</text>
+                        <text x="290" y="90" font-family="Tahoma" font-weight="bold" font-size="14" fill="#7f1d1d" text-anchor="middle">Berubah</text>
+                    </g>
+
+                    <g style="transform-origin: 490px 75px;">
+                        <rect x="420" y="35" width="140" height="80" rx="10" fill="#fffbeb" stroke="#f59e0b" stroke-width="3"/>
+                        <text x="490" y="55" font-family="Tahoma" font-size="12" fill="#b45309" text-anchor="middle">Murid Perlu</text>
+                        <text x="490" y="75" font-family="Tahoma" font-weight="bold" font-size="14" fill="#b45309" text-anchor="middle">Problem</text>
+                        <text x="490" y="95" font-family="Tahoma" font-weight="bold" font-size="14" fill="#b45309" text-anchor="middle">Solving</text>
+                    </g>
+
+                    <g style="transform-origin: 690px 75px;">
+                        <rect x="620" y="35" width="140" height="80" rx="10" fill="#eff6ff" stroke="#3b82f6" stroke-width="3"/>
+                        <text x="690" y="55" font-family="Tahoma" font-size="12" fill="#1e40af" text-anchor="middle">Guru Perlu</text>
+                        <text x="690" y="75" font-family="Tahoma" font-weight="bold" font-size="14" fill="#1e40af" text-anchor="middle">Strategi</text>
+                        <text x="690" y="95" font-family="Tahoma" font-weight="bold" font-size="14" fill="#1e40af" text-anchor="middle">Heuristik</text>
+                    </g>
+
+                    <g style="transform-origin: 890px 75px;">
+                        <rect x="820" y="35" width="140" height="80" rx="10" fill="#f0fdf4" stroke="#22c55e" stroke-width="3"/>
+                        <text x="890" y="65" font-family="Tahoma" font-weight="bold" font-size="14" fill="#14532d" text-anchor="middle">AI Membantu</text>
+                        <text x="890" y="90" font-family="Tahoma" font-weight="bold" font-size="14" fill="#14532d" text-anchor="middle">Guru</text>
+                    </g>
+                </svg>
+            </div>
+            
+            <p>Melalui website pelatihan ini, guru akan mendapatkan teori dan contoh praktis untuk membimbing kemampuan nalar murid. Guru juga akan dipandu menggunakan alat AI untuk mempermudah pembuatan soal dan materi ajar.</p>
+        </div>
+
+        <div class="card">
+            <h2>Mengapa Heuristik Penting dalam TKA?</h2>
+            <p>Soal TKA didesain agar murid menggunakan penalaran saat memecahkan masalah keseharian<!--[cite: 1]-->. Kemampuan ini tidak bisa dicapai jika murid hanya terbiasa menghafal rumus. Pendekatan heuristik membantu murid beradaptasi secara bertahap dengan perubahan karakter soal tersebut.</p>
+
+            <div class="callout">
+                <strong>Perubahan Karakteristik Soal:</strong>
+                Matematika saat ini tidak lagi sekadar menghitung angka yang sudah tersedia di soal. Murid sekarang dituntut untuk membaca informasi yang panjang, mencari pokok masalahnya, lalu menemukan cara penyelesaiannya sendiri.
+            </div>
+
+            <div class="svg-container">
+                <svg class="svg-graphic" viewBox="0 0 1000 120" xmlns="http://www.w3.org/2000/svg">
+                    <polygon points="10,30 180,30 200,60 180,90 10,90" fill="#94a3b8" />
+                    <text x="100" y="65" font-family="Tahoma" font-weight="bold" font-size="14" fill="white" text-anchor="middle">Latihan Rutin</text>
+                    
+                    <polygon points="190,30 360,30 380,60 360,90 190,90 210,60" fill="#64748b" />
+                    <text x="295" y="65" font-family="Tahoma" font-weight="bold" font-size="14" fill="white" text-anchor="middle">Penalaran</text>
+
+                    <polygon points="370,30 540,30 560,60 540,90 370,90 390,60" fill="#475569" />
+                    <text x="475" y="65" font-family="Tahoma" font-weight="bold" font-size="14" fill="white" text-anchor="middle">Literasi</text>
+
+                    <polygon points="550,30 740,30 760,60 740,90 550,90 570,60" fill="#3b82f6" />
+                    <text x="655" y="65" font-family="Tahoma" font-weight="bold" font-size="14" fill="white" text-anchor="middle">Problem Solving</text>
+
+                    <polygon points="750,30 960,30 980,60 960,90 750,90 770,60" fill="#f97316" />
+                    <text x="865" y="65" font-family="Tahoma" font-weight="bold" font-size="15" fill="white" text-anchor="middle">Heuristik</text>
+                </svg>
+            </div>
+
+            <ul class="custom-bullet">
+                <li>Latihan hitung biasa kini sudah berubah menjadi tugas penalaran.</li>
+                <li>Penalaran mengharuskan murid memiliki keterampilan literasi membaca agar tidak bingung melihat soal cerita.</li>
+                <li>Pemahaman literasi digunakan untuk kemampuan memecahkan masalah.</li>
+                <li>Agar bisa memecahkan masalah dengan baik, murid perlu dibekali dengan strategi heuristik.</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h2>Meluruskan Kesalahan Pemahaman (Miskonsepsi)</h2>
+            <p>Alasan penting lainnya mengapa guru sangat membutuhkan heuristik adalah untuk memperbaiki kesalahan konsep dasar murid yang sering terbawa dari sekolah dasar. Kebiasaan menghafal rumus membuat guru sering tidak menyadari bahwa murid sebenarnya salah paham, sampai akhirnya mereka gagal menjawab soal TKA.</p>
+            <p>Berikut adalah tiga contoh kesalahan pemahaman umum pada materi kelas MTs dan cara memperbaikinya:</p>
+
+            <table class="styled-table">
+                <thead>
+                    <tr>
+                        <th style="width: 20%;">Materi MTs</th>
+                        <th style="width: 40%;">Bentuk Kesalahan Pemahaman</th>
+                        <th style="width: 40%;">Cara Perbaikan dengan Heuristik</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <span class="badge">Kelas VII</span><br>
+                            <strong>Aljabar</strong>
+                        </td>
+                        <td>Murid sering kali menganggap huruf pada aljabar sebagai singkatan dari nama benda, bukan sebagai angka yang belum diketahui nilainya. Contohnya, bentuk $3a + 4b$ sering diartikan sebagai "tiga apel dan empat buku". Akibatnya, saat variabelnya diganti menjadi $3x + 4y$, murid menjadi bingung.</td>
+                        <td>Guru bisa menggunakan strategi <strong>Tebak dan Uji</strong>. Jangan langsung menyalahkan murid. Minta mereka untuk mengganti huruf tersebut dengan angka sembarangan untuk membuktikan sendiri apakah anggapan "label nama benda" tersebut masuk akal secara matematika.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="badge">Kelas VIII</span><br>
+                            <strong>Geometri</strong>
+                        </td>
+                        <td>Murid sering mengira bahwa bentuk bangun datar yang berbeda tidak mungkin memiliki luas yang sama persis. Mereka juga menganggap bahwa membesarkan ukuran keliling sebuah bangun sudah pasti akan membuat luasnya ikut bertambah.</td>
+                        <td>Guru mengajak murid ke tahap <strong>Eksplorasi</strong>. Minta murid menggambar dua persegi panjang yang ukurannya berbeda di atas kertas berpetak (misalnya persegi panjang ukuran $2 \times 6$ dan ukuran $3 \times 4$). Biarkan murid melihat sendiri bahwa luas dua bangun bisa sama meskipun kelilingnya berbeda.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="badge">Kelas IX</span><br>
+                            <strong>Peluang</strong>
+                        </td>
+                        <td>Murid tahu bahwa peluang koin memunculkan sisi gambar adalah setengah. Namun, mereka salah menyimpulkan bahwa jika koin dilempar dua kali, hasilnya pasti akan pas muncul satu gambar dan satu angka. Mereka tidak bisa membedakan teori rumus dengan kejadian nyata.</td>
+                        <td>Guru menggunakan strategi <strong>Eksperimen</strong>. Minta murid membuat tabel, lalu suruh mereka melempar koin sungguhan sebanyak sepuluh kali. Setelah itu, bandingkan hasil catatan tabel mereka dengan prediksi dari rumus peluang.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="references">
+            <h3 style="font-family: Tahoma; font-size: 1.2rem; color: #475569; margin-bottom: 15px;">Referensi</h3>
+            <div class="ref-item">
+                Kementerian Pendidikan Dasar dan Menengah. (n.d.). <em>Kerangka asesmen tes kemampuan akademik jenjang SMP/MTs/Sederajat: Matematika</em>. Pusmendik BSKAP. Retrieved from https://pusmendik.kemendikdasmen.go.id/tka/tka/view/mata-pelajaran-wajib/smp/Matematika
+            </div>
+        </div>
+
+    </div>
+
+    <footer>
+        <div class="footer-shortcuts">
+            <a href="index.html">Beranda</a>
+            <a href="teori.html">Teori Heuristik</a>
+            <a href="penyelesaian.html">Penyelesaian Soal</a>
+            <a href="pembelajaran.html">Cara Membelajarkan</a>
+            <a href="klinik_ai.html">Klinik AI</a>
+        </div>
+        <div class="footer-copy">
+            &copy; 2026 <strong>Tim Pengabdian Masyarakat Universitas Negeri Surabaya</strong><br>
+            Program HEURISTIC-MAT | Guru MTs Kabupaten Jombang
+        </div>
+    </footer>
+
+</body>
+</html>
