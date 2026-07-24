@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HEURISTIC-MAT | Penugasan LKM</title>
+    
+    <!-- Script html2pdf untuk Ekspor PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <style>
+        /* Global Styles */
+        body { font-family: Tahoma, sans-serif; font-size: 1.1em; line-height: 1.8; color: #333333; margin: 0; padding: 0; background-color: #f4f7f6; }
+        h1, h2, h3, h4 { color: #1a365d; margin-bottom: 15px; line-height: 1.3; }
+        h2 { font-size: 1.8rem; border-bottom: 3px solid #e2e8f0; padding-bottom: 12px; margin-top: 20px; }
+        
+        header { background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%); color: white; padding: 50px 20px 40px 20px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        .logo-container { display: inline-flex; justify-content: center; align-items: center; gap: 25px; margin-bottom: 25px; background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); padding: 15px 30px; border-radius: 50px; border: 1px solid rgba(255, 255, 255, 0.2); }
+        .logo-container img { height: 80px; width: auto; filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.3)); }
+        header h1 { color: #ffffff !important; margin: 0; font-size: 2.5rem; letter-spacing: 2px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+        
+        nav { background-color: #1a365d; display: flex; justify-content: center; padding: 15px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 5px rgba(0,0,0,0.1); flex-wrap: wrap; }
+        nav a { color: #f8fafc; text-decoration: none; margin: 5px 15px; font-weight: bold; font-size: 1.05em; transition: color 0.3s ease; }
+        nav a:hover, nav a.active { color: #fbbf24; }
+        
+        .container { max-width: 1000px; margin: 40px auto; padding: 0 20px; }
+        .card { background-color: white; border-radius: 12px; padding: 35px; margin-bottom: 35px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-top: 5px solid #2b6cb0; }
+        
+        footer { background-color: #1e293b; color: #94a3b8; padding: 35px 20px; text-align: center; margin-top: 50px; }
+        .footer-shortcuts { margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #334155; display: flex; justify-content: center; flex-wrap: wrap; gap: 15px; }
+        .footer-shortcuts a { color: #fbbf24; text-decoration: none; font-size: 0.95em; font-weight: bold; transition: color 0.2s; }
+        .footer-shortcuts a:hover { color: #ffffff; }
+        .footer-copy { font-size: 0.95em; line-height: 1.6; }
+        .footer-copy strong { color: #ffffff; }
+
+        /* Form Styles */
+        .form-group { margin-bottom: 25px; }
+        .form-group label { display: block; font-weight: bold; color: #1e3a8a; margin-bottom: 8px; font-size: 1.05em; }
+        .form-group label span.req { color: #ef4444; }
+        .form-control { width: 100%; box-sizing: border-box; padding: 12px 15px; border: 1px solid #cbd5e1; border-radius: 8px; font-family: Tahoma, sans-serif; font-size: 1em; transition: 0.3s; background-color: #f8fafc; }
+        .form-control:focus { border-color: #3b82f6; box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2); outline: none; background-color: #ffffff; }
+        textarea.form-control { min-height: 100px; resize: vertical; }
+        
+        .form-row { display: flex; gap: 20px; }
+        .form-col { flex: 1; }
+
+        .helper-text { font-size: 0.85em; color: #64748b; margin-top: 5px; font-style: italic; }
+
+        /* Button Styles */
+        .btn-group { display: flex; gap: 15px; margin-top: 40px; border-top: 2px solid #e2e8f0; padding-top: 25px; justify-content: flex-end; align-items: center; }
+        .btn { padding: 15px 30px; border: none; border-radius: 8px; font-weight: bold; font-size: 1.1em; cursor: pointer; transition: 0.2s; display: inline-flex; align-items: center; gap: 10px; }
+        .btn-submit { background-color: #f97316; color: white; box-shadow: 0 4px 6px rgba(249, 115, 22, 0.3); }
+        .btn-submit:hover { background-color: #ea580c; box-shadow: 0 6px 8px rgba(234, 88, 12, 0.4); transform: translateY(-2px); }
+        
+        /* Modal Sukses */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.7); display: none; justify-content: center; align-items: center; z-index: 1000; backdrop-filter: blur(4px); }
+        .modal-box { background: white; padding: 40px; border-radius: 12px; text-align: center; max-width: 400px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .modal-icon { width: 80px; height: 80px; background-color: #d1fae5; color: #10b981; border-radius: 50%; display: flex; justify-content: center; align-items: center; margin: 0 auto 20px auto; }
+        .modal-icon svg { width: 40px; height: 40px; fill: none; stroke: currentColor; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+        .modal-title { color: #1a365d; font-size: 1.5rem; font-weight: bold; margin-bottom: 10px; }
+        .modal-text { color: #475569; margin-bottom: 25px; line-height: 1.5; }
+        .btn-close-modal { background-color: #3b82f6; color: white; padding: 10px 20px; border-radius: 6px; text-decoration: none; font-weight: bold; border: none; cursor: pointer; }
+
+        /* Printable Area */
+        #print-template { display: none; width: 800px; margin: 0 auto; background: white; box-sizing: border-box; }
+
+        @keyframes popIn { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+
+        @media (max-width: 768px) { 
+            .form-row { flex-direction: column; gap: 0; } 
+            .btn-group { flex-direction: column; align-items: stretch; }
+            .btn { width: 100%; justify-content: center; }
+            .btn-group button:first-child { order: 2; margin-top: 10px; text-align: center; width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-container">
+            <img src="https://i.ibb.co.com/Gv1xXFQG/logo-Unesa.png" alt="Logo Unesa">
+            <img src="https://i.ibb.co.com/b51mpVLL/logo-kemenag-png-7673.png" alt="Logo Kemenag Jombang">
+        </div>
+        <h1>HEURISTIC-MAT</h1>
+    </header>
+
+    <nav>
+        <a href="index.html">Beranda</a>
+        <a href="teori.html">Teori Heuristik</a>
+        <a href="penyelesaian.html">Penyelesaian Soal</a>
+        <a href="pembelajaran.html">Cara Membelajarkan</a>
+        <a href="klinik_ai.html">Klinik AI</a>
+        <a href="penugasan_lkm.html" class="active">Penugasan LKM</a>
+    </nav>
+
+    <div class="container">
+        
+        <div class="card" style="background-color: #1a365d; color: #ffffff; text-align: center; border-top: none; padding: 25px;">
+            <p style="font-size: 1.2rem; line-height: 1.6; margin: 0;">
+                <strong>Formulir Penugasan Pelatihan</strong><br>
+                Rancanglah satu Lembar Kerja Murid (LKM) berlandaskan 5 Langkah Krulik-Rudnick menggunakan bantuan Klinik AI.
+            </p>
+        </div>
+
+        <div class="card">
+            <h2 style="margin-top: 0;">Data Diri Peserta</h2>
+            <div class="form-row">
+                <div class="form-col">
+                    <div class="form-group">
+                        <label for="namaLengkap">Nama Lengkap beserta Gelar <span class="req">*</span></label>
+                        <input type="text" id="namaLengkap" class="form-control" placeholder="Contoh: Ahmad, S.Pd., Gr.">
+                    </div>
+                </div>
+                <div class="form-col">
+                    <div class="form-group">
+                        <label for="asalInstansi">Asal Madrasah/Instansi <span class="req">*</span></label>
+                        <input type="text" id="asalInstansi" class="form-control" placeholder="Contoh: MTsN 1 Jombang">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="materiKelas">Materi & Kelas <span class="req">*</span></label>
+                <input type="text" id="materiKelas" class="form-control" placeholder="Contoh: Teorema Pythagoras - Kelas VIII">
+            </div>
+        </div>
+
+        <div class="card">
+            <h2 style="margin-top: 0;">Rancangan LKM Heuristik</h2>
+            <p style="color: #475569; margin-bottom: 25px; border-bottom: 1px dashed #cbd5e1; padding-bottom: 15px;">
+                Pastikan tahapan LKM ini selaras dengan langkah-langkah penyelesaian heuristik yang telah dipelajari. (Perubahan data pada kolom ini akan <strong>tersimpan otomatis</strong> di perangkat Anda).
+            </p>
+
+            <div class="form-group">
+                <label for="soalCerita">1. Konteks Masalah / Soal Cerita Utama <span class="req">*</span></label>
+                <div class="helper-text">Tuliskan soal masalah kehidupan nyata yang menuntut penalaran murid (Karakteristik TKA).</div>
+                <textarea id="soalCerita" class="form-control" placeholder="Ketik soal cerita di sini..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="faseEksplorasi">2. Tahap 1 & 2: Memahami & Mengeksplorasi (Read & Explore) <span class="req">*</span></label>
+                <div class="helper-text">Perintah apa yang Anda berikan agar murid menemukan angka penting dan membuat sketsa visual masalah?</div>
+                <textarea id="faseEksplorasi" class="form-control" placeholder="Contoh: Tuliskan informasi apa saja yang diketahui, lalu buatlah sketsa/tabelnya..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="faseStrategi">3. Tahap 3: Pemilihan Strategi (Select) <span class="req">*</span></label>
+                <div class="helper-text">Bagaimana Anda memandu murid untuk memilih 1 dari 8 strategi heuristik?</div>
+                <textarea id="faseStrategi" class="form-control" placeholder="Contoh: Strategi penyelesaian apa yang cocok? (Tebak dan Uji / Penyederhanaan / Membagi & Menaklukkan)..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="faseSolve">4. Tahap 4: Penyelesaian Kunci (Solve) <span class="req">*</span></label>
+                <div class="helper-text">Tuliskan langkah-langkah hitungan Anda sebagai guru untuk menyelesaikan soal tersebut dengan teliti.</div>
+                <textarea id="faseSolve" class="form-control" placeholder="Tuliskan kunci hitungannya di sini..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="faseReflect">5. Tahap 5: Refleksi & Modifikasi (Reflect and Extend) <span class="req">*</span></label>
+                <div class="helper-text">Tuliskan satu soal modifikasi tambahan (misal: mengganti angka/syarat) untuk mengecek apakah murid benar-benar paham.</div>
+                <textarea id="faseReflect" class="form-control" placeholder="Contoh: Coba hitung kembali jika total kakinya berubah menjadi 220..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="scaffolding">6. Skenario Pertanyaan Pancingan (Scaffolding Guru) <span class="req">*</span></label>
+                <div class="helper-text">Jika murid mengalami kebuntuan saat mencari rumus, tuliskan 2-3 pertanyaan pancingan lisan yang akan Anda berikan!</div>
+                <textarea id="scaffolding" class="form-control" placeholder="Contoh: 1. Jika kue dipotong 3 dan dipotong 4, apakah ukurannya sama? 2. Lalu bagaimana cara menyamakan angka penyebutnya?..."></textarea>
+            </div>
+
+            <div class="btn-group">
+                <button type="button" onclick="resetForm()" style="background: none; border: none; color: #ef4444; text-decoration: underline; cursor: pointer; font-weight: bold; font-size: 0.95em;">Bersihkan Formulir</button>
+                <button type="button" class="btn btn-submit" onclick="submitForm()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><line x1="9" y1="15" x2="15" y2="15"></line></svg>
+                    Simpan & Kirim Jawaban
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Modal Konfirmasi Sukses -->
+    <div class="modal-overlay" id="successModal">
+        <div class="modal-box">
+            <div class="modal-icon">
+                <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            </div>
+            <div class="modal-title">Tugas Berhasil Disubmit!</div>
+            <div class="modal-text">
+                Terima kasih, data penugasan LKM Anda telah terekam di sistem.<br><br>
+                Kami juga telah mengunduhkan salinan PDF otomatis sebagai arsip Anda.
+            </div>
+            <button class="btn-close-modal" onclick="closeModal()">Tutup Jendela</button>
+        </div>
+    </div>
+
+    <!-- Template Tersembunyi untuk Print PDF -->
+    <div id="print-template">
+        <div style="padding: 20px 30px; font-family: 'Times New Roman', Times, serif; color: #000; background-color: #fff; width: 100%; box-sizing: border-box;">
+            <div style="text-align: center; border-bottom: 3px double #000; padding-bottom: 20px; margin-bottom: 20px;">
+                <h2 style="margin: 0; font-size: 22px;">LEMBAR KERJA MURID (LKM) HEURISTIK</h2>
+                <h3 style="margin: 5px 0 0 0; font-size: 16px; font-weight: normal;">Program Pelatihan HEURISTIC-MAT</h3>
+            </div>
+            
+            <table style="width: 100%; border-collapse: collapse; margin-bottom: 25px; font-size: 15px;">
+                <tr>
+                    <td style="width: 150px; font-weight: bold; padding: 4px 0;">Nama Peserta</td>
+                    <td style="width: 10px;">:</td>
+                    <td id="pdf-nama" style="padding: 4px 0; border-bottom: 1px dotted #ccc;"></td>
+                </tr>
+                <tr>
+                    <td style="font-weight: bold; padding: 4px 0;">Asal Instansi</td>
+                    <td>:</td>
+                    <td id="pdf-instansi" style="padding: 4px 0; border-bottom: 1px dotted #ccc;"></td>
+                </tr>
+                <tr>
+                    <td style="font-weight: bold; padding: 4px 0;">Materi / Kelas</td>
+                    <td>:</td>
+                    <td id="pdf-materi" style="padding: 4px 0; border-bottom: 1px dotted #ccc;"></td>
+                </tr>
+            </table>
+
+            <div style="margin-bottom: 15px;">
+                <h4 style="margin: 0 0 8px 0; background-color: #f0f0f0; padding: 6px; border-left: 4px solid #000; font-size: 14px;">1. Konteks Masalah / Soal Utama</h4>
+                <div id="pdf-soal" style="padding: 8px; border: 1px solid #ccc; min-height: 50px; white-space: pre-wrap; font-size: 14px;"></div>
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <h4 style="margin: 0 0 8px 0; background-color: #f0f0f0; padding: 6px; border-left: 4px solid #000; font-size: 14px;">2. Tahap 1 & 2: Panduan Memahami & Eksplorasi</h4>
+                <div id="pdf-eksplorasi" style="padding: 8px; border: 1px solid #ccc; min-height: 50px; white-space: pre-wrap; font-size: 14px;"></div>
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <h4 style="margin: 0 0 8px 0; background-color: #f0f0f0; padding: 6px; border-left: 4px solid #000; font-size: 14px;">3. Tahap 3: Arahan Pemilihan Strategi Heuristik</h4>
+                <div id="pdf-strategi" style="padding: 8px; border: 1px solid #ccc; min-height: 50px; white-space: pre-wrap; font-size: 14px;"></div>
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <h4 style="margin: 0 0 8px 0; background-color: #f0f0f0; padding: 6px; border-left: 4px solid #000; font-size: 14px;">4. Tahap 4: Penyelesaian Kunci (Solve)</h4>
+                <div id="pdf-solve" style="padding: 8px; border: 1px solid #ccc; min-height: 50px; white-space: pre-wrap; font-size: 14px;"></div>
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <h4 style="margin: 0 0 8px 0; background-color: #f0f0f0; padding: 6px; border-left: 4px solid #000; font-size: 14px;">5. Tahap 5: Refleksi & Modifikasi Soal (Reflect)</h4>
+                <div id="pdf-reflect" style="padding: 8px; border: 1px solid #ccc; min-height: 50px; white-space: pre-wrap; font-size: 14px;"></div>
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <h4 style="margin: 0 0 8px 0; background-color: #f0f0f0; padding: 6px; border-left: 4px solid #000; font-size: 14px;">6. Skenario Pertanyaan Pancingan (Scaffolding)</h4>
+                <div id="pdf-scaffolding" style="padding: 8px; border: 1px solid #ccc; min-height: 50px; white-space: pre-wrap; font-size: 14px;"></div>
+            </div>
+            
+            <div style="text-align: right; margin-top: 20px; font-size: 12px; color: #555;">
+                <em>Dokumen LKM ini di-generate dari Sistem HEURISTIC-MAT</em>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-shortcuts">
+            <a href="index.html">Beranda</a>
+            <a href="teori.html">Teori Heuristik</a>
+            <a href="penyelesaian.html">Penyelesaian Soal</a>
+            <a href="pembelajaran.html">Cara Membelajarkan</a>
+            <a href="klinik_ai.html">Klinik AI</a>
+            <a href="penugasan_lkm.html">Penugasan LKM</a>
+        </div>
+        <div class="footer-copy">
+            &copy; 2026 <strong>Tim Pengabdian Masyarakat Universitas Negeri Surabaya</strong><br>
+            Program HEURISTIC-MAT | Guru MTs Kabupaten Jombang
+        </div>
+    </footer>
+
+    <script>
+        // === MASUKKAN URL GOOGLE APPS SCRIPT ANDA DI SINI ===
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyCxA3Ke1HH1iKDbllLXofNg1kSq4aE6XaoD36elITxAnmgw-rmNE3o3vjZAIjZw-41/exec';
+        
+        const inputIds = ['namaLengkap', 'asalInstansi', 'materiKelas', 'soalCerita', 'faseEksplorasi', 'faseStrategi', 'faseSolve', 'faseReflect', 'scaffolding'];
+
+        // --- FITUR AUTO-SAVE (LOCALSTORAGE) ---
+        window.addEventListener('DOMContentLoaded', () => {
+            // 1. Memuat data yang sudah diketik sebelumnya
+            inputIds.forEach(id => {
+                const savedValue = localStorage.getItem('heuristic_lkm_' + id);
+                if (savedValue) {
+                    document.getElementById(id).value = savedValue;
+                }
+                
+                // 2. Menyimpan otomatis ke memori setiap kali tombol keyboard ditekan
+                document.getElementById(id).addEventListener('input', function() {
+                    localStorage.setItem('heuristic_lkm_' + id, this.value);
+                });
+            });
+        });
+
+        // Fitur untuk mereset formulir
+        function resetForm() {
+            if(confirm("Yakin ingin menghapus semua isian formulir ini? Data yang terhapus tidak dapat dikembalikan.")) {
+                inputIds.forEach(id => {
+                    const el = document.getElementById(id);
+                    el.value = '';
+                    el.style.borderColor = '#cbd5e1'; // Reset border color
+                    localStorage.removeItem('heuristic_lkm_' + id);
+                });
+                alert("Formulir berhasil dibersihkan.");
+            }
+        }
+
+        function validateForm() {
+            let isValid = true;
+            
+            inputIds.forEach(id => {
+                const el = document.getElementById(id);
+                if (!el.value.trim()) {
+                    el.style.borderColor = '#ef4444';
+                    isValid = false;
+                } else {
+                    el.style.borderColor = '#cbd5e1';
+                }
+            });
+            
+            if (!isValid) alert("Harap lengkapi semua kolom wajib (*).");
+            return isValid;
+        }
+
+        function preparePDFContent() {
+            document.getElementById('pdf-nama').innerText = document.getElementById('namaLengkap').value || "-";
+            document.getElementById('pdf-instansi').innerText = document.getElementById('asalInstansi').value || "-";
+            document.getElementById('pdf-materi').innerText = document.getElementById('materiKelas').value || "-";
+            
+            document.getElementById('pdf-soal').innerText = document.getElementById('soalCerita').value || "-";
+            document.getElementById('pdf-eksplorasi').innerText = document.getElementById('faseEksplorasi').value || "-";
+            document.getElementById('pdf-strategi').innerText = document.getElementById('faseStrategi').value || "-";
+            document.getElementById('pdf-solve').innerText = document.getElementById('faseSolve').value || "-";
+            document.getElementById('pdf-reflect').innerText = document.getElementById('faseReflect').value || "-";
+            document.getElementById('pdf-scaffolding').innerText = document.getElementById('scaffolding').value || "-";
+        }
+
+        function generatePDF() {
+            return new Promise((resolve) => {
+                preparePDFContent();
+                
+                // Simpan posisi layar user saat ini
+                const currentScrollY = window.scrollY;
+                
+                // PENTING: Gulir paksa layar ke puncak agar gambar PDF tidak terpotong
+                window.scrollTo(0, 0);
+
+                const header = document.querySelector('header');
+                const nav = document.querySelector('nav');
+                const container = document.querySelector('.container');
+                const footer = document.querySelector('footer');
+                const printTemplate = document.getElementById('print-template');
+                
+                // Munculkan layar loading untuk proses PDF
+                const overlay = document.createElement('div');
+                overlay.style.cssText = 'position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.98); z-index:9999; display:flex; flex-direction:column; align-items:center; justify-content:center; font-family:Tahoma;';
+                overlay.innerHTML = '<div style="font-size:50px; margin-bottom:15px;">⏳</div><div style="font-size:22px; font-weight:bold; color:#1e3a8a;">Menyiapkan Dokumen PDF...</div><div style="color:#64748b; margin-top:10px;">Mohon tunggu sebentar</div>';
+                document.body.appendChild(overlay);
+
+                header.style.display = 'none';
+                nav.style.display = 'none';
+                container.style.display = 'none';
+                footer.style.display = 'none';
+                
+                printTemplate.style.display = 'block';
+
+                const namaFile = `Tugas_LKM_${document.getElementById('namaLengkap').value.replace(/\s+/g, '_')}.pdf`;
+                
+                const opt = {
+                    margin:       10,
+                    filename:     namaFile,
+                    image:        { type: 'jpeg', quality: 0.98 },
+                    html2canvas:  { scale: 2, useCORS: true, scrollX: 0, scrollY: 0 },
+                    jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                };
+
+                setTimeout(() => {
+                    const elementToPrint = printTemplate.firstElementChild;
+                    
+                    html2pdf().set(opt).from(elementToPrint).save().then(() => {
+                        header.style.display = '';
+                        nav.style.display = '';
+                        container.style.display = '';
+                        footer.style.display = '';
+                        printTemplate.style.display = 'none';
+                        document.body.removeChild(overlay);
+                        
+                        window.scrollTo(0, currentScrollY);
+                        resolve(true);
+                    }).catch(err => {
+                        console.error("Error Cetak PDF:", err);
+                        header.style.display = '';
+                        nav.style.display = '';
+                        container.style.display = '';
+                        footer.style.display = '';
+                        printTemplate.style.display = 'none';
+                        document.body.removeChild(overlay);
+                        window.scrollTo(0, currentScrollY);
+                        alert("Terjadi kesalahan saat membuat PDF.");
+                        resolve(false);
+                    });
+                }, 600); 
+            });
+        }
+
+        async function submitForm() {
+            if (!validateForm()) return;
+            
+            const submitBtn = document.querySelector('.btn-submit');
+            const originalBtnContent = submitBtn.innerHTML;
+            
+            submitBtn.innerHTML = '⏳ Memproses...';
+            submitBtn.style.backgroundColor = '#64748b';
+            submitBtn.style.transform = 'none';
+            submitBtn.style.boxShadow = 'none';
+            submitBtn.disabled = true;
+
+            const formData = {
+                nama: document.getElementById('namaLengkap').value,
+                instansi: document.getElementById('asalInstansi').value,
+                materi: document.getElementById('materiKelas').value,
+                soal: document.getElementById('soalCerita').value,
+                eksplorasi: document.getElementById('faseEksplorasi').value,
+                strategi: document.getElementById('faseStrategi').value,
+                solve: document.getElementById('faseSolve').value,
+                reflect: document.getElementById('faseReflect').value,
+                scaffolding: document.getElementById('scaffolding').value
+            };
+
+            try {
+                if(GOOGLE_SCRIPT_URL === 'TARUH_URL_WEB_APP_ANDA_DISINI') {
+                    console.warn("URL Google Script belum diisi. Simulasi submit dijalankan.");
+                    // Urutan: Buat PDF dulu -> Munculkan PopUp Sukses
+                    await generatePDF(); 
+                    document.getElementById('successModal').style.display = 'flex';
+                } else {
+                    // 1. KIRIM DATA KE GOOGLE DULU
+                    await fetch(GOOGLE_SCRIPT_URL, {
+                        method: 'POST',
+                        mode: 'no-cors', 
+                        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                        body: JSON.stringify(formData)
+                    });
+                    
+                    // 2. JIKA BERHASIL, BUAT PDF-NYA
+                    await generatePDF();
+                    
+                    // 3. SETELAH PDF SELESAI, TAMPILKAN POP-UP SUKSES
+                    document.getElementById('successModal').style.display = 'flex';
+                }
+            } catch (error) {
+                alert("Kesalahan koneksi jaringan. Pastikan internet Anda lancar dan coba tekan Submit kembali.");
+                console.error("Detail Error:", error);
+            } finally {
+                submitBtn.innerHTML = originalBtnContent;
+                submitBtn.style.backgroundColor = '';
+                submitBtn.style.transform = '';
+                submitBtn.style.boxShadow = '';
+                submitBtn.disabled = false;
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('successModal').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
