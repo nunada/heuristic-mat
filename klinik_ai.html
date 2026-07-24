@@ -7,6 +7,16 @@
     
     <!-- Script html2pdf untuk Ekspor PDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <!-- Script MathJax untuk Render Matematika -->
+    <script>
+        window.MathJax = {
+          tex: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            displayMath: [['$$', '$$'], ['\\[', '\\]']]
+          }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
     <style>
         body { font-family: Tahoma, sans-serif; font-size: 1.1em; line-height: 1.8; color: #333333; margin: 0; padding: 0; background-color: #f4f7f6; }
@@ -145,8 +155,16 @@
                 </ol>
             </div>
 
+            <!-- Bagian ini sudah diupdate dengan tombol simpan -->
             <div class="form-group" style="margin-bottom: 0;">
-                <input type="password" id="apiKeyInput" class="form-control" placeholder="Paste API Key Anda di sini (contoh: AIzaSy...)">
+                <div style="display: flex; gap: 10px;">
+                    <input type="password" id="apiKeyInput" class="form-control" placeholder="Paste API Key Anda di sini (contoh: AIzaSy... atau AQ...)">
+                    <button type="button" class="btn-copy" style="white-space: nowrap; padding: 0 20px;" onclick="simpanApiKey()">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 5px;"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                        Simpan Key
+                    </button>
+                </div>
+                <div id="apiKeyStatus" style="display: none; margin-top: 10px; font-size: 0.95em; font-weight: bold;"></div>
             </div>
         </div>
         <!-- ========================================== -->
@@ -359,7 +377,7 @@
 
     <script>
         // URL Google Sheets Khusus Chat:
-        const GOOGLE_SCRIPT_URL_CHAT = 'https://script.google.com/macros/s/AKfycbzDjUUk2rm2OteK9rrPiDAItRQlTXH8jLsZlxhZiRTCpYEl-aSgR7fHYvcOmiba4HyiSw/exec'; 
+        const GOOGLE_SCRIPT_URL_CHAT = 'TARUH_URL_WEB_APP_CHAT_ANDA_DISINI'; 
         
         let chatHistory = [];
         const chatBox = document.getElementById("chatBox");
@@ -383,7 +401,7 @@
             document.getElementById("generalModal").style.display = 'none';
         }
 
-        // 2. Logika Prompt Builder (Diperbarui dengan Jenis Konteks)
+        // 2. Logika Prompt Builder
         function generatePrompt() {
             const role = document.getElementById('buildRole').value;
             const topic = document.getElementById('buildTopic').value;
@@ -425,6 +443,13 @@
             bubble.innerHTML = formattedText;
             chatBox.appendChild(bubble);
             chatBox.scrollTop = chatBox.scrollHeight;
+
+            // --- REVISI: Render MathJax setelah pesan AI muncul ---
+            if (window.MathJax && sender === 'bot') {
+                MathJax.typesetPromise([bubble]).catch(function (err) {
+                    console.error('MathJax render error:', err.message);
+                });
+            }
         }
 
         function appendLoading() {
@@ -441,31 +466,34 @@
             if (loading) loading.remove();
         }
 
-        // --- DIUBAH: MENAMBAHKAN PARAMETER userApiKey ---
+        // --- DIUBAH: MENAMBAHKAN PARAMETER userApiKey & MENGGUNAKAN encodeURIComponent ---
+        // --- REVISI: API KEY DIKIRIM LEWAT HEADER, BUKAN URL ---
         async function fetchGeminiAPI(modelName, payload, userApiKey) {
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${userApiKey}`;
+            // Perhatikan: Tidak ada lagi ?key= di akhir URL
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent`;
+            
             const response = await fetch(url, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: { 
+                    "Content-Type": "application/json",
+                    "x-goog-api-key": userApiKey // API Key diletakkan di sini, jauh lebih aman
+                },
                 body: JSON.stringify(payload)
             });
+            
             const data = await response.json();
             
             if (!response.ok) {
-                const errMsg = data.error?.message?.toLowerCase() || "";
-                // Jika API Key salah/kadaluarsa
-                if (errMsg.includes("api key not valid") || errMsg.includes("api key expired")) {
-                    throw new Error("API_KEY_INVALID");
-                }
-                // Jika error karena model tidak ditemukan/diblokir oleh Free Tier
-                throw new Error("GANTI_MODEL");
+                // Tangkap pesan error spesifik dari Google
+                const errorMsg = data.error?.message || `HTTP Error ${response.status}`;
+                console.error("Error dari Google AI:", data);
+                throw new Error(errorMsg);
             }
             
             return data.candidates?.[0]?.content?.parts?.[0]?.text;
         }
 
         async function sendMessage() {
-            // --- DIUBAH: VALIDASI API KEY DARI INPUT ---
             const userApiKey = document.getElementById('apiKeyInput').value.trim();
             if (!userApiKey) {
                 showModal('error', 'API Key Kosong', 'Mohon tempelkan (paste) API Key Google Anda pada panel Pengaturan Akses AI di atas sebelum mulai bertanya.');
@@ -490,20 +518,28 @@
             
             chatHistory.push({ role: "user", parts: [{ text: text }] });
 
-            const formatInstruction = "Berikan jawaban yang MENDALAM, TERPERINCI, serta sertakan alasan pedagogis pada setiap penjelasan Anda.";
-            const systemPrompt = `Kamu adalah Asisten AI Heuristic-Mat yang membantu guru MTs di Jombang. Pedomani standar soal TKA Matematika SMP yang memiliki 4 Domain (Bilangan, Aljabar, Geometri & Pengukuran, Data & Peluang) serta 3 Level Kognitif (L1: Pemahaman, L2: Aplikasi, L3: Penalaran). Perhatikan baik-baik apakah pengguna meminta jenis soal Intra-Matematika (matematika murni tanpa cerita) atau soal Kontekstual (dengan latar cerita). JANGAN MENGGUNAKAN FORMAT MARKDOWN BINTANG GANDA ATAU TUNGGAL. Gunakan HURUF KAPITAL jika ingin memberi penekanan penting. Jawablah menggunakan Bahasa Indonesia yang ramah. ${formatInstruction}`;
+            // --- REVISI: Mengubah karakter AI agar lebih ringkas dan tidak bertele-tele ---
+            const formatInstruction = "Gunakan format penulisan LaTeX (bungkus dengan $ untuk sebaris dan $$ untuk blok) untuk semua rumus/angka matematika agar rapi.";
+            
+            const systemPrompt = `Kamu adalah Asisten AI Heuristic-Mat. Jawablah LANGSUNG KE INTI tanpa basa-basi.
+                PENTING:
+                1. JANGAN PERNAH menggunakan salam pembuka seperti "Assalamu'alaikum", "Halo", atau menyapa nama guru di awal balasan. Langsung berikan jawaban yang diminta!
+                2. Jawablah dengan RINGKAS dan PADAT, jangan terlalu panjang kecuali pengguna meminta penjelasan rinci.
+                3. Pedomani standar soal TKA Matematika SMP (Bilangan, Aljabar, Geometri, Data Peluang) dan Level Kognitif (L1, L2, L3).
+                4. Jawablah menggunakan Bahasa Indonesia yang profesional namun langsung ke sasaran. ${formatInstruction}`;
 
             const payload = {
                 contents: chatHistory,
                 systemInstruction: { parts: [{ text: systemPrompt }] }
             };
 
-            const modelsToTry = ["gemini-1.5-flash", "gemini-1.5-flash-latest", "gemini-1.5-flash-8b"];
+            // REVISI FINAL: Menggunakan jajaran model Gemini generasi 3.x sesuai permintaan Anda
+            const modelsToTry = ["gemini-3.6-flash", "gemini-3.1-flash"];
             let success = false;
+            let errorMessage = "";
 
             for (let model of modelsToTry) {
                 try {
-                    // --- DIUBAH: MENGIRIM userApiKey KE FUNGSI FETCH ---
                     let aiResponse = await fetchGeminiAPI(model, payload, userApiKey);
                     if (aiResponse) {
                         removeLoading();
@@ -513,22 +549,14 @@
                         break; 
                     }
                 } catch (err) {
-                    if (err.message === "API_KEY_INVALID") {
-                        removeLoading();
-                        appendMessage("bot", `⚠️ <strong>API Key Anda Salah atau Kadaluarsa.</strong> Silakan periksa kembali API Key yang Anda masukkan.`);
-                        chatHistory.pop();
-                        success = true; 
-                        break;
-                    }
-                    if (err.message === "GANTI_MODEL") {
-                        continue; // Lanjut ke model berikutnya jika diblokir
-                    }
+                    errorMessage = err.message; 
+                    console.error("Gagal dengan model", model, ":", err);
                 }
             }
 
             if (!success) {
                 removeLoading();
-                appendMessage("bot", `⚠️ <strong>Koneksi Gagal.</strong><br>Pastikan koneksi internet Anda stabil atau periksa kuota/akses API Key Anda.`);
+                appendMessage("bot", `⚠️ <strong>Koneksi Gagal.</strong><br>Pesan dari sistem Google: <em style="color: #ef4444;">${errorMessage}</em><br>Pastikan API Key benar, dan Anda memiliki koneksi internet.`);
                 chatHistory.pop();
             }
 
@@ -542,12 +570,10 @@
                 const printTemplate = document.getElementById('print-template');
                 const chatContentArea = document.getElementById('pdf-chat-content');
                 
-                // Pindahkan data diri
                 document.getElementById('pdf-chat-nama').innerText = document.getElementById('namaGuru').value;
                 document.getElementById('pdf-chat-instansi').innerText = document.getElementById('instansiGuru').value || "-";
                 document.getElementById('pdf-chat-waktu').innerText = new Date().toLocaleString('id-ID');
 
-                // Susun ulang chat
                 chatContentArea.innerHTML = "";
                 const bubbles = document.querySelectorAll('#chatBox .chat-bubble');
                 bubbles.forEach(bubble => {
@@ -565,9 +591,8 @@
                     chatContentArea.appendChild(div);
                 });
 
-                // Simpan posisi scroll
                 const currentScrollY = window.scrollY;
-                window.scrollTo(0, 0); // Kunci agar PDF tidak terpotong
+                window.scrollTo(0, 0); 
 
                 const header = document.querySelector('header');
                 const nav = document.querySelector('nav');
@@ -655,7 +680,6 @@
             saveBtn.innerHTML = '⏳ Menyimpan...';
             saveBtn.disabled = true;
 
-            // Merangkai isi percakapan
             let rawText = "";
             document.querySelectorAll('#chatBox .chat-bubble').forEach(bubble => {
                 if(bubble.id === 'loadingBubble') return;
@@ -672,7 +696,6 @@
                     await generateChatPDF(true);
                     showModal('success', 'Riwayat Berhasil Disimpan', 'Simulasi berhasil. (URL Google Script Anda belum diatur). Salinan PDF diunduh otomatis.');
                 } else {
-                    // Gunakan mode no-cors untuk keamanan pengiriman
                     await fetch(GOOGLE_SCRIPT_URL_CHAT, {
                         method: 'POST',
                         mode: 'no-cors',
@@ -680,7 +703,6 @@
                         body: JSON.stringify(formData)
                     });
                     
-                    // Setelah terkirim ke server diam-diam, baru buat PDF-nya
                     await generateChatPDF(true);
                     showModal('success', 'Riwayat Berhasil Disimpan', 'Terima kasih, riwayat konsultasi Klinik AI Anda telah terekam di sistem. Salinan PDF Anda diunduh otomatis.');
                 }
@@ -692,6 +714,39 @@
                 saveBtn.disabled = false;
             }
         }
+
+        // --- FUNGSI SIMPAN API KEY ---
+        function simpanApiKey() {
+            const key = document.getElementById('apiKeyInput').value.trim();
+            const statusEl = document.getElementById('apiKeyStatus');
+            
+            if (key) {
+                // Simpan ke memori browser
+                localStorage.setItem('heuristicMat_ApiKey', key);
+                
+                // Tampilkan pesan sukses
+                statusEl.style.display = 'block';
+                statusEl.style.color = '#10b981'; // Warna hijau
+                statusEl.innerHTML = '✔️ API Key berhasil disimpan ke memori browser dan siap digunakan!';
+            } else {
+                // Tampilkan pesan error jika kosong
+                statusEl.style.display = 'block';
+                statusEl.style.color = '#ef4444'; // Warna merah
+                statusEl.innerHTML = '❌ Mohon paste API Key terlebih dahulu sebelum menyimpan.';
+            }
+        }
+
+        // --- MUAT ULANG API KEY OTOMATIS SAAT HALAMAN DIBUKA ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedKey = localStorage.getItem('heuristicMat_ApiKey');
+            if (savedKey) {
+                document.getElementById('apiKeyInput').value = savedKey;
+                const statusEl = document.getElementById('apiKeyStatus');
+                statusEl.style.display = 'block';
+                statusEl.style.color = '#3b82f6'; // Warna biru
+                statusEl.innerHTML = '💡 API Key Anda sebelumnya telah dimuat ulang secara otomatis.';
+            }
+        });
     </script>
 </body>
 </html>
