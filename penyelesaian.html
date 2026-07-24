@@ -48,7 +48,7 @@
         
         .math-box { background-color: #f0fdf4; border: 1px dashed #22c55e; padding: 15px; border-radius: 6px; margin-top: 15px; font-size: 1.05em; color: #14532d; }
         
-        .svg-container { width: 100%; text-align: center; margin: 25px 0; padding: 10px 0; }
+        .svg-container { width: 100%; text-align: center; margin: 25px 0; padding: 10px 0; overflow-x: auto;}
         .svg-graphic { width: 100%; max-width: 800px; height: auto; display: block; margin: 0 auto; }
 
         .references { margin-top: 60px; padding-top: 20px; border-top: 2px solid #cbd5e1; font-size: 0.9em; }
@@ -66,6 +66,7 @@
             header h1 { font-size: 2rem; } 
             nav { flex-direction: column; align-items: center; gap: 10px; } 
             .card { padding: 25px 20px; } 
+            .svg-graphic { min-width: 500px; }
         }
     </style>
 </head>
@@ -85,23 +86,30 @@
         <a href="penyelesaian.html" class="active">Penyelesaian Soal</a>
         <a href="pembelajaran.html">Cara Membelajarkan</a>
         <a href="klinik_ai.html">Klinik AI</a>
+        <a href="penugasan_lkm.html">Penugasan LKM</a>
     </nav>
 
     <div class="container">
         
         <div class="card">
-            <h2>Penerapan Penyelesaian Soal TKA Tingkat MTs</h2>
-            <p>Penerapan teori heuristik akan lebih mudah dipahami jika kita melihat contoh pengerjaannya secara langsung. Pada soal-soal TKA, murid diwajibkan untuk menggunakan nalar dalam memecahkan masalah (<i>problem solving</i>) yang didasari pada literasi bacaan<!--[cite: 1]-->.</p>
-            <p>Halaman ini menyajikan enam contoh soal murni yang disesuaikan dengan tingkat kesulitan SMP/MTs (Kelas VII, VIII, dan IX). Materi ini mencakup Bilangan, Aljabar, Geometri, Bangun Ruang, dan Statistika/Peluang. Kita akan menyelesaikan soal-soal tersebut menggunakan pola pikir Polya dan langkah penulisan Krulik-Rudnick.</p>
+            <h2>Penerapan Penyelesaian Soal TKA (Berdasarkan Indikator Terbaru)</h2>
+            <p>Penerapan teori heuristik akan lebih mudah dipahami jika kita melihat contoh pengerjaannya secara langsung. Pada soal-soal TKA jenjang SMP/MTs, murid diwajibkan untuk menggunakan nalar (Level Kognitif 3 - <i>Problem Solving</i>) yang didasari pada literasi bacaan.</p>
+            <p>Halaman ini menyajikan lima studi kasus yang diadaptasi langsung dari kisi-kisi <strong>Indikator Soal TKA Matematika SMP</strong>. Kita akan mengupas langkah demi langkah memandu pemikiran murid menggunakan rute berpikir Polya dan langkah penulisan operasional Krulik-Rudnick (<i>Read, Explore, Select, Solve, Reflect</i>).</p>
         </div>
 
         <!-- KASUS 1 -->
         <div class="card">
-            <h2>Kasus 1: Bilangan Pecahan (Konteks Warisan)</h2>
+            <h2>Kasus 1: Perbandingan Rasio Gabungan</h2>
             <div class="problem-box">
-                <span class="problem-badge">Materi Kelas VII - Bilangan</span>
+                <span class="problem-badge">Materi: Bilangan (Rasio L3)</span>
                 <div class="problem-title">Soal TKA:</div>
-                Seorang kiai di Jombang mewariskan tanah seluas $12.000\text{ m}^2$. Anak pertama mendapat bagian $\frac{1}{3}$ dari total tanah, anak kedua mendapat $\frac{1}{4}$ bagian, dan sisanya akan diwakafkan untuk pembangunan madrasah. Berapakah luas tanah yang diwakafkan untuk madrasah tersebut?
+                Rasio uang saku Andi terhadap Budi adalah $4 : 3$. Rasio uang saku Budi terhadap Cici adalah $6 : 7$. Jika total uang saku ketiganya adalah Rp210.000,00. Analisislah pernyataan berikut manakah yang benar:
+                <ol type="A">
+                    <li>Rasio gabungan A:B:C adalah 8:6:7.</li>
+                    <li>Selisih uang saku Andi dan Budi adalah Rp 20.000,00.</li>
+                    <li>Uang saku Cici adalah Rp 70.000,00.</li>
+                    <li>Uang saku Budi adalah yang paling sedikit di antara ketiganya.</li>
+                </ol>
             </div>
 
             <div class="step-container">
@@ -109,8 +117,8 @@
                     <div class="step-title">Fase Polya: Memahami Masalah</div>
                     <div class="step-subtitle">Langkah Operasional: <i>Read &amp; Explore</i></div>
                     <div class="step-content">
-                        <strong>Pola Pikir:</strong> Mencari angka pecahan dan ukuran utuh dari soal cerita.<br><br>
-                        <strong>Tindakan Teknis:</strong> Murid membaca teks dan mencatat: Total luas tanah $12.000\text{ m}^2$. Anak pertama mendapat $\frac{1}{3}$ bagian, anak kedua $\frac{1}{4}$ bagian. Yang ditanyakan adalah luas sisa tanah untuk madrasah. Murid bisa menggambar sebuah kotak besar yang diibaratkan sebagai nilai 1 utuh untuk memudahkan pemahaman.
+                        <strong>Pola Pikir:</strong> Mengidentifikasi adanya dua nilai rasio yang berbeda untuk orang yang sama.<br><br>
+                        <strong>Tindakan Teknis:</strong> Murid mencatat fakta bahwa ada tiga subjek: Andi (A), Budi (B), dan Cici (C). Total uang mereka adalah Rp210.000. Masalah utamanya adalah nilai rasio Budi terbagi menjadi dua versi, yaitu angka 3 (saat dengan Andi) dan angka 6 (saat dengan Cici).
                     </div>
                 </div>
 
@@ -118,8 +126,8 @@
                     <div class="step-title">Fase Polya: Menyusun Rencana</div>
                     <div class="step-subtitle">Langkah Operasional: <i>Select a Strategy</i></div>
                     <div class="step-content">
-                        <strong>Pola Pikir:</strong> Mencari urutan hitungan pecahan yang tepat.<br><br>
-                        <strong>Tindakan Teknis:</strong> Murid menggunakan strategi <strong>Penyederhanaan Masalah</strong>. Urutannya: 1) Hitung jumlah pecahan milik kedua anak, 2) Kurangi nilai 1 utuh dengan jumlah milik anak untuk mendapat porsi madrasah, 3) Kalikan porsi pecahan madrasah tersebut dengan angka luas tanah total ($12.000\text{ m}^2$).
+                        <strong>Pola Pikir:</strong> Menyamakan nilai pembanding agar dapat dihitung sekaligus.<br><br>
+                        <strong>Tindakan Teknis:</strong> Menggunakan strategi <strong>Penyederhanaan Masalah (Mengenali Pola)</strong>. Rencananya adalah mencari KPK dari angka rasio milik Budi (antara 3 dan 6). Setelah nilai Budi disamakan, barulah total unit rasio dijumlahkan untuk membagi nilai uang tunai total.
                     </div>
                 </div>
 
@@ -127,17 +135,25 @@
                     <div class="step-title">Fase Polya: Melaksanakan Rencana</div>
                     <div class="step-subtitle">Langkah Operasional: <i>Solve</i></div>
                     <div class="step-content">
-                        <strong>Pola Pikir:</strong> Menghitung pecahan dengan menyamakan angka penyebut.<br><br>
-                        <strong>Tindakan Teknis:</strong> Murid menjalankan perhitungan sesuai urutan rencana.
+                        <strong>Pola Pikir:</strong> Melakukan operasi pengali rasio dan pembagian nilai nyata.<br><br>
+                        <strong>Tindakan Teknis:</strong> Murid menjalankan perhitungan tahap demi tahap.
                         <div class="math-box">
-                            <strong>1. Menjumlahkan Porsi Anak:</strong><br>
-                            $\frac{1}{3} + \frac{1}{4} = \frac{4}{12} + \frac{3}{12} = \frac{7}{12}$ bagian.<br><br>
+                            <strong>1. Menyamakan Rasio:</strong><br>
+                            $A : B = 4 : 3$<br>
+                            $B : C = 6 : 7$<br>
+                            Agar B sama-sama bernilai 6, rasio pertama dikali 2, sehingga:<br>
+                            $A : B = 8 : 6$.<br>
+                            Rasio gabungan $A : B : C = 8 : 6 : 7$. <em>(Pernyataan A Benar)</em><br><br>
                             
-                            <strong>2. Mencari Porsi Madrasah:</strong><br>
-                            Tanah Utuh (1) - Porsi Anak = $\frac{12}{12} - \frac{7}{12} = \frac{5}{12}$ bagian.<br><br>
+                            <strong>2. Mencari Nilai 1 Unit Rasio:</strong><br>
+                            Total unit rasio $= 8 + 6 + 7 = 21$ unit.<br>
+                            Nilai 1 unit $= \text{Rp } 210.000 \div 21 = \text{Rp } 10.000$.<br><br>
 
-                            <strong>3. Menghitung Luas Madrasah:</strong><br>
-                            $\frac{5}{12} \times 12.000 = 5 \times 1.000 =$ <strong>$5.000\text{ m}^2$</strong>.
+                            <strong>3. Menghitung Uang Masing-masing & Evaluasi Opsi:</strong><br>
+                            Andi $= 8 \times 10.000 = \text{Rp } 80.000$<br>
+                            Budi $= 6 \times 10.000 = \text{Rp } 60.000$ <em>(Paling sedikit - Pernyataan D Benar)</em><br>
+                            Cici $= 7 \times 10.000 = \text{Rp } 70.000$ <em>(Pernyataan C Benar)</em><br>
+                            Selisih Andi & Budi $= 80.000 - 60.000 = \text{Rp } 20.000$ <em>(Pernyataan B Benar)</em>
                         </div>
                     </div>
                 </div>
@@ -146,8 +162,8 @@
                     <div class="step-title">Fase Polya: Melihat Kembali</div>
                     <div class="step-subtitle">Langkah Operasional: <i>Reflect and Extend</i></div>
                     <div class="step-content">
-                        <strong>Pola Pikir:</strong> Memastikan jumlah luas seluruh pembagian tanah tepat 12.000.<br><br>
-                        <strong>Tindakan Teknis:</strong> Murid mengecek kembali nilai luas untuk anak pertama ($4.000\text{ m}^2$) dan anak kedua ($3.000\text{ m}^2$). Jika ditotal: $4.000 + 3.000 + 5.000 = 12.000\text{ m}^2$ (Hitungannya benar).
+                        <strong>Pola Pikir:</strong> Mengecek apakah penjumlahan hasil akhirnya cocok dengan kondisi soal.<br><br>
+                        <strong>Tindakan Teknis:</strong> Murid menjumlahkan uang akhir: $80.000 + 60.000 + 70.000 = 210.000$. Hasil hitungan sudah konsisten. Guru dapat memodifikasi soal dengan mengganti total angka agar murid melatih kelancaran operasi pecahannya.
                     </div>
                 </div>
             </div>
@@ -155,11 +171,11 @@
 
         <!-- KASUS 2 -->
         <div class="card">
-            <h2>Kasus 2: Persamaan Linear (Sistem Hewan)</h2>
+            <h2>Kasus 2: Perbandingan Berbalik Nilai (Proyek)</h2>
             <div class="problem-box">
-                <span class="problem-badge">Materi Kelas VII/VIII - Aljabar</span>
+                <span class="problem-badge" style="background-color: #f97316;">Materi: Bilangan (Perbandingan L3)</span>
                 <div class="problem-title">Soal TKA:</div>
-                Di area peternakan milik sebuah pondok pesantren, terdapat sekumpulan ayam dan kambing. Total hewan di peternakan tersebut memiliki 70 kepala dan 200 kaki. Berapa banyak jumlah ayam dan jumlah kambing di dalam peternakan tersebut?
+                Pembangunan sebuah jembatan direncanakan selesai dalam 90 hari oleh 20 orang pekerja. Setelah berjalan 30 hari, proyek dihentikan selama 10 hari karena cuaca buruk. Agar proyek dapat selesai tepat waktu, berapa jumlah pekerja yang harus ditambahkan?
             </div>
 
             <div class="step-container">
@@ -167,8 +183,12 @@
                     <div class="step-title">Fase Polya: Memahami Masalah</div>
                     <div class="step-subtitle">Langkah Operasional: <i>Read &amp; Explore</i></div>
                     <div class="step-content">
-                        <strong>Pola Pikir:</strong> Mengidentifikasi data dari teks cerita yang tidak disebutkan angkanya secara langsung.<br><br>
-                        <strong>Tindakan Teknis:</strong> Murid membaca teks dan mencatat fakta bahwa seekor ayam memiliki dua kaki, dan kambing memiliki empat kaki. Jika total ada 70 kepala, artinya jumlah hewannya adalah persis 70 ekor. Total keseluruhan kaki adalah 200.
+                        <strong>Pola Pikir:</strong> Menyusun rentang waktu peristiwa.<br><br>
+                        <strong>Tindakan Teknis:</strong> Murid mencatat jadwal proyek:<br>
+                        - Target normal: 90 hari, butuh 20 orang.<br>
+                        - Fase lancar: Sudah jalan 30 hari (dengan 20 orang).<br>
+                        - Fase macet: Mandek 10 hari (0 orang bekerja).<br>
+                        Masalah utama: Ada sisa pekerjaan yang menumpuk dan harus diselesaikan dengan sisa hari yang makin sedikit.
                     </div>
                 </div>
 
@@ -176,8 +196,8 @@
                     <div class="step-title">Fase Polya: Menyusun Rencana</div>
                     <div class="step-subtitle">Langkah Operasional: <i>Select a Strategy</i></div>
                     <div class="step-content">
-                        <strong>Pola Pikir:</strong> Menghubungkan informasi jumlah kepala dan kaki untuk mencari jumlah hewan.<br><br>
-                        <strong>Tindakan Teknis:</strong> Murid menggunakan strategi <strong>Tebak dan Uji</strong>. Strategi ini digabungkan dengan <strong>Membuat Daftar Teratur</strong> dengan cara menyusun angka tebakannya di dalam tabel agar terlihat rapi.
+                        <strong>Pola Pikir:</strong> Menghitung beban kerja total, beban kerja yang sudah selesai, lalu mencari sisa beban untuk sisa waktu.<br><br>
+                        <strong>Tindakan Teknis:</strong> Menggunakan strategi <strong>Memecah Masalah</strong> ke dalam konsep "Orang-Hari". Rencananya: Cari total kewajiban orang-hari, kurangi dengan yang sudah dikerjakan, lalu bagikan sisa beban tersebut pada jumlah hari yang tersisa.
                     </div>
                 </div>
 
@@ -185,17 +205,22 @@
                     <div class="step-title">Fase Polya: Melaksanakan Rencana</div>
                     <div class="step-subtitle">Langkah Operasional: <i>Solve</i></div>
                     <div class="step-content">
-                        <strong>Pola Pikir:</strong> Melakukan hitungan perkalian dengan teliti.<br><br>
-                        <strong>Tindakan Teknis:</strong> Murid menebak pembagian jumlah hewan sampai hasil kakinya persis bernilai 200.
+                        <strong>Pola Pikir:</strong> Teliti dalam mengurangkan hari yang berjalan dan libur.<br><br>
+                        <strong>Tindakan Teknis:</strong>
                         <div class="math-box">
-                            <strong>Tebakan Pertama:</strong> Membagi jumlah hewan setengah-setengah.<br>
-                            Sebanyak 35 ekor ayam dan 35 ekor kambing (Total kepala 70 ekor).<br>
-                            Hitungan Kaki: $(35 \times 2) + (35 \times 4) = 70 + 140 = 210$ kaki.<br>
-                            <em>Evaluasi: Terlalu banyak 10 kaki. Berarti jumlah hewan yang kakinya banyak (kambing) harus dikurangi.</em><br><br>
-                            <strong>Tebakan Kedua:</strong> Mengurangi 5 ekor jumlah kambing.<br>
-                            Sebanyak 40 ekor ayam dan 30 ekor kambing (Total kepala 70 ekor).<br>
-                            Hitungan Kaki: $(40 \times 2) + (30 \times 4) = 80 + 120 = 200$ kaki.<br>
-                            <em>Evaluasi: Tepat 200 kaki. Jawabannya adalah <strong>40 ayam dan 30 kambing</strong>.</em>
+                            <strong>1. Total Target Beban Pekerjaan:</strong><br>
+                            $90 \text{ hari} \times 20 \text{ pekerja} = 1.800 \text{ orang-hari}$.<br><br>
+                            
+                            <strong>2. Pekerjaan yang Sudah Selesai:</strong><br>
+                            $30 \text{ hari} \times 20 \text{ pekerja} = 600 \text{ orang-hari}$.<br>
+                            Sisa beban pekerjaan $= 1.800 - 600 = 1.200 \text{ orang-hari}$.<br><br>
+
+                            <strong>3. Menghitung Sisa Waktu dan Kebutuhan Pekerja:</strong><br>
+                            Sisa waktu kerja $= 90 - 30 (\text{jalan}) - 10 (\text{libur}) = 50 \text{ hari}$.<br>
+                            Jumlah total pekerja yang dibutuhkan $= 1.200 \text{ beban} \div 50 \text{ hari} = 24 \text{ orang}$.<br><br>
+                            
+                            <strong>4. Jawaban Akhir (Tambahan):</strong><br>
+                            Tambahan pekerja $= 24 \text{ orang} - 20 \text{ (pekerja lama)} = \mathbf{4 \text{ orang tambahan}}$.
                         </div>
                     </div>
                 </div>
@@ -204,8 +229,8 @@
                     <div class="step-title">Fase Polya: Melihat Kembali</div>
                     <div class="step-subtitle">Langkah Operasional: <i>Reflect and Extend</i></div>
                     <div class="step-content">
-                        <strong>Pola Pikir:</strong> Memastikan hasil tebakan sesuai dengan syarat jumlah kepala.<br><br>
-                        <strong>Tindakan Teknis:</strong> Murid mengecek apakah 40 ayam ditambah 30 kambing jumlah kepalanya memang 70. Guru bisa memberikan pertanyaan modifikasi: <em>"Bagaimana jika total kepalanya tetap 70 ekor, namun total kakinya berubah menjadi 220?"</em>
+                        <strong>Pola Pikir:</strong> Menguji apakah total beban kerja 1800 terpenuhi dengan skema baru.<br><br>
+                        <strong>Tindakan Teknis:</strong> Murid melakukan rekap ulang: (30 hari $\times$ 20 orang) + (10 hari libur $\times$ 0 orang) + (50 hari $\times$ 24 orang) $= 600 + 0 + 1200 = 1800$. Bukti hitungan matematika solid dan benar.
                     </div>
                 </div>
             </div>
@@ -213,11 +238,55 @@
 
         <!-- KASUS 3 -->
         <div class="card">
-            <h2>Kasus 3: Geometri Bangun Datar Gabungan</h2>
+            <h2>Kasus 3: Geometri (Kesebangunan Bangun Datar)</h2>
             <div class="problem-box">
-                <span class="problem-badge">Materi Kelas VIII - Geometri</span>
+                <span class="problem-badge" style="background-color: #3b82f6;">Materi: Geometri (Aplikasi - L2)</span>
                 <div class="problem-title">Soal TKA:</div>
-                Sebuah dinding pameran berbentuk gabungan bangun datar menyerupai bentuk rumah. Bagian dasar merupakan tembok dengan alas sepanjang 10 meter. Sisi kiri yang tegak lurus memiliki ketinggian total 10 meter. Di samping kanan dinding terdapat tambahan tembok setinggi 2 meter dan selebar 4 meter. Titik atap segitiganya berjarak sejauh 10 meter lurus dari lantai dasar. Hitunglah luas total dinding pameran ini!
+                Dua trapesium siku-siku pada gambar di bawah ini adalah <strong>sebangun</strong>. Jika panjang sisi sejajar trapesium kecil adalah 6 cm dan 9 cm, dan sisi sejajar terpanjang trapesium besar adalah 15 cm, tentukan panjang sisi sejajar terpendek trapesium besar.
+                
+                <div class="svg-container" style="margin-top: 20px;">
+                    <svg viewBox="0 0 500 200" xmlns="http://www.w3.org/2000/svg" style="max-width: 600px; width: 100%;">
+                        <!-- Grid latar belakang -->
+                        <defs>
+                            <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+                                <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#f1f5f9" stroke-width="1"/>
+                            </pattern>
+                        </defs>
+                        <rect width="100%" height="100%" fill="url(#grid)" rx="8"/>
+
+                        <!-- 
+                            PERHITUNGAN PRESISI MATEMATIS SVG:
+                            Skala: 10px = 1 cm
+                            Trapesium Kecil: Atas = 60px (6cm), Bawah = 90px (9cm). Tinggi sembarang = 80px (8cm).
+                            Trapesium Besar: Sebangun. Sisi terpanjang = 15cm (150px). 
+                            Faktor skala (Besar/Kecil) = 150 / 90 = 1.666...
+                            Tinggi Trapesium Besar = 80px * 1.666... = 133.34px
+                            Atas Trapesium Besar = 60px * 1.666... = 100px
+                        -->
+
+                        <!-- Trapesium Kecil -->
+                        <!-- Poin: Kiri-Atas (50,60), Kanan-Atas (110,60), Kanan-Bawah (140,140), Kiri-Bawah (50,140) -->
+                        <polygon points="50,60 110,60 140,140 50,140" fill="#eff6ff" stroke="#2563eb" stroke-width="3" stroke-linejoin="round"/>
+                        <!-- Indikator Siku-siku Trapesium Kecil -->
+                        <polyline points="50,70 60,70 60,60" fill="none" stroke="#2563eb" stroke-width="2"/>
+                        <polyline points="50,130 60,130 60,140" fill="none" stroke="#2563eb" stroke-width="2"/>
+                        
+                        <!-- Label Trapesium Kecil -->
+                        <text x="80" y="50" font-family="Tahoma" font-weight="bold" font-size="14" fill="#1e3a8a" text-anchor="middle">6 cm</text>
+                        <text x="95" y="160" font-family="Tahoma" font-weight="bold" font-size="14" fill="#1e3a8a" text-anchor="middle">9 cm</text>
+
+                        <!-- Trapesium Besar -->
+                        <!-- Poin: Kiri-Atas (250, 26.66), Kanan-Atas (350, 26.66), Kanan-Bawah (400, 160), Kiri-Bawah (250, 160) -->
+                        <polygon points="250,26.66 350,26.66 400,160 250,160" fill="#f0fdf4" stroke="#16a34a" stroke-width="3" stroke-linejoin="round"/>
+                        <!-- Indikator Siku-siku Trapesium Besar -->
+                        <polyline points="250,36.66 260,36.66 260,26.66" fill="none" stroke="#16a34a" stroke-width="2"/>
+                        <polyline points="250,150 260,150 260,160" fill="none" stroke="#16a34a" stroke-width="2"/>
+
+                        <!-- Label Trapesium Besar -->
+                        <text x="300" y="18.6" font-family="Tahoma" font-weight="bold" font-size="16" fill="#14532d" text-anchor="middle">?</text>
+                        <text x="325" y="180" font-family="Tahoma" font-weight="bold" font-size="14" fill="#14532d" text-anchor="middle">15 cm</text>
+                    </svg>
+                </div>
             </div>
 
             <div class="step-container">
@@ -225,8 +294,8 @@
                     <div class="step-title">Fase Polya: Memahami Masalah</div>
                     <div class="step-subtitle">Langkah Operasional: <i>Read &amp; Explore</i></div>
                     <div class="step-content">
-                        <strong>Pola Pikir:</strong> Membayangkan bentuk bangunan dari kalimat cerita.<br><br>
-                        <strong>Tindakan Teknis:</strong> Menghitung luas dinding yang bentuknya gabungan ini tidak bisa menggunakan satu rumus saja. Murid menggambar sketsa. Fakta ukuran yang dicatat pada gambar: alas total 10 meter, sisi tegak sebelah kiri 10 meter, tembok tambahan tinggi 2 meter dan lebar 4 meter.
+                        <strong>Pola Pikir:</strong> Mengidentifikasi sifat kesebangunan pada dua bangun datar.<br><br>
+                        <strong>Tindakan Teknis:</strong> Murid mencatat informasi yang diketahui: Terdapat dua trapesium siku-siku sebangun. Pada trapesium kecil, sisi atas (pendek) = 6 cm dan sisi bawah (panjang) = 9 cm. Pada trapesium besar, sisi bawah (terpanjang) = 15 cm. Yang dicari adalah panjang sisi atas trapesium besar.
                     </div>
                 </div>
 
@@ -234,8 +303,8 @@
                     <div class="step-title">Fase Polya: Menyusun Rencana</div>
                     <div class="step-subtitle">Langkah Operasional: <i>Select a Strategy</i></div>
                     <div class="step-content">
-                        <strong>Pola Pikir:</strong> Memecah bangun yang sulit menjadi beberapa bangun dasar (persegi panjang dan segitiga).<br><br>
-                        <strong>Tindakan Teknis:</strong> Murid menggunakan strategi <strong>Membagi dan Menaklukkan</strong>. Murid memberikan garis bayangan untuk membelah gambar tersebut menjadi tiga bagian: area segitiga atap (A), area pilar kiri (B), dan tembok kecil di kanan (C).
+                        <strong>Pola Pikir:</strong> Membuat persamaan rasio antar sisi yang bersesuaian.<br><br>
+                        <strong>Tindakan Teknis:</strong> Menggunakan strategi <strong>Model Matematika (Perbandingan Senilai)</strong>. Karena bangun tersebut sebangun, maka perbandingan sisi sejajar bagian atas dan bagian bawah pada kedua trapesium haruslah sama. Rencananya: $\frac{\text{Atas Kecil}}{\text{Bawah Kecil}} = \frac{\text{Atas Besar}}{\text{Bawah Besar}}$.
                     </div>
                 </div>
 
@@ -243,55 +312,22 @@
                     <div class="step-title">Fase Polya: Melaksanakan Rencana</div>
                     <div class="step-subtitle">Langkah Operasional: <i>Solve</i></div>
                     <div class="step-content">
-                        <strong>Pola Pikir:</strong> Mencari tahu ukuran panjang dan lebar dari tiap bagian yang sudah dipotong, lalu menghitung luasnya.<br><br>
-                        <strong>Tindakan Teknis:</strong> Murid menghitung luas tiap potongan secara terpisah, lalu menjumlahkan ketiganya di akhir.
-                        
-                        <div class="svg-container">
-                            <svg class="svg-graphic" viewBox="0 0 1000 350" xmlns="http://www.w3.org/2000/svg">
-                                <g style="transform-origin: 450px 100px;">
-                                    <polygon points="200,130 300,30 400,130" fill="#3b82f6" stroke="#1e3a8a" stroke-width="3"/>
-                                    <text x="300" y="100" font-family="Tahoma" font-weight="bold" font-size="20" fill="white" text-anchor="middle">A</text>
-                                </g>
-
-                                <g style="transform-origin: 450px 200px;">
-                                    <rect x="200" y="130" width="200" height="140" fill="#2b6cb0" stroke="#1e3a8a" stroke-width="3"/>
-                                    <text x="300" y="205" font-family="Tahoma" font-weight="bold" font-size="20" fill="white" text-anchor="middle">B</text>
-                                </g>
-
-                                <g style="transform-origin: 610px 240px;">
-                                    <rect x="400" y="210" width="120" height="60" fill="#60a5fa" stroke="#1e3a8a" stroke-width="3"/>
-                                    <text x="460" y="245" font-family="Tahoma" font-weight="bold" font-size="20" fill="white" text-anchor="middle">C</text>
-                                </g>
-
-                                <line x1="180" y1="30" x2="180" y2="270" stroke="#64748b" stroke-width="3"/>
-                                <line x1="165" y1="30" x2="195" y2="30" stroke="#64748b" stroke-width="3"/>
-                                <line x1="165" y1="270" x2="195" y2="270" stroke="#64748b" stroke-width="3"/>
-                                <text x="150" y="155" font-family="Tahoma" font-weight="bold" font-size="16" fill="#333333" text-anchor="end">10 m</text>
-
-                                <line x1="545" y1="210" x2="545" y2="270" stroke="#64748b" stroke-width="3"/>
-                                <line x1="530" y1="210" x2="560" y2="210" stroke="#64748b" stroke-width="3"/>
-                                <line x1="530" y1="270" x2="560" y2="270" stroke="#64748b" stroke-width="3"/>
-                                <text x="570" y="245" font-family="Tahoma" font-weight="bold" font-size="16" fill="#333333">2 m</text>
-
-                                <line x1="200" y1="300" x2="520" y2="300" stroke="#64748b" stroke-width="3"/>
-                                <line x1="200" y1="285" x2="200" y2="315" stroke="#64748b" stroke-width="3"/>
-                                <line x1="520" y1="285" x2="520" y2="315" stroke="#64748b" stroke-width="3"/>
-                                <text x="360" y="335" font-family="Tahoma" font-weight="bold" font-size="16" fill="#333333" text-anchor="middle">10 m</text>
-                            </svg>
-                        </div>
-
+                        <strong>Pola Pikir:</strong> Menyelesaikan operasi perkalian silang aljabar sederhana.<br><br>
+                        <strong>Tindakan Teknis:</strong>
                         <div class="math-box">
-                            <strong>1. Menentukan Ukuran Bangun Datar yang Dipotong</strong><br>
-                            Lebar bidang B = Lebar alas total (10 m) dikurangi bagian kanan (4 m) = 6 m.<br>
-                            Tinggi bidang B = Tinggi dinding utuh (10 m) dikurangi tinggi atap (4 m) = 6 m.<br><br>
+                            <strong>1. Memasukkan Nilai ke dalam Model Rasio:</strong><br>
+                            Misalkan $x$ adalah sisi sejajar terpendek (atas) trapesium besar.<br>
+                            $\frac{6}{9} = \frac{x}{15}$<br><br>
                             
-                            <strong>2. Menghitung Luas Tiap Area</strong><br>
-                            Luas A (Segitiga) = $\frac{1}{2} \times \text{alas} \times \text{tinggi} = \frac{1}{2} \times 6 \times 4 = 12\text{ m}^2$<br>
-                            Luas B (Persegi) = $\text{sisi} \times \text{sisi} = 6 \times 6 = 36\text{ m}^2$<br>
-                            Luas C (Persegi Panjang) = $\text{panjang} \times \text{lebar} = 4 \times 2 = 8\text{ m}^2$<br><br>
+                            <strong>2. Menyederhanakan dan Kali Silang:</strong><br>
+                            Pecahan $\frac{6}{9}$ dapat disederhanakan menjadi $\frac{2}{3}$.<br>
+                            $\frac{2}{3} = \frac{x}{15}$<br>
+                            $3 \times x = 2 \times 15$<br>
+                            $3x = 30$<br>
+                            $x = 10$<br><br>
 
-                            <strong>3. Penjumlahan Akhir</strong><br>
-                            Luas Total = $12 + 36 + 8 =$ <strong>56 meter persegi.</strong>
+                            <strong>3. Kesimpulan:</strong><br>
+                            Panjang sisi sejajar terpendek trapesium besar adalah <strong>10 cm</strong>.
                         </div>
                     </div>
                 </div>
@@ -300,8 +336,8 @@
                     <div class="step-title">Fase Polya: Melihat Kembali</div>
                     <div class="step-subtitle">Langkah Operasional: <i>Reflect and Extend</i></div>
                     <div class="step-content">
-                        <strong>Pola Pikir:</strong> Mengecek apakah ukuran potongan gambarnya sudah masuk akal.<br><br>
-                        <strong>Tindakan Teknis:</strong> Murid mengecek apakah lebar bidang B (6 meter) ditambah lebar bidang C (4 meter) sudah pas dengan angka alas total 10 meter.
+                        <strong>Pola Pikir:</strong> Membuktikan kebenaran rasio secara terbalik.<br><br>
+                        <strong>Tindakan Teknis:</strong> Murid mengecek kembali pecahan rasionya. Trapesium kecil $6:9$ rasionya $2:3$. Trapesium besar $10:15$ jika dibagi 5 rasionya juga $2:3$. Terbukti perhitungan sudah sangat tepat dan presisi.
                     </div>
                 </div>
             </div>
@@ -309,11 +345,11 @@
 
         <!-- KASUS 4 -->
         <div class="card">
-            <h2>Kasus 4: Statistika (Rata-rata Gabungan)</h2>
+            <h2>Kasus 4: Geometri (Volume Bangun Ruang)</h2>
             <div class="problem-box">
-                <span class="problem-badge">Materi Kelas VIII - Statistika</span>
+                <span class="problem-badge">Materi: Pengukuran Geometri (L3)</span>
                 <div class="problem-title">Soal TKA:</div>
-                Rata-rata nilai ulangan matematika dari 10 orang santri adalah 75. Setelah nilai 2 orang santri susulan dimasukkan ke dalam daftar, rata-rata kelas tersebut berubah menjadi 77. Berapakah rata-rata nilai dari kedua santri yang mengikuti susulan tersebut?
+                Sebuah kerucut dengan jari-jari $r$ dan tinggi $t$ memiliki volume $V_1$. Jika jari-jari kerucut tersebut diperbesar 2 kali dan tingginya diperkecil $\frac{1}{2}$ kali, volume kerucut yang baru adalah $V_2$. Tentukan perbandingan atau hubungan rasio antara $V_1$ dan $V_2$.
             </div>
 
             <div class="step-container">
@@ -321,8 +357,8 @@
                     <div class="step-title">Fase Polya: Memahami Masalah</div>
                     <div class="step-subtitle">Langkah Operasional: <i>Read &amp; Explore</i></div>
                     <div class="step-content">
-                        <strong>Pola Pikir:</strong> Mencari jumlah awal dan jumlah akhir dari soal cerita.<br><br>
-                        <strong>Tindakan Teknis:</strong> Murid mencatat fakta: Ada 10 anak dengan rata-rata 75. Kemudian ada tambahan 2 anak, sehingga total anak menjadi 12 orang. Rata-rata yang baru untuk 12 orang tersebut adalah 77. Tujuan soal adalah mencari rata-rata nilai dari 2 anak susulan tersebut.
+                        <strong>Pola Pikir:</strong> Mengidentifikasi komponen rumus mana yang nilainya mengalami perubahan.<br><br>
+                        <strong>Tindakan Teknis:</strong> Murid mencatat keadaan awal (Kerucut 1: $r$ dan $t$) dan keadaan akhir (Kerucut 2: $r_2 = 2r$ dan $t_2 = \frac{1}{2}t$). Murid mengingat bahwa rumus volume kerucut adalah $V = \frac{1}{3} \pi r^2 t$.
                     </div>
                 </div>
 
@@ -330,8 +366,8 @@
                     <div class="step-title">Fase Polya: Menyusun Rencana</div>
                     <div class="step-subtitle">Langkah Operasional: <i>Select a Strategy</i></div>
                     <div class="step-content">
-                        <strong>Pola Pikir:</strong> Mencari total nilai secara utuh sebelum menghitung selisihnya.<br><br>
-                        <strong>Tindakan Teknis:</strong> Murid menggunakan strategi <strong>Bekerja Mundur</strong> atau <strong>Penyederhanaan Masalah</strong>. Rencananya: 1) Hitung total nilai 10 anak pertama, 2) Hitung total nilai seluruh 12 anak, 3) Kurangi total 12 anak dengan total 10 anak untuk mendapat total nilai 2 anak susulan, 4) Bagi hasil tersebut dengan angka 2 untuk mendapat nilai rata-ratanya.
+                        <strong>Pola Pikir:</strong> Memasukkan perubahan ukuran baru ke dalam rumus awal untuk melihat hasil pembesarannya.<br><br>
+                        <strong>Tindakan Teknis:</strong> Menggunakan strategi <strong>Penyederhanaan atau Substitusi Aljabar</strong>. Kita akan membandingkan rumus $V_1$ dengan rumus $V_2$ yang angka perubahannya sudah disubstitusi. (Murid juga bisa memisalkan variabel dengan angka, misal $r=2, t=4$ untuk mempermudah hitungan).
                     </div>
                 </div>
 
@@ -339,20 +375,24 @@
                     <div class="step-title">Fase Polya: Melaksanakan Rencana</div>
                     <div class="step-subtitle">Langkah Operasional: <i>Solve</i></div>
                     <div class="step-content">
-                        <strong>Pola Pikir:</strong> Menghitung perkalian dan pengurangan dengan teliti.<br><br>
-                        <strong>Tindakan Teknis:</strong> Murid menjalankan perhitungan sesuai urutan rencana.
+                        <strong>Pola Pikir:</strong> Berhati-hati dengan aturan pangkat dua pada komponen jari-jari.<br><br>
+                        <strong>Tindakan Teknis:</strong>
                         <div class="math-box">
-                            <strong>1. Total Nilai Awal (10 anak):</strong><br>
-                            $10 \times 75 = 750$<br><br>
+                            <strong>1. Menulis Volume Awal:</strong><br>
+                            $V_1 = \frac{1}{3} \pi r^2 t$<br><br>
                             
-                            <strong>2. Total Nilai Akhir (12 anak):</strong><br>
-                            $12 \times 77 = 924$<br><br>
+                            <strong>2. Menghitung Volume Baru (V2):</strong><br>
+                            Masukkan nilai $r_2 = (2r)$ dan $t_2 = (\frac{1}{2}t)$ ke dalam rumus.<br>
+                            $V_2 = \frac{1}{3} \pi (2r)^2 (\frac{1}{2}t)$<br>
+                            <em>Catatan: $(2r)^2 = 4r^2$</em><br>
+                            $V_2 = \frac{1}{3} \pi (4r^2) (\frac{1}{2}t)$<br>
+                            $V_2 = \frac{1}{3} \pi (4 \times \frac{1}{2}) (r^2 t)$<br>
+                            $V_2 = 2 \times [\frac{1}{3} \pi r^2 t]$<br><br>
 
-                            <strong>3. Total Nilai 2 Anak Susulan:</strong><br>
-                            $924 - 750 = 174$<br><br>
-                            
-                            <strong>4. Rata-rata 2 Anak Susulan:</strong><br>
-                            $174 \div 2 =$ <strong>87</strong>.
+                            <strong>3. Mengambil Kesimpulan:</strong><br>
+                            Karena bagian dalam kurung siku di atas adalah rumus $V_1$, maka:<br>
+                            $V_2 = 2 \times V_1$<br>
+                            Sehingga rasio <strong>$V_1 : V_2 = 1 : 2$</strong>.
                         </div>
                     </div>
                 </div>
@@ -361,8 +401,12 @@
                     <div class="step-title">Fase Polya: Melihat Kembali</div>
                     <div class="step-subtitle">Langkah Operasional: <i>Reflect and Extend</i></div>
                     <div class="step-content">
-                        <strong>Pola Pikir:</strong> Memastikan angka rata-ratanya masuk akal secara logika.<br><br>
-                        <strong>Tindakan Teknis:</strong> Murid mengecek: Jika rata-rata kelas naik dari 75 menjadi 77, itu artinya nilai anak susulan pasti lebih besar dari 75. Nilai 87 sangat masuk akal karena terbukti menarik rata-rata kelas ke atas.
+                        <strong>Pola Pikir:</strong> Membuktikan aljabar dengan contoh angka nyata (Strategi Tebak dan Uji).<br><br>
+                        <strong>Tindakan Teknis:</strong> Misal ambil angka yang mudah, $r=2, t=2$.<br>
+                        $V_1$ = $1/3 \times \pi \times 2^2 \times 2 = 8/3 \pi$.<br>
+                        Kerucut baru: $r=4, t=1$.<br>
+                        $V_2$ = $1/3 \times \pi \times 4^2 \times 1 = 16/3 \pi$.<br>
+                        Terbukti $16/3$ adalah tepat dua kali lipat dari $8/3$. Kesimpulan teruji valid.
                     </div>
                 </div>
             </div>
@@ -370,11 +414,108 @@
 
         <!-- KASUS 5 -->
         <div class="card">
-            <h2>Kasus 5: Volume Bangun Ruang Sisi Lengkung</h2>
+            <h2>Kasus 5: Analisis Data (Membaca Grafik Kompleks)</h2>
             <div class="problem-box">
-                <span class="problem-badge">Materi Kelas IX - Bangun Ruang</span>
+                <span class="problem-badge" style="background-color: #ef4444;">Materi: Data & Peluang (Penalaran - L3)</span>
                 <div class="problem-title">Soal TKA:</div>
-                Takmir Masjid Agung sedang memasang tandon air yang baru. Tandon berbentuk silinder (tabung) ini memiliki tinggi 3 meter. Bagian atas tandon berbentuk setengah bola yang menutupi bagian tabung. Jika ukuran diameter tandon tersebut adalah 2 meter, berapa liter air maksimal yang bisa ditampung hingga penuh? (Gunakan angka $\pi \approx 3,14$).
+                Petugas loket di suatu museum melaporkan banyak pengunjung yang <strong>masuk</strong> dan <strong>keluar</strong> area museum setiap satu jam sekali dalam satu hari. Laporannya disajikan dalam diagram garis berikut.
+                
+                <div class="svg-container" style="margin-top: 20px;">
+                    <svg viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg" class="svg-graphic" style="font-family: Tahoma, sans-serif;">
+                        <!-- Latar Belakang Putih -->
+                        <rect width="100%" height="100%" fill="#ffffff" rx="8" stroke="#cbd5e1" stroke-width="1"/>
+                        
+                        <!-- Judul Grafik -->
+                        <text x="400" y="30" font-weight="bold" font-size="18" fill="#1e293b" text-anchor="middle">Banyak Pengunjung Museum per Jam</text>
+                        
+                        <!-- 
+                            PERHITUNGAN PRESISI GRAFIK SVG:
+                            Sumbu Y Max = 125. Tinggi Y-axis aktual = 280px (Titik 0 di Y=330, Titik 125 di Y=50).
+                            Rasio Piksel per 1 pengunjung = 280px / 125 = 2.24 piksel.
+                            Koordinat Titik Y = 330 - (Nilai Pengunjung * 2.24).
+                            
+                            Sumbu X: Mulai 120, bergeser 90px setiap jamnya.
+                        -->
+
+                        <!-- Garis Grid Horizontal & Label Sumbu Y -->
+                        <g stroke="#e2e8f0" stroke-width="1.5">
+                            <!-- Y=0 (330px) -->
+                            <line x1="80" y1="330" x2="750" y2="330"/>
+                            <text x="70" y="335" font-size="12" fill="#64748b" text-anchor="end" stroke="none">0</text>
+                            <!-- Y=25 (330 - 25*2.24 = 274px) -->
+                            <line x1="80" y1="274" x2="750" y2="274"/>
+                            <text x="70" y="279" font-size="12" fill="#64748b" text-anchor="end" stroke="none">25</text>
+                            <!-- Y=50 (330 - 50*2.24 = 218px) -->
+                            <line x1="80" y1="218" x2="750" y2="218"/>
+                            <text x="70" y="223" font-size="12" fill="#64748b" text-anchor="end" stroke="none">50</text>
+                            <!-- Y=75 (330 - 75*2.24 = 162px) -->
+                            <line x1="80" y1="162" x2="750" y2="162"/>
+                            <text x="70" y="167" font-size="12" fill="#64748b" text-anchor="end" stroke="none">75</text>
+                            <!-- Y=100 (330 - 100*2.24 = 106px) -->
+                            <line x1="80" y1="106" x2="750" y2="106"/>
+                            <text x="70" y="111" font-size="12" fill="#64748b" text-anchor="end" stroke="none">100</text>
+                            <!-- Y=125 (330 - 125*2.24 = 50px) -->
+                            <line x1="80" y1="50" x2="750" y2="50"/>
+                            <text x="70" y="55" font-size="12" fill="#64748b" text-anchor="end" stroke="none">125</text>
+                        </g>
+                        <!-- Label Y Axis -->
+                        <text x="30" y="190" font-weight="bold" font-size="12" fill="#475569" transform="rotate(-90 30,190)" text-anchor="middle">BANYAK PENGUNJUNG</text>
+
+                        <!-- Label Sumbu X -->
+                        <g font-size="12" fill="#64748b" text-anchor="middle">
+                            <text x="120" y="350">9</text>
+                            <text x="210" y="350">10</text>
+                            <text x="300" y="350">11</text>
+                            <text x="390" y="350">12</text>
+                            <text x="480" y="350">13</text>
+                            <text x="570" y="350">14</text>
+                            <text x="660" y="350">15</text>
+                            <text x="750" y="350">16</text>
+                        </g>
+                        <text x="435" y="375" font-weight="bold" font-size="12" fill="#475569" text-anchor="middle">PUKUL</text>
+
+                        <!-- Garis MASUK (Biru) -->
+                        <polyline points="120,218 210,106 300,50 390,106 480,150.8 570,195.6 660,218 750,274" fill="none" stroke="#2563eb" stroke-width="3" stroke-linejoin="round"/>
+                        <!-- Titik MASUK -->
+                        <g fill="#2563eb">
+                            <circle cx="120" cy="218" r="5"/><text x="120" y="208" font-size="11" text-anchor="middle" font-weight="bold">50</text>
+                            <circle cx="210" cy="106" r="5"/><text x="210" y="96" font-size="11" text-anchor="middle" font-weight="bold">100</text>
+                            <circle cx="300" cy="50" r="5"/><text x="300" y="40" font-size="11" text-anchor="middle" font-weight="bold">125</text>
+                            <circle cx="390" cy="106" r="5"/><text x="390" y="96" font-size="11" text-anchor="middle" font-weight="bold">100</text>
+                            <circle cx="480" cy="150.8" r="5"/><text x="480" y="140.8" font-size="11" text-anchor="middle" font-weight="bold">80</text>
+                            <circle cx="570" cy="195.6" r="5"/><text x="570" y="185.6" font-size="11" text-anchor="middle" font-weight="bold">60</text>
+                            <circle cx="660" cy="218" r="5"/><text x="660" y="208" font-size="11" text-anchor="middle" font-weight="bold">50</text>
+                            <circle cx="750" cy="274" r="5"/><text x="750" y="264" font-size="11" text-anchor="middle" font-weight="bold">25</text>
+                        </g>
+
+                        <!-- Garis KELUAR (Oranye) -->
+                        <polyline points="120,307.6 210,307.6 300,218 390,195.6 480,173.2 570,106 660,106 750,50" fill="none" stroke="#ea580c" stroke-width="3" stroke-linejoin="round" stroke-dasharray="6,4"/>
+                        <!-- Titik KELUAR -->
+                        <g fill="#ea580c">
+                            <circle cx="120" cy="307.6" r="5"/><text x="120" y="323" font-size="11" text-anchor="middle" font-weight="bold">10</text>
+                            <circle cx="210" cy="307.6" r="5"/><text x="210" y="323" font-size="11" text-anchor="middle" font-weight="bold">10</text>
+                            <circle cx="300" cy="218" r="5"/><text x="300" y="233" font-size="11" text-anchor="middle" font-weight="bold">50</text>
+                            <circle cx="390" cy="195.6" r="5"/><text x="390" y="211" font-size="11" text-anchor="middle" font-weight="bold">60</text>
+                            <circle cx="480" cy="173.2" r="5"/><text x="480" y="188" font-size="11" text-anchor="middle" font-weight="bold">70</text>
+                            <circle cx="570" cy="106" r="5"/><text x="570" y="121" font-size="11" text-anchor="middle" font-weight="bold">100</text>
+                            <circle cx="660" cy="106" r="5"/><text x="660" y="121" font-size="11" text-anchor="middle" font-weight="bold">100</text>
+                            <circle cx="750" cy="50" r="5"/><text x="750" y="65" font-size="11" text-anchor="middle" font-weight="bold">125</text>
+                        </g>
+
+                        <!-- Legenda -->
+                        <rect x="330" y="380" width="15" height="15" fill="#2563eb"/>
+                        <text x="355" y="392" font-size="12" fill="#333" font-weight="bold">Masuk</text>
+                        <rect x="420" y="380" width="15" height="15" fill="#ea580c"/>
+                        <text x="445" y="392" font-size="12" fill="#333" font-weight="bold">Keluar</text>
+                    </svg>
+                </div>
+                
+                <p style="margin-top: 15px;">Tiga petugas memberikan pernyataan yang berbeda-beda mengenai tafsiran diagram di atas. Tentukan apakah pernyataan mereka BENAR atau SALAH!</p>
+                <ul style="padding-left: 20px;">
+                    <li><strong>Petugas 1:</strong> Pada jam 13.00 tidak ada pengunjung yang berada di area museum.</li>
+                    <li><strong>Petugas 2:</strong> Pengunjung yang berada di area museum tercatat paling banyak pada pukul 11.00.</li>
+                    <li><strong>Petugas 3:</strong> Setelah pukul 12.00, banyak pengunjung yang berada di area museum terus berkurang.</li>
+                </ul>
             </div>
 
             <div class="step-container">
@@ -382,8 +523,8 @@
                     <div class="step-title">Fase Polya: Memahami Masalah</div>
                     <div class="step-subtitle">Langkah Operasional: <i>Read &amp; Explore</i></div>
                     <div class="step-content">
-                        <strong>Pola Pikir:</strong> Mencatat angka dan memisahkan bentuk bangun ruang.<br><br>
-                        <strong>Tindakan Teknis:</strong> Bangun ini adalah gabungan antara tabung dan setengah bola. Tinggi tabung ($t$) adalah 3 meter. Diameternya 2 meter, berarti ukuran jari-jarinya ($r$) adalah 1 meter. Pertanyaan utama soal adalah kapasitas volume total dalam satuan liter. Murid menggambar sketsa tandon.
+                        <strong>Pola Pikir:</strong> Mengidentifikasi perbedaan antara "Banyaknya orang yang masuk" dengan "Total akumulasi orang di dalam gedung".<br><br>
+                        <strong>Tindakan Teknis:</strong> Murid membaca grafik dengan teliti. Garis biru menunjukkan orang yang <em>masuk</em> (bertambah), garis oranye menunjukkan orang yang <em>keluar</em> (berkurang). Pertanyaan meminta kita menghitung <strong>"pengunjung yang berada di area museum"</strong> (Total Sisa). Ini adalah soal jebakan L3 di mana nilai puncak di grafik biru bukanlah jawaban akhir.
                     </div>
                 </div>
 
@@ -391,8 +532,8 @@
                     <div class="step-title">Fase Polya: Menyusun Rencana</div>
                     <div class="step-subtitle">Langkah Operasional: <i>Select a Strategy</i></div>
                     <div class="step-content">
-                        <strong>Pola Pikir:</strong> Menghitung bagian-bagiannya lalu mengubah satuan meter menjadi liter.<br><br>
-                        <strong>Tindakan Teknis:</strong> Murid menggunakan strategi <strong>Membagi dan Menaklukkan</strong>. Urutannya: menghitung volume tabung, menghitung volume setengah bola, menjumlahkan keduanya, lalu di tahap akhir mengubah angka meter kubik tersebut menjadi liter. (Catatan: $1\text{ m}^3 = 1.000\text{ liter}$).
+                        <strong>Pola Pikir:</strong> Menghitung saldo orang yang ada di dalam gedung secara bertahap dari jam ke jam.<br><br>
+                        <strong>Tindakan Teknis:</strong> Menggunakan strategi <strong>Membuat Daftar Teratur (Tabulasi)</strong>. Rencananya adalah mencatat selisih antara Masuk dan Keluar setiap jamnya, lalu menjumlahkannya secara beruntun (kumulatif) dari pukul 09.00 sampai 16.00.
                     </div>
                 </div>
 
@@ -400,21 +541,23 @@
                     <div class="step-title">Fase Polya: Melaksanakan Rencana</div>
                     <div class="step-subtitle">Langkah Operasional: <i>Solve</i></div>
                     <div class="step-content">
-                        <strong>Pola Pikir:</strong> Melakukan perhitungan aljabar yang memiliki nilai desimal.<br><br>
-                        <strong>Tindakan Teknis:</strong> Murid menyelesaikan perhitungan secara terpisah agar mudah diperiksa jika ada kesalahan.
-                        
+                        <strong>Pola Pikir:</strong> Teliti dalam penjumlahan dan pengurangan angka dari daftar.<br><br>
+                        <strong>Tindakan Teknis:</strong> Murid membuat hitungan beruntun:
                         <div class="math-box">
-                            <strong>1. Volume Tabung Silinder ($V_1$)</strong><br>
-                            $V_1 = \pi \times r^2 \times t$<br>
-                            $V_1 = 3,14 \times (1)^2 \times 3 = 3,14 \times 3 = 9,42\text{ m}^3$<br><br>
-                            
-                            <strong>2. Volume Setengah Bola Atap ($V_2$)</strong><br>
-                            $V_2 = \frac{1}{2} \times \left( \frac{4}{3} \times \pi \times r^3 \right) = \frac{2}{3} \times \pi \times r^3$<br>
-                            $V_2 = \frac{2}{3} \times 3,14 \times (1)^3 \approx 2,09\text{ m}^3$<br><br>
+                            <strong>Daftar Akumulasi Pengunjung (Total Sisa = Total Sebelumnya + Masuk - Keluar):</strong><br>
+                            - Pukul 09.00: 50 Masuk, 10 Keluar $\rightarrow$ Total di dalam: $50 - 10 = \mathbf{40}$ orang<br>
+                            - Pukul 10.00: 100 Masuk, 10 Keluar $\rightarrow$ Total di dalam: $40 + 100 - 10 = \mathbf{130}$ orang<br>
+                            - Pukul 11.00: 125 Masuk, 50 Keluar $\rightarrow$ Total di dalam: $130 + 125 - 50 = \mathbf{205}$ orang<br>
+                            - Pukul 12.00: 100 Masuk, 60 Keluar $\rightarrow$ Total di dalam: $205 + 100 - 60 = \mathbf{245}$ orang<br>
+                            - Pukul 13.00: 80 Masuk, 70 Keluar $\rightarrow$ Total di dalam: $245 + 80 - 70 = \mathbf{255}$ orang <strong>(PUNCAK)</strong><br>
+                            - Pukul 14.00: 60 Masuk, 100 Keluar $\rightarrow$ Total di dalam: $255 + 60 - 100 = \mathbf{215}$ orang<br>
+                            - Pukul 15.00: 50 Masuk, 100 Keluar $\rightarrow$ Total di dalam: $215 + 50 - 100 = \mathbf{165}$ orang<br>
+                            - Pukul 16.00: 25 Masuk, 125 Keluar $\rightarrow$ Total di dalam: $165 + 25 - 125 = \mathbf{65}$ orang<br><br>
 
-                            <strong>3. Penjumlahan Total dan Mengubah ke Liter</strong><br>
-                            Total Volume = $9,42 + 2,09 = 11,51\text{ m}^3$<br>
-                            Ubah Satuan = $11,51 \times 1.000 =$ <strong>11.510 liter air.</strong>
+                            <strong>Evaluasi Pernyataan:</strong><br>
+                            1. Petugas 1 (Pukul 13.00 nol pengunjung): <strong>SALAH</strong> (Ada 255 pengunjung).<br>
+                            2. Petugas 2 (Paling banyak pukul 11.00): <strong>SALAH</strong> (Puncak tertingginya di pukul 13.00).<br>
+                            3. Petugas 3 (Setelah 12.00 terus berkurang): <strong>SALAH</strong> (Dari jam 12.00 ke 13.00 pengunjungnya naik dari 245 ke 255).
                         </div>
                     </div>
                 </div>
@@ -423,8 +566,8 @@
                     <div class="step-title">Fase Polya: Melihat Kembali</div>
                     <div class="step-subtitle">Langkah Operasional: <i>Reflect and Extend</i></div>
                     <div class="step-content">
-                        <strong>Pola Pikir:</strong> Memeriksa apakah pengubahan satuan ukurnya sudah benar.<br><br>
-                        <strong>Tindakan Teknis:</strong> Murid mengecek kembali hitungan perkalian angka seribunya. Guru kemudian memberikan soal latihan penalaran berikutnya: <em>"Jika keran air mampu mengisi sebanyak 50 liter per menit, berapa jam waktu yang dibutuhkan untuk mengisi tandon ini sampai penuh?"</em>
+                        <strong>Pola Pikir:</strong> Mengambil kesimpulan konseptual atas kesalahan umum.<br><br>
+                        <strong>Tindakan Teknis:</strong> Murid berefleksi bahwa melihat titik tertinggi pada grafik (garis biru menunjuk ke angka 125 di jam 11) tidak bisa disimpulkan langsung sebagai "total isi museum terbanyak" tanpa memperhitungkan jumlah orang dari jam sebelumnya. Penalaran ini adalah inti dari Level Kognitif 3.
                     </div>
                 </div>
             </div>
@@ -433,7 +576,7 @@
         <div class="references">
             <h3 style="font-family: Tahoma; font-size: 1.2rem; color: #475569; margin-bottom: 15px;">Referensi</h3>
             <div class="ref-item">
-                Kementerian Pendidikan Dasar dan Menengah. (n.d.). <em>Kerangka asesmen tes kemampuan akademik jenjang SMP/MTs/Sederajat: Matematika</em>. Pusmendik BSKAP. Retrieved from https://pusmendik.kemendikdasmen.go.id/tka/tka/view/mata-pelajaran-wajib/smp/Matematika
+                Kementerian Pendidikan Dasar dan Menengah. (n.d.). <em>Kerangka asesmen tes kemampuan akademik jenjang SMP/MTs/Sederajat: Matematika</em>. Pusmendik BSKAP.
             </div>
             <div class="ref-item">
                 Krulik, S., & Rudnick, J. A. (1988). <em>Problem solving: A handbook for elementary school teachers</em>. Allyn and Bacon.
@@ -446,9 +589,10 @@
         <div class="footer-shortcuts">
             <a href="index.html">Beranda</a>
             <a href="teori.html">Teori Heuristik</a>
-            <a href="penyelesaian.html">Penyelesaian Soal</a>
+            <a href="penyelesaian.html" class="active">Penyelesaian Soal</a>
             <a href="pembelajaran.html">Cara Membelajarkan</a>
             <a href="klinik_ai.html">Klinik AI</a>
+            <a href="penugasan_lkm.html">Penugasan LKM</a>
         </div>
         <div class="footer-copy">
             &copy; 2026 <strong>Tim Pengabdian Masyarakat Universitas Negeri Surabaya</strong><br>
