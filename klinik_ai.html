@@ -7,6 +7,7 @@
     
     <!-- Script html2pdf untuk Ekspor PDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
     <!-- Script MathJax untuk Render Matematika -->
     <script>
         window.MathJax = {
@@ -75,7 +76,11 @@
         .chat-bubble.user { align-self: flex-end; background-color: #dbeafe; color: #1e3a8a; border-bottom-right-radius: 2px; }
         .chat-bubble.bot { align-self: flex-start; background-color: #f1f5f9; color: #334155; border-bottom-left-radius: 2px; border: 1px solid #e2e8f0; }
         
-        .chat-input-area { display: flex; gap: 10px; padding: 15px; background-color: #f8fafc; border-top: 1px solid #e2e8f0; align-items: stretch; }
+        .chat-input-area { display: flex; flex-direction: column; background-color: #f8fafc; border-top: 1px solid #e2e8f0; }
+        .file-preview-bar { padding: 10px 15px 0 15px; font-size: 0.85em; color: #10b981; display: none; }
+        .input-controls-row { display: flex; gap: 10px; padding: 15px; align-items: stretch; }
+        .btn-attach { background-color: #e2e8f0; color: #475569; border: none; padding: 0 15px; border-radius: 8px; font-size: 1.2em; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
+        .btn-attach:hover { background-color: #cbd5e1; }
         .chat-input { flex: 1; padding: 12px 15px; border: 1px solid #cbd5e1; border-radius: 8px; font-family: Tahoma, sans-serif; font-size: 1em; resize: vertical; min-height: 120px; max-height: 400px; overflow-y: auto; }
         .btn-send { background-color: #10b981; color: white; border: none; padding: 0 25px; border-radius: 8px; font-weight: bold; cursor: pointer; display: flex; justify-content: center; align-items: center; }
         .btn-send:hover { background-color: #059669; }
@@ -299,8 +304,21 @@
                 </div>
 
                 <div class="chat-input-area">
-                    <textarea id="userInput" class="chat-input" placeholder="Ketik pertanyaan atau paste prompt Anda di sini... (Tekan Enter untuk mengirim)" onkeydown="handleEnter(event)"></textarea>
-                    <button id="sendBtn" class="btn-send" onclick="sendMessage()">KIRIM</button>
+                    <!-- Area Indikator Preview File -->
+                    <div id="filePreview" class="file-preview-bar"></div>
+                    
+                    <div class="input-controls-row">
+                        <!-- Input File yang disembunyikan -->
+                        <input type="file" id="fileInput" accept="image/png, image/jpeg, image/webp, application/pdf" style="display: none;" onchange="handleFileSelect(event)">
+                        
+                        <!-- Tombol untuk memicu lampiran -->
+                        <button class="btn-attach" onclick="document.getElementById('fileInput').click()" title="Lampirkan File (Gambar/PDF)">
+                            📎
+                        </button>
+
+                        <textarea id="userInput" class="chat-input" placeholder="Ketik pertanyaan atau minta buatkan soal... (Tekan Enter untuk mengirim)" onkeydown="handleEnter(event)"></textarea>
+                        <button id="sendBtn" class="btn-send" onclick="sendMessage()">KIRIM</button>
+                    </div>
                 </div>
             </div>
 
@@ -377,10 +395,49 @@
 
     <script>
         // URL Google Sheets Khusus Chat:
-        const GOOGLE_SCRIPT_URL_CHAT = 'TARUH_URL_WEB_APP_CHAT_ANDA_DISINI'; 
+        const GOOGLE_SCRIPT_URL_CHAT = 'https://script.google.com/macros/s/AKfycbzDjUUk2rm2OteK9rrPiDAItRQlTXH8jLsZlxhZiRTCpYEl-aSgR7fHYvcOmiba4HyiSw/exec'; 
         
         let chatHistory = [];
         const chatBox = document.getElementById("chatBox");
+
+        // Variabel untuk menyimpan data file yang akan diupload ke AI
+        let attachedFile = null;
+
+        // Fungsi membaca file saat pengguna mengeklik icon klip kertas
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            // Batasi ukuran maksimal file ke 4MB agar browser klien tidak lag
+            if (file.size > 4 * 1024 * 1024) {
+                showModal('error', 'Ukuran File Terlalu Besar', 'Maaf, ukuran file maksimal adalah 4MB agar tidak membebani memori perangkat saat memproses data ke AI.');
+                event.target.value = "";
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                // Simpan data file dalam format murni Base64
+                attachedFile = {
+                    mimeType: file.type,
+                    data: reader.result.split(',')[1] 
+                };
+                
+                // Tampilkan nama file di area preview
+                const previewEl = document.getElementById('filePreview');
+                previewEl.innerHTML = `📎 <strong>Terlampir:</strong> ${file.name} <span style="cursor:pointer; color:red; margin-left:10px; font-weight:bold; border:1px solid red; padding:2px 5px; border-radius:4px;" onclick="removeAttachment()">Batal [X]</span>`;
+                previewEl.style.display = "block";
+            };
+            
+            reader.readAsDataURL(file); 
+        }
+
+        // Fungsi untuk membatalkan file lampiran
+        function removeAttachment() {
+            attachedFile = null;
+            document.getElementById('fileInput').value = "";
+            document.getElementById('filePreview').style.display = "none";
+        }
 
         // 1. Modal Helper
         function showModal(type, title, text) {
@@ -401,7 +458,7 @@
             document.getElementById("generalModal").style.display = 'none';
         }
 
-        // 2. Logika Prompt Builder
+        // 2. Logika Prompt Builder 
         function generatePrompt() {
             const role = document.getElementById('buildRole').value;
             const topic = document.getElementById('buildTopic').value;
@@ -422,7 +479,7 @@
             document.querySelector('.chat-container').scrollIntoView({ behavior: 'smooth' });
         }
 
-        // 3. Logika Chat
+        // 3. Logika Chat & MathJax
         function handleEnter(e) {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
@@ -444,7 +501,7 @@
             chatBox.appendChild(bubble);
             chatBox.scrollTop = chatBox.scrollHeight;
 
-            // --- REVISI: Render MathJax setelah pesan AI muncul ---
+            // Trigger MathJax untuk merapikan rumus matematika secara otomatis
             if (window.MathJax && sender === 'bot') {
                 MathJax.typesetPromise([bubble]).catch(function (err) {
                     console.error('MathJax render error:', err.message);
@@ -466,17 +523,15 @@
             if (loading) loading.remove();
         }
 
-        // --- DIUBAH: MENAMBAHKAN PARAMETER userApiKey & MENGGUNAKAN encodeURIComponent ---
-        // --- REVISI: API KEY DIKIRIM LEWAT HEADER, BUKAN URL ---
+        // --- API KEY SEKARANG DIKIRIM MELALUI HEADER x-goog-api-key ---
         async function fetchGeminiAPI(modelName, payload, userApiKey) {
-            // Perhatikan: Tidak ada lagi ?key= di akhir URL
             const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent`;
             
             const response = await fetch(url, {
                 method: "POST",
                 headers: { 
                     "Content-Type": "application/json",
-                    "x-goog-api-key": userApiKey // API Key diletakkan di sini, jauh lebih aman
+                    "x-goog-api-key": userApiKey
                 },
                 body: JSON.stringify(payload)
             });
@@ -484,10 +539,9 @@
             const data = await response.json();
             
             if (!response.ok) {
-                // Tangkap pesan error spesifik dari Google
-                const errorMsg = data.error?.message || `HTTP Error ${response.status}`;
-                console.error("Error dari Google AI:", data);
-                throw new Error(errorMsg);
+                // Tangkap spesifik pesan error dari server Google
+                const errMsg = data.error?.message || `HTTP Error ${response.status}`;
+                throw new Error(errMsg);
             }
             
             return data.candidates?.[0]?.content?.parts?.[0]?.text;
@@ -509,32 +563,57 @@
             const inputEl = document.getElementById("userInput");
             const sendBtn = document.getElementById("sendBtn");
             const text = inputEl.value.trim();
-            if (!text) return;
+            
+            // Cegah pengiriman jika teks dan file sama-sama kosong
+            if (!text && !attachedFile) return;
 
-            appendMessage("user", text);
+            // Merakit Array 'parts' untuk instruksi pengguna
+            const userParts = [];
+            if (text) {
+                userParts.push({ text: text });
+            }
+            // Jika ada file (gambar/pdf) yang diunggah, sisipkan ke dalam request inlineData
+            if (attachedFile) {
+                userParts.push({
+                    inlineData: {
+                        mimeType: attachedFile.mimeType,
+                        data: attachedFile.data
+                    }
+                });
+            }
+
+            // Membangun tampilan pesan di sisi layar pengguna
+            let displayMsg = text;
+            if (attachedFile) {
+                displayMsg += `<br><small style="color: #6b7280; margin-top: 10px; display: block;"><em>[📎 Berhasil melampirkan file dokumen/gambar]</em></small>`;
+            }
+            appendMessage("user", displayMsg);
+
+            // Mereset area input setelah dikirim ke atas layar
             inputEl.value = "";
             sendBtn.disabled = true;
             appendLoading();
+            removeAttachment(); // Kosongkan variabel file
             
-            chatHistory.push({ role: "user", parts: [{ text: text }] });
+            chatHistory.push({ role: "user", parts: userParts });
 
-            // --- REVISI: Mengubah karakter AI agar lebih ringkas dan tidak bertele-tele ---
-            const formatInstruction = "Gunakan format penulisan LaTeX (bungkus dengan $ untuk sebaris dan $$ untuk blok) untuk semua rumus/angka matematika agar rapi.";
-            
-            const systemPrompt = `Kamu adalah Asisten AI Heuristic-Mat. Jawablah LANGSUNG KE INTI tanpa basa-basi.
-                PENTING:
-                1. JANGAN PERNAH menggunakan salam pembuka seperti "Assalamu'alaikum", "Halo", atau menyapa nama guru di awal balasan. Langsung berikan jawaban yang diminta!
-                2. Jawablah dengan RINGKAS dan PADAT, jangan terlalu panjang kecuali pengguna meminta penjelasan rinci.
-                3. Pedomani standar soal TKA Matematika SMP (Bilangan, Aljabar, Geometri, Data Peluang) dan Level Kognitif (L1, L2, L3).
-                4. Jawablah menggunakan Bahasa Indonesia yang profesional namun langsung ke sasaran. ${formatInstruction}`;
+            // --- SYSTEM PROMPT: AI DILARANG BERTELE-TELE ---
+            const formatInstruction = "Gunakan format penulisan LaTeX (bungkus dengan $ untuk inline dan $$ untuk blok equation) pada semua rumus/angka matematika.";
+            const systemPrompt = `Kamu adalah Asisten AI Heuristic-Mat yang membantu guru MTs. Jawablah LANGSUNG KE INTI tanpa basa-basi.
+PENTING:
+1. JANGAN PERNAH memberikan salam pembuka (seperti "Assalamu'alaikum" atau "Halo"). Langsung berikan jawaban yang diminta!
+2. Jawablah dengan RINGKAS dan PADAT.
+3. Pedomani standar soal TKA Matematika SMP (Bilangan, Aljabar, Geometri, Data Peluang) dan Level Kognitif (L1, L2, L3).
+4. Gunakan Bahasa Indonesia profesional namun langsung sasaran. ${formatInstruction}`;
 
             const payload = {
                 contents: chatHistory,
                 systemInstruction: { parts: [{ text: systemPrompt }] }
             };
 
-            // REVISI FINAL: Menggunakan jajaran model Gemini generasi 3.x sesuai permintaan Anda
-            const modelsToTry = ["gemini-3.6-flash", "gemini-3.1-flash"];
+            // Menggunakan jajaran model Gemini generasi 3.x
+            // Kita coba model yang ringan dan efisien dulu.
+            const modelsToTry = ["gemini-3.1-flash-lite", "gemini-3.1-flash"];
             let success = false;
             let errorMessage = "";
 
@@ -549,14 +628,14 @@
                         break; 
                     }
                 } catch (err) {
-                    errorMessage = err.message; 
-                    console.error("Gagal dengan model", model, ":", err);
+                    errorMessage = err.message;
+                    console.warn(`Gagal memanggil model ${model}. Mencoba model cadangan...`, err);
                 }
             }
 
             if (!success) {
                 removeLoading();
-                appendMessage("bot", `⚠️ <strong>Koneksi Gagal.</strong><br>Pesan dari sistem Google: <em style="color: #ef4444;">${errorMessage}</em><br>Pastikan API Key benar, dan Anda memiliki koneksi internet.`);
+                appendMessage("bot", `⚠️ <strong>Koneksi Gagal.</strong><br>Pesan Kesalahan Google: <em style="color: #ef4444;">${errorMessage}</em><br><br>Kemungkinan masalah:<br>1. API Key tidak valid.<br>2. Format file yang dikirim tidak didukung / terlalu besar.<br>3. Google memblokir pemanggilan model ini (API version issue).`);
                 chatHistory.pop();
             }
 
@@ -721,17 +800,13 @@
             const statusEl = document.getElementById('apiKeyStatus');
             
             if (key) {
-                // Simpan ke memori browser
                 localStorage.setItem('heuristicMat_ApiKey', key);
-                
-                // Tampilkan pesan sukses
                 statusEl.style.display = 'block';
-                statusEl.style.color = '#10b981'; // Warna hijau
+                statusEl.style.color = '#10b981';
                 statusEl.innerHTML = '✔️ API Key berhasil disimpan ke memori browser dan siap digunakan!';
             } else {
-                // Tampilkan pesan error jika kosong
                 statusEl.style.display = 'block';
-                statusEl.style.color = '#ef4444'; // Warna merah
+                statusEl.style.color = '#ef4444';
                 statusEl.innerHTML = '❌ Mohon paste API Key terlebih dahulu sebelum menyimpan.';
             }
         }
@@ -743,7 +818,7 @@
                 document.getElementById('apiKeyInput').value = savedKey;
                 const statusEl = document.getElementById('apiKeyStatus');
                 statusEl.style.display = 'block';
-                statusEl.style.color = '#3b82f6'; // Warna biru
+                statusEl.style.color = '#3b82f6';
                 statusEl.innerHTML = '💡 API Key Anda sebelumnya telah dimuat ulang secara otomatis.';
             }
         });
