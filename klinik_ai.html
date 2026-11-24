@@ -14,6 +14,9 @@
           tex: {
             inlineMath: [['$', '$'], ['\\(', '\\)']],
             displayMath: [['$$', '$$'], ['\\[', '\\]']]
+          },
+          options: {
+            skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
           }
         };
     </script>
@@ -24,7 +27,7 @@
         h1, h2, h3, h4 { color: #1a365d; margin-bottom: 15px; line-height: 1.3; }
         h2 { font-size: 1.8rem; border-bottom: 3px solid #e2e8f0; padding-bottom: 12px; margin-top: 20px; }
         
-                header { background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%); color: white; padding: 50px 20px 40px 20px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.2); position: relative; }
+        header { background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%); color: white; padding: 50px 20px 40px 20px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.2); position: relative; }
         .header-container { max-width: 1100px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         .header-brand { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: inherit; transition: opacity 0.2s ease; }
         .header-brand:hover { opacity: 0.95; }
@@ -57,9 +60,22 @@
         .form-control { width: 100%; box-sizing: border-box; padding: 12px 15px; border: 1px solid #cbd5e1; border-radius: 8px; font-family: Tahoma, sans-serif; font-size: 1em; background-color: #f8fafc; }
         .form-control:focus { border-color: #3b82f6; outline: none; background-color: #ffffff; }
 
+        /* API Key Controls */
+        .api-key-row { display: flex; gap: 8px; align-items: stretch; flex-wrap: wrap; }
+        .api-key-input-wrap { position: relative; flex: 1; min-width: 220px; display: flex; }
+        .api-key-input-wrap input { padding-right: 44px; }
+        .btn-toggle-key { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: transparent; border: none; cursor: pointer; font-size: 1.1em; color: #64748b; padding: 4px 6px; border-radius: 6px; }
+        .btn-toggle-key:hover { background-color: #e2e8f0; color: #1e293b; }
+        .btn-secondary { background-color: #e2e8f0; color: #334155; border: none; padding: 10px 16px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; display: inline-flex; align-items: center; gap: 6px; font-size: 0.95em; }
+        .btn-secondary:hover { background-color: #cbd5e1; }
+        .btn-danger-outline { background-color: #fff; color: #dc2626; border: 1px solid #fca5a5; padding: 10px 14px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; font-size: 0.9em; }
+        .btn-danger-outline:hover { background-color: #fef2f2; }
+
         /* Styles for Ethics & Prompt Material */
         .info-box { background-color: #fef2f2; border-left: 6px solid #ef4444; padding: 20px; border-radius: 8px; margin-bottom: 25px; font-size: 1em; color: #7f1d1d; }
-        .info-box strong { font-size: 1.1em; color: #991b1b; }
+        .info-box strong { font-size: 1.05em; color: #991b1b; }
+        .tip-box { background-color: #f0fdf4; border-left: 6px solid #10b981; padding: 16px 20px; border-radius: 8px; margin-top: 18px; font-size: 0.95em; color: #065f46; }
+        .tip-box strong { color: #047857; }
         .prompt-theory { display: flex; flex-wrap: wrap; gap: 15px; margin: 25px 0; }
         .theory-item { flex: 1 1 200px; background-color: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 15px; text-align: center; }
         .theory-item h4 { color: #1e40af; margin-top: 0; margin-bottom: 10px; font-size: 1.2rem; }
@@ -74,23 +90,63 @@
         .btn-copy:hover { background-color: #2563eb; }
 
         /* Styles for Chat UI */
-        .chat-container { display: flex; flex-direction: column; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; min-height: 650px; height: auto; }
-        .chat-header { background-color: #1e293b; color: white; padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; }
+        .chat-container { display: flex; flex-direction: column; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; min-height: 680px; height: auto; }
+        .chat-header { background-color: #1e293b; color: white; padding: 14px 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
         .chat-header-title { display: flex; align-items: center; gap: 10px; font-weight: bold; }
-        
-        .chat-history { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; background-color: #ffffff; min-height: 400px; }
-        .chat-bubble { max-width: 85%; padding: 15px 20px; border-radius: 15px; line-height: 1.5; font-size: 1em; word-wrap: break-word; }
+        .chat-header-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+        .session-pill { background: rgba(255,255,255,0.12); color: #e2e8f0; padding: 5px 12px; border-radius: 20px; font-size: 0.8em; display: inline-flex; align-items: center; gap: 6px; }
+        .btn-new-chat { background-color: #334155; color: #f8fafc; border: 1px solid #475569; padding: 6px 12px; border-radius: 6px; font-size: 0.85em; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .btn-new-chat:hover { background-color: #475569; color: #fbbf24; }
+
+        /* Mode & Efficiency Toolbar */
+        .ai-toolbar { background-color: #f1f5f9; border-bottom: 1px solid #e2e8f0; padding: 12px 18px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; font-size: 0.9em; }
+        .mode-selector-group { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .mode-selector-group label { font-weight: bold; color: #1e3a8a; font-size: 0.92em; margin: 0; }
+        .mode-select { padding: 7px 12px; border: 1px solid #cbd5e1; border-radius: 8px; background-color: #ffffff; font-family: Tahoma, sans-serif; font-size: 0.92em; color: #1e293b; font-weight: bold; cursor: pointer; }
+        .mode-select:focus { border-color: #3b82f6; outline: none; }
+        .tool-toggle { display: inline-flex; align-items: center; gap: 7px; background: #ffffff; border: 1px solid #cbd5e1; padding: 6px 12px; border-radius: 8px; cursor: pointer; user-select: none; font-size: 0.88em; color: #334155; transition: 0.2s; }
+        .tool-toggle:hover { border-color: #3b82f6; }
+        .tool-toggle input { cursor: pointer; accent-color: #2563eb; width: 16px; height: 16px; margin: 0; }
+        .mode-hint { width: 100%; font-size: 0.84em; color: #475569; line-height: 1.4; }
+
+        .quota-banner { background-color: #fffbeb; border-bottom: 1px solid #fde68a; color: #92400e; padding: 10px 18px; font-size: 0.88em; display: none; align-items: center; justify-content: space-between; gap: 10px; }
+        .quota-banner button { background: #f59e0b; color: white; border: none; padding: 4px 10px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 0.85em; white-space: nowrap; }
+
+        .chat-history { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; background-color: #ffffff; min-height: 400px; max-height: 650px; }
+        .chat-bubble { max-width: 86%; padding: 15px 20px; border-radius: 15px; line-height: 1.6; font-size: 1em; word-wrap: break-word; position: relative; }
         .chat-bubble.user { align-self: flex-end; background-color: #dbeafe; color: #1e3a8a; border-bottom-right-radius: 2px; }
-        .chat-bubble.bot { align-self: flex-start; background-color: #f1f5f9; color: #334155; border-bottom-left-radius: 2px; border: 1px solid #e2e8f0; }
+        .chat-bubble.bot { align-self: flex-start; background-color: #f8fafc; color: #1e293b; border-bottom-left-radius: 2px; border: 1px solid #e2e8f0; }
+
+        .chat-bubble.bot h3, .chat-bubble.bot h4 { margin: 12px 0 6px 0; font-size: 1.08em; color: #1e3a8a; }
+        .chat-bubble.bot ul, .chat-bubble.bot ol { margin: 6px 0 10px 0; padding-left: 22px; }
+        .chat-bubble.bot li { margin-bottom: 4px; }
+        .chat-bubble.bot pre { background-color: #1e293b; color: #f8fafc; padding: 12px; border-radius: 8px; overflow-x: auto; font-size: 0.88em; line-height: 1.45; margin: 10px 0; }
+        .chat-bubble.bot code { background-color: #e2e8f0; color: #0f172a; padding: 2px 5px; border-radius: 4px; font-size: 0.9em; }
+        .chat-bubble.bot pre code { background: transparent; color: inherit; padding: 0; }
+
+        .bot-meta-bar { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 12px; padding-top: 8px; border-top: 1px dashed #cbd5e1; font-size: 0.78em; color: #64748b; flex-wrap: wrap; }
+        .bot-meta-info { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .meta-badge { background: #e2e8f0; color: #334155; padding: 2px 8px; border-radius: 12px; font-weight: bold; }
+        .meta-badge.cached { background: #d1fae5; color: #065f46; }
+        .meta-badge.verified { background: #dbeafe; color: #1e40af; }
+        .btn-copy-msg { background: #ffffff; border: 1px solid #cbd5e1; color: #334155; padding: 3px 10px; border-radius: 6px; font-size: 0.95em; cursor: pointer; font-weight: bold; transition: 0.2s; }
+        .btn-copy-msg:hover { background: #eff6ff; border-color: #3b82f6; color: #1d4ed8; }
+
+        .code-exec-details { margin: 8px 0 12px 0; background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 8px 12px; font-size: 0.88em; }
+        .code-exec-details summary { cursor: pointer; font-weight: bold; color: #1e40af; }
+
+        .stream-status { font-size: 0.88em; color: #64748b; font-style: italic; display: inline-flex; align-items: center; gap: 8px; }
         
         .chat-input-area { display: flex; flex-direction: column; background-color: #f8fafc; border-top: 1px solid #e2e8f0; }
-        .file-preview-bar { padding: 10px 15px 0 15px; font-size: 0.85em; color: #10b981; display: none; }
+        .file-preview-bar { padding: 10px 15px 0 15px; font-size: 0.85em; color: #059669; display: none; }
         .input-controls-row { display: flex; gap: 10px; padding: 15px; align-items: stretch; }
         .btn-attach { background-color: #e2e8f0; color: #475569; border: none; padding: 0 15px; border-radius: 8px; font-size: 1.2em; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
         .btn-attach:hover { background-color: #cbd5e1; }
-        .chat-input { flex: 1; padding: 12px 15px; border: 1px solid #cbd5e1; border-radius: 8px; font-family: Tahoma, sans-serif; font-size: 1em; resize: vertical; min-height: 120px; max-height: 400px; overflow-y: auto; }
-        .btn-send { background-color: #10b981; color: white; border: none; padding: 0 25px; border-radius: 8px; font-weight: bold; cursor: pointer; display: flex; justify-content: center; align-items: center; }
+        .chat-input { flex: 1; padding: 12px 15px; border: 1px solid #cbd5e1; border-radius: 8px; font-family: Tahoma, sans-serif; font-size: 1em; resize: vertical; min-height: 100px; max-height: 360px; overflow-y: auto; }
+        .btn-send { background-color: #10b981; color: white; border: none; padding: 0 22px; border-radius: 8px; font-weight: bold; cursor: pointer; display: flex; justify-content: center; align-items: center; min-width: 92px; transition: 0.2s; }
         .btn-send:hover { background-color: #059669; }
+        .btn-send.streaming { background-color: #ef4444; }
+        .btn-send.streaming:hover { background-color: #dc2626; }
         .btn-send:disabled { background-color: #94a3b8; cursor: not-allowed; }
 
         /* Save Button */
@@ -98,7 +154,7 @@
         .btn-save { background-color: #f97316; color: white; border: none; padding: 12px 25px; border-radius: 8px; font-weight: bold; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; font-size: 1em; }
         .btn-save:hover { background-color: #ea580c; }
 
-        .loading-dots { display: inline-flex; align-items: center; gap: 4px; height: 24px; }
+        .loading-dots { display: inline-flex; align-items: center; gap: 4px; height: 20px; }
         .loading-dots span { width: 6px; height: 6px; background-color: #64748b; border-radius: 50%; animation: bounce 1.4s infinite ease-in-out both; }
         .loading-dots span:nth-child(1) { animation-delay: -0.32s; }
         .loading-dots span:nth-child(2) { animation-delay: -0.16s; }
@@ -106,7 +162,8 @@
 
         /* Modal Styles */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.7); display: none; justify-content: center; align-items: center; z-index: 1000; backdrop-filter: blur(4px); }
-        .modal-box { background: white; padding: 40px; border-radius: 12px; text-align: center; max-width: 400px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .modal-box { background: white; padding: 40px; border-radius: 12px; text-align: center; max-width: 420px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        @keyframes popIn { 0% { transform: scale(0.9); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
         .modal-icon { width: 80px; height: 80px; border-radius: 50%; display: flex; justify-content: center; align-items: center; margin: 0 auto 20px auto; }
         .modal-icon.success { background-color: #d1fae5; color: #10b981; }
         .modal-icon.error { background-color: #fee2e2; color: #ef4444; }
@@ -119,34 +176,39 @@
         #print-template { display: none; }
 
         @media (max-width: 768px) {
-        body { overflow-x: clip; }
-        header { padding: 10px 16px; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.25); }
-        .header-container { flex-direction: row; justify-content: space-between; align-items: center; width: 100%; }
-        .header-brand { flex-direction: row; align-items: center; gap: 10px; min-width: 0; }
-        .logo-container { margin-bottom: 0; padding: 4px 8px; gap: 6px; border-radius: 20px; background: rgba(255, 255, 255, 0.15); flex-shrink: 0; }
-        .logo-container img { height: 28px; }
-        header h1 { font-size: 1.1rem; letter-spacing: 0.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        
-        .menu-toggle { display: flex; flex-direction: column; justify-content: space-between; width: 28px; height: 22px; background: transparent; border: none; cursor: pointer; padding: 1px; flex-shrink: 0; z-index: 1001; }
-        .menu-toggle .bar { width: 100%; height: 3px; background-color: #ffffff; border-radius: 3px; transition: transform 0.3s ease, opacity 0.2s ease; }
-        .menu-toggle.active .bar:nth-child(1) { transform: translateY(8px) rotate(45deg); }
-        .menu-toggle.active .bar:nth-child(2) { opacity: 0; }
-        .menu-toggle.active .bar:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
-        
-        nav { position: fixed; top: var(--header-height, 50px); left: 0; right: 0; width: 100%; box-sizing: border-box; background-color: #1a365d; flex-direction: column; align-items: stretch; padding: 0 15px; max-height: 0; overflow-y: auto; visibility: hidden; opacity: 0; box-shadow: 0 10px 20px rgba(0,0,0,0.3); border-top: 1px solid rgba(255, 255, 255, 0.15); border-bottom: 3px solid #2b6cb0; transition: max-height 0.35s ease, opacity 0.25s ease, padding 0.35s ease, visibility 0.35s; z-index: 999; }
-        nav.open { max-height: calc(100vh - 60px); visibility: visible; opacity: 1; padding: 12px 15px 16px 15px; }
-        nav a { margin: 3px 0; padding: 10px 14px; border-radius: 6px; font-size: 1rem; display: block; transition: background-color 0.2s ease, color 0.2s ease; }
-        nav a:hover { background-color: rgba(255, 255, 255, 0.1); color: #fbbf24; }
-        nav a.active { color: #fbbf24; background-color: rgba(251, 191, 36, 0.15); border-left: 3px solid #fbbf24; padding-left: 12px; }
-        
-        .nav-backdrop { display: block; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(2px); z-index: 998; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease; pointer-events: none; }
-        .nav-backdrop.open { opacity: 1; visibility: visible; pointer-events: auto; }
- .builder-grid { grid-template-columns: 1fr; } .form-row { flex-direction: column; gap: 0; } .chat-bubble { max-width: 95%; } }
+            body { overflow-x: clip; }
+            header { padding: 10px 16px; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.25); }
+            .header-container { flex-direction: row; justify-content: space-between; align-items: center; width: 100%; }
+            .header-brand { flex-direction: row; align-items: center; gap: 10px; min-width: 0; }
+            .logo-container { margin-bottom: 0; padding: 4px 8px; gap: 6px; border-radius: 20px; background: rgba(255, 255, 255, 0.15); flex-shrink: 0; }
+            .logo-container img { height: 28px; }
+            header h1 { font-size: 1.1rem; letter-spacing: 0.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+            
+            .menu-toggle { display: flex; flex-direction: column; justify-content: space-between; width: 28px; height: 22px; background: transparent; border: none; cursor: pointer; padding: 1px; flex-shrink: 0; z-index: 1001; }
+            .menu-toggle .bar { width: 100%; height: 3px; background-color: #ffffff; border-radius: 3px; transition: transform 0.3s ease, opacity 0.2s ease; }
+            .menu-toggle.active .bar:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+            .menu-toggle.active .bar:nth-child(2) { opacity: 0; }
+            .menu-toggle.active .bar:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+            
+            nav { position: fixed; top: var(--header-height, 50px); left: 0; right: 0; width: 100%; box-sizing: border-box; background-color: #1a365d; flex-direction: column; align-items: stretch; padding: 0 15px; max-height: 0; overflow-y: auto; visibility: hidden; opacity: 0; box-shadow: 0 10px 20px rgba(0,0,0,0.3); border-top: 1px solid rgba(255, 255, 255, 0.15); border-bottom: 3px solid #2b6cb0; transition: max-height 0.35s ease, opacity 0.25s ease, padding 0.35s ease, visibility 0.35s; z-index: 999; }
+            nav.open { max-height: calc(100vh - 60px); visibility: visible; opacity: 1; padding: 12px 15px 16px 15px; }
+            nav a { margin: 3px 0; padding: 10px 14px; border-radius: 6px; font-size: 1rem; display: block; transition: background-color 0.2s ease, color 0.2s ease; }
+            nav a:hover { background-color: rgba(255, 255, 255, 0.1); color: #fbbf24; }
+            nav a.active { color: #fbbf24; background-color: rgba(251, 191, 36, 0.15); border-left: 3px solid #fbbf24; padding-left: 12px; }
+            
+            .nav-backdrop { display: block; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(2px); z-index: 998; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease; pointer-events: none; }
+            .nav-backdrop.open { opacity: 1; visibility: visible; pointer-events: auto; }
+            .builder-grid { grid-template-columns: 1fr; }
+            .form-row { flex-direction: column; gap: 0; }
+            .chat-bubble { max-width: 95%; }
+            .input-controls-row { flex-wrap: wrap; }
+            .btn-send { width: 100%; padding: 12px; }
+        }
     </style>
 </head>
 <body>
 
-        <header id="siteHeader">
+    <header id="siteHeader">
         <div class="header-container">
             <a href="index.html" class="header-brand">
                 <div class="logo-container">
@@ -178,44 +240,49 @@
         
         <div class="card" style="background-color: #1a365d; color: #ffffff; text-align: center; border-top: none;">
             <p style="font-size: 1.25rem; line-height: 1.6; margin: 0;">
-                Selamat datang di Klinik AI. Asisten cerdas ini siap membantu Anda merancang soal TKA (Kognitif L1-L3) dan menyusun skenario pendampingan (scaffolding) untuk murid di kelas.
+                Selamat datang di Klinik AI. Asisten cerdas ini kini menggunakan <strong>Gemini Interactions API terbaru</strong> (streaming cepat, hemat kuota cache otomatis, &amp; opsi verifikasi hitungan) untuk membantu Anda merancang soal TKA (Kognitif L1–L3) dan skenario <em>scaffolding</em>.
             </p>
         </div>
 
         <!-- ========================================== -->
-        <!-- PANEL API KEY BARU MULAI DI SINI -->
+        <!-- PANEL API KEY -->
         <!-- ========================================== -->
         <div class="card">
             <h2 style="margin-top: 0; display: flex; align-items: center; gap: 10px;">
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"></path></svg>
-                Pengaturan Akses AI
+                Pengaturan Akses AI (Gratis &amp; Hemat Kuota)
             </h2>
-            <p style="color: #475569; margin-bottom: 20px;">Untuk menggunakan layanan Klinik AI, Anda membutuhkan API Key dari Google AI Studio. Sistem ini memproses API Key secara aman langsung di browser Anda.</p>
+            <p style="color: #475569; margin-bottom: 18px;">Klinik AI berjalan langsung di browser Anda menggunakan <strong>API Key Gratis dari Google AI Studio</strong> tanpa biaya langganan. API Key hanya tersimpan di perangkat Anda.</p>
             
             <div class="info-box" style="background-color: #f8fafc; border-left-color: #3b82f6; color: #1e293b;">
                 <strong>Cara Mendapatkan API Key Gratis:</strong>
                 <ol style="margin-top: 8px; margin-bottom: 0; padding-left: 20px;">
-                    <li>Buka <a href="https://aistudio.google.com/api-keys" target="_blank" style="color: #3b82f6; text-decoration: none; font-weight: bold;">Google AI Studio</a> dan login menggunakan akun Gmail Anda.</li>
+                    <li>Buka <a href="https://aistudio.google.com/api-keys" target="_blank" rel="noopener noreferrer" style="color: #3b82f6; text-decoration: none; font-weight: bold;">Google AI Studio</a> dan login menggunakan akun Gmail Anda.</li>
                     <li>Klik tombol biru bertuliskan <strong>Create API Key</strong>.</li>
                     <li>Salin teks acak yang muncul, lalu tempelkan pada kotak di bawah ini.</li>
                 </ol>
             </div>
 
-            <!-- Bagian ini sudah diupdate dengan tombol simpan -->
             <div class="form-group" style="margin-bottom: 0;">
-                <div style="display: flex; gap: 10px;">
-                    <input type="password" id="apiKeyInput" class="form-control" placeholder="Paste API Key Anda di sini (contoh: AIzaSy... atau AQ...)">
-                    <button type="button" class="btn-copy" style="white-space: nowrap; padding: 0 20px;" onclick="simpanApiKey()">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 5px;"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                <div class="api-key-row">
+                    <div class="api-key-input-wrap">
+                        <input type="password" id="apiKeyInput" class="form-control" placeholder="Paste API Key Anda di sini (contoh: AIzaSy...)">
+                        <button type="button" class="btn-toggle-key" id="toggleKeyBtn" onclick="toggleApiKeyVisibility()" title="Tampilkan / Sembunyikan API Key">👁️</button>
+                    </div>
+                    <button type="button" class="btn-copy" style="white-space: nowrap; padding: 0 18px;" onclick="simpanApiKey()">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
                         Simpan Key
                     </button>
+                    <button type="button" class="btn-danger-outline" onclick="hapusApiKey()" title="Hapus API Key dari browser ini">Hapus</button>
                 </div>
                 <div id="apiKeyStatus" style="display: none; margin-top: 10px; font-size: 0.95em; font-weight: bold;"></div>
             </div>
+
+            <div class="tip-box">
+                <strong>💡 Fitur Penghemat Kuota Otomatis Aktif:</strong>
+                Sistem ini otomatis memakai <strong>memori sesi server (Stateful Cache)</strong> sehingga riwayat chat &amp; file gambar/PDF tidak dikirim berulang-ulang, mengompresi foto soal sebelum dikirim, dan secara bawaan menggunakan <strong>Mode Hemat (Gemini 3.5 Flash-Lite)</strong> agar kuota gratis Anda jauh lebih awet.
+            </div>
         </div>
-        <!-- ========================================== -->
-        <!-- PANEL API KEY BARU SELESAI -->
-        <!-- ========================================== -->
 
         <div class="card">
             <h2 style="margin-top: 0;">Data Pengguna Klinik AI</h2>
@@ -238,11 +305,11 @@
 
         <!-- Bagian 1: Etika & Teori Prompting -->
         <div class="card">
-            <h2>Pahami Etika & Formula Prompting</h2>
+            <h2>Pahami Etika &amp; Formula Prompting</h2>
             
             <div class="info-box">
                 <strong>Peringatan Etika Penggunaan AI:</strong><br>
-                1. <strong>AI adalah Asisten, Bukan Ahli Matematika Mutlak.</strong> AI terkadang bisa salah menghitung (halusinasi angka). Guru <strong>wajib</strong> memverifikasi ulang hasil hitungan kunci jawaban yang diberikan AI.<br>
+                1. <strong>AI adalah Asisten, Bukan Ahli Matematika Mutlak.</strong> Meskipun tersedia fitur <em>Verifikasi Hitungan</em>, guru tetap <strong>wajib</strong> memeriksa ulang kunci jawaban dan kelayakan pedagogis soal.<br>
                 2. <strong>Jaga Privasi.</strong> Jangan pernah memasukkan nama asli murid, nilai rapor, atau data pribadi sekolah ke dalam kolom chat AI.
             </div>
 
@@ -250,7 +317,7 @@
             
             <div class="prompt-theory">
                 <div class="theory-item">
-                    <h4>1. Peran & Domain</h4>
+                    <h4>1. Peran &amp; Domain</h4>
                     <p>Tentukan apakah Anda ingin fokus di Aljabar, Bilangan, Geometri, atau Data Peluang.</p>
                 </div>
                 <div class="theory-item">
@@ -258,7 +325,7 @@
                     <p>Sebutkan apakah ini soal murni (Intra-Matematika) atau soal cerita kontekstual (Masalah sehari-hari).</p>
                 </div>
                 <div class="theory-item">
-                    <h4>3. Tugas & Level</h4>
+                    <h4>3. Tugas &amp; Level</h4>
                     <p>Minta AI menyesuaikan apakah ini untuk Pemahaman (L1), Aplikasi (L2), atau Penalaran (L3).</p>
                 </div>
             </div>
@@ -282,8 +349,8 @@
                     <select id="buildTopic" class="form-control" onchange="generatePrompt()">
                         <option value="Bilangan (Operasi Aritmetika, Faktorisasi, Rasio, Perbandingan)">Bilangan</option>
                         <option value="Aljabar (Bentuk Aljabar, Relasi Fungsi, Persamaan, Pertidaksamaan, Barisan & Deret)">Aljabar</option>
-                        <option value="Geometri & Pengukuran (Sudut, Pythagoras, Kesebangunan, Transformasi, Keliling/Luas/Volume)">Geometri & Pengukuran</option>
-                        <option value="Data & Peluang (Mean, Median, Modus, Jangkauan, Peluang Kejadian Tunggal)">Data & Peluang</option>
+                        <option value="Geometri & Pengukuran (Sudut, Pythagoras, Kesebangunan, Transformasi, Keliling/Luas/Volume)">Geometri &amp; Pengukuran</option>
+                        <option value="Data & Peluang (Mean, Median, Modus, Jangkauan, Peluang Kejadian Tunggal)">Data &amp; Peluang</option>
                     </select>
                 </div>
                 <div class="builder-group">
@@ -336,11 +403,40 @@
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
                         Ruang Konsultasi AI
                     </div>
+                    <div class="chat-header-actions">
+                        <span class="session-pill" id="sessionUsagePill" title="Total estimasi token terpakai pada sesi ini">📊 0 giliran · 0 token</span>
+                        <button type="button" class="btn-new-chat" onclick="resetChatSession()" title="Mulai topik baru agar riwayat tidak panjang dan kuota lebih hemat">🔄 Sesi Baru</button>
+                    </div>
+                </div>
+
+                <!-- Toolbar Pemilihan Mode Hemat & Fitur -->
+                <div class="ai-toolbar">
+                    <div class="mode-selector-group">
+                        <label for="aiModeSelect">Mode AI:</label>
+                        <select id="aiModeSelect" class="mode-select" onchange="updateModeHint()">
+                            <option value="hemat" selected>⚡ Mode Hemat (Cepat &amp; Paling Irit Kuota)</option>
+                            <option value="seimbang">⚖️ Mode Seimbang (Gemini 4 · Soal L2–L3 &amp; Gambar)</option>
+                            <option value="penalaran">🧠 Mode Penalaran L3 (Gemini 4 · Analisis Mendalam)</option>
+                        </select>
+                    </div>
+                    <label class="tool-toggle" title="Aktifkan agar AI menjalankan kalkulator Python di server untuk mengecek ketepatan hitungan matematika (tanpa biaya tambahan).">
+                        <input type="checkbox" id="enableCodeExec">
+                        <span>🧮 Verifikasi Hitungan Otomatis</span>
+                    </label>
+                    <div class="mode-hint" id="modeHintText">
+                        Menggunakan <strong>Gemini 3.5 Flash-Lite</strong> (berpikir minimal). Paling cepat &amp; paling hemat kuota API Key gratis — ideal untuk membuat soal L1/L2, LKM, dan scaffolding.
+                    </div>
+                </div>
+
+                <!-- Peringatan lembut saat sesi sudah panjang -->
+                <div class="quota-banner" id="quotaBanner">
+                    <span>💡 <strong>Tips Hemat Kuota:</strong> Percakapan ini sudah cukup panjang. Jika ingin berganti topik/materi, klik <em>Sesi Baru</em> agar pemakaian token tetap irit.</span>
+                    <button type="button" onclick="resetChatSession()">Mulai Sesi Baru</button>
                 </div>
                 
                 <div class="chat-history" id="chatBox">
                     <div class="chat-bubble bot">
-                        Halo! Saya adalah Asisten AI HEURISTIC-MAT. Saya bisa merancang soal murni (Intra-Matematika) maupun kontekstual untuk level L1, L2, dan L3. Apa yang bisa saya bantu hari ini?
+                        Halo! Saya adalah Asisten AI HEURISTIC-MAT. Saya bisa merancang soal murni (Intra-Matematika) maupun kontekstual untuk level L1, L2, dan L3. Pilih <strong>Mode Hemat</strong> untuk penggunaan sehari-hari, atau aktifkan <strong>Verifikasi Hitungan</strong> jika butuh pengecekan angka secara pasti. Apa yang bisa saya bantu hari ini?
                     </div>
                 </div>
 
@@ -353,12 +449,12 @@
                         <input type="file" id="fileInput" accept="image/png, image/jpeg, image/webp, application/pdf" style="display: none;" onchange="handleFileSelect(event)">
                         
                         <!-- Tombol untuk memicu lampiran -->
-                        <button class="btn-attach" onclick="document.getElementById('fileInput').click()" title="Lampirkan File (Gambar/PDF)">
+                        <button type="button" class="btn-attach" onclick="document.getElementById('fileInput').click()" title="Lampirkan Foto Soal atau Dokumen PDF (Otomatis dikompres agar hemat kuota)">
                             📎
                         </button>
 
-                        <textarea id="userInput" class="chat-input" placeholder="Ketik pertanyaan atau minta buatkan soal... (Tekan Enter untuk mengirim)" onkeydown="handleEnter(event)"></textarea>
-                        <button id="sendBtn" class="btn-send" onclick="sendMessage()">KIRIM</button>
+                        <textarea id="userInput" class="chat-input" placeholder="Ketik pertanyaan atau minta buatkan soal... (Tekan Enter untuk mengirim, Shift+Enter untuk baris baru)" onkeydown="handleEnter(event)"></textarea>
+                        <button type="button" id="sendBtn" class="btn-send" onclick="handleSendOrStop()">KIRIM</button>
                     </div>
                 </div>
             </div>
@@ -366,7 +462,7 @@
             <div class="action-bar">
                 <button type="button" class="btn-save" onclick="submitChatHistory()">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
-                    Simpan & Kirim Riwayat Konsultasi
+                    Simpan &amp; Kirim Riwayat Konsultasi
                 </button>
             </div>
         </div>
@@ -437,53 +533,195 @@
     <script>
         // URL Google Sheets Khusus Chat:
         const GOOGLE_SCRIPT_URL_CHAT = 'https://script.google.com/macros/s/AKfycbzDjUUk2rm2OteK9rrPiDAItRQlTXH8jLsZlxhZiRTCpYEl-aSgR7fHYvcOmiba4HyiSw/exec'; 
-        
-        let chatHistory = [];
-        const chatBox = document.getElementById("chatBox");
 
-        // Variabel untuk menyimpan data file yang akan diupload ke AI
+        // Konfigurasi Mode AI (Gemini Interactions API v1 — Gratis & Hemat Kuota)
+        const AI_MODES = {
+            hemat: {
+                label: 'Mode Hemat',
+                hint: 'Menggunakan <strong>Gemini 3.5 Flash-Lite</strong> (berpikir minimal). Paling cepat &amp; paling hemat kuota API Key gratis — ideal untuk membuat soal L1/L2, LKM, dan scaffolding.',
+                chain: [
+                    { model: 'gemini-3.5-flash-lite', thinking_level: 'minimal', max_output_tokens: 1800 },
+                    { model: 'gemini-3.1-flash-lite', thinking_level: 'minimal', max_output_tokens: 1800 },
+                    { model: 'gemini-4-hydrogen', thinking_level: 'low', max_output_tokens: 2048 }
+                ]
+            },
+            seimbang: {
+                label: 'Mode Seimbang',
+                hint: 'Menggunakan <strong>Gemini 4 Hydrogen</strong> (berpikir rendah). Cerdas &amp; tajam untuk soal HOTS L2–L3 serta membaca foto soal/PDF dengan pemakaian token tetap terkontrol.',
+                chain: [
+                    { model: 'gemini-4-hydrogen', thinking_level: 'low', max_output_tokens: 2400 },
+                    { model: 'gemini-3.5-flash-lite', thinking_level: 'low', max_output_tokens: 2200 },
+                    { model: 'gemini-3.1-flash-lite', thinking_level: 'low', max_output_tokens: 2200 }
+                ]
+            },
+            penalaran: {
+                label: 'Mode Penalaran L3',
+                hint: 'Menggunakan <strong>Gemini 4 Hydrogen</strong> (berpikir menengah). Cocok untuk soal L3 penalaran kompleks &amp; pembuktian. <em>Catatan: memakai lebih banyak token dari Mode Hemat.</em>',
+                chain: [
+                    { model: 'gemini-4-hydrogen', thinking_level: 'medium', max_output_tokens: 3500 },
+                    { model: 'gemini-4-argon', thinking_level: 'medium', max_output_tokens: 3500 },
+                    { model: 'gemini-3.5-flash-lite', thinking_level: 'medium', max_output_tokens: 3000 }
+                ]
+            }
+        };
+
+        const INTERACTIONS_ENDPOINT = 'https://generativelanguage.googleapis.com/v1/interactions';
+
+        let chatHistory = [];
+        let lastInteractionId = null; // Stateful server-side memory (hemat input token & cache otomatis)
+        let sessionTotalTokens = 0;
+        let sessionTurns = 0;
+        let activeAbortController = null;
+        let isStreaming = false;
         let attachedFile = null;
 
+        const chatBox = document.getElementById("chatBox");
+
+        // --- KOMPRESI GAMBAR OTOMATIS AGAR HEMAT TOKEN & BANDWIDTH ---
+        function compressImageFile(file, maxDim = 1280, quality = 0.82) {
+            return new Promise((resolve, reject) => {
+                const img = new Image();
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    img.onload = () => {
+                        let width = img.width;
+                        let height = img.height;
+                        if (width > maxDim || height > maxDim) {
+                            if (width > height) {
+                                height = Math.round((height * maxDim) / width);
+                                width = maxDim;
+                            } else {
+                                width = Math.round((width * maxDim) / height);
+                                height = maxDim;
+                            }
+                        }
+                        const canvas = document.createElement('canvas');
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.fillStyle = '#ffffff';
+                        ctx.fillRect(0, 0, width, height);
+                        ctx.drawImage(img, 0, 0, width, height);
+                        const dataUrl = canvas.toDataURL('image/jpeg', quality);
+                        const base64 = dataUrl.split(',')[1];
+                        const approxKB = Math.round((base64.length * 3) / 4 / 1024);
+                        resolve({
+                            type: 'image',
+                            mime_type: 'image/jpeg',
+                            data: base64,
+                            name: file.name,
+                            sizeLabel: `${approxKB} KB (terkompres)`
+                        });
+                    };
+                    img.onerror = reject;
+                    img.src = e.target.result;
+                };
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+
         // Fungsi membaca file saat pengguna mengeklik icon klip kertas
-        function handleFileSelect(event) {
+        async function handleFileSelect(event) {
             const file = event.target.files[0];
             if (!file) return;
             
-            // Batasi ukuran maksimal file ke 4MB agar browser klien tidak lag
-            if (file.size > 4 * 1024 * 1024) {
-                showModal('error', 'Ukuran File Terlalu Besar', 'Maaf, ukuran file maksimal adalah 4MB agar tidak membebani memori perangkat saat memproses data ke AI.');
+            const isPdf = file.type === 'application/pdf';
+            const isImage = file.type.startsWith('image/');
+
+            if (!isPdf && !isImage) {
+                showModal('error', 'Format File Tidak Didukung', 'Mohon unggah file gambar (JPG, PNG, WEBP) atau dokumen PDF.');
                 event.target.value = "";
                 return;
             }
 
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                // Simpan data file dalam format murni Base64
-                attachedFile = {
-                    mimeType: file.type,
-                    data: reader.result.split(',')[1] 
-                };
-                
-                // Tampilkan nama file di area preview
-                const previewEl = document.getElementById('filePreview');
-                previewEl.innerHTML = `📎 <strong>Terlampir:</strong> ${file.name} <span style="cursor:pointer; color:red; margin-left:10px; font-weight:bold; border:1px solid red; padding:2px 5px; border-radius:4px;" onclick="removeAttachment()">Batal [X]</span>`;
+            if (isPdf && file.size > 6 * 1024 * 1024) {
+                showModal('error', 'Ukuran PDF Terlalu Besar', 'Ukuran maksimal dokumen PDF adalah 6MB agar proses cepat dan tidak boros kuota token.');
+                event.target.value = "";
+                return;
+            }
+
+            if (isImage && file.size > 12 * 1024 * 1024) {
+                showModal('error', 'Ukuran Gambar Terlalu Besar', 'Ukuran maksimal file gambar adalah 12MB.');
+                event.target.value = "";
+                return;
+            }
+
+            const previewEl = document.getElementById('filePreview');
+
+            try {
+                if (isImage) {
+                    previewEl.innerHTML = `⏳ Mengoptimalkan gambar agar hemat kuota...`;
+                    previewEl.style.display = "block";
+                    attachedFile = await compressImageFile(file);
+                } else {
+                    const base64 = await new Promise((resolve, reject) => {
+                        const reader = new FileReader();
+                        reader.onloadend = () => resolve(reader.result.split(',')[1]);
+                        reader.onerror = reject;
+                        reader.readAsDataURL(file);
+                    });
+                    const sizeKB = Math.round(file.size / 1024);
+                    attachedFile = {
+                        type: 'document',
+                        mime_type: 'application/pdf',
+                        data: base64,
+                        name: file.name,
+                        sizeLabel: `${sizeKB} KB`
+                    };
+                }
+
+                previewEl.innerHTML = `📎 <strong>Terlampir:</strong> ${escapeHtml(attachedFile.name)} <span style="color:#475569;">(${attachedFile.sizeLabel})</span> <span style="cursor:pointer; color:#dc2626; margin-left:10px; font-weight:bold; border:1px solid #fca5a5; padding:1px 6px; border-radius:4px; background:#fff;" onclick="removeAttachment()">Batal [X]</span>`;
                 previewEl.style.display = "block";
-            };
-            
-            reader.readAsDataURL(file); 
+            } catch (err) {
+                console.error('File read error:', err);
+                showModal('error', 'Gagal Membaca File', 'Terjadi kesalahan saat memproses file lampiran.');
+                removeAttachment();
+            }
         }
 
-        // Fungsi untuk membatalkan file lampiran
         function removeAttachment() {
             attachedFile = null;
             document.getElementById('fileInput').value = "";
             document.getElementById('filePreview').style.display = "none";
         }
 
+        function updateModeHint() {
+            const mode = document.getElementById('aiModeSelect').value;
+            const hintEl = document.getElementById('modeHintText');
+            if (AI_MODES[mode]) {
+                hintEl.innerHTML = AI_MODES[mode].hint;
+            }
+        }
+
+        function updateSessionBadge() {
+            const pill = document.getElementById('sessionUsagePill');
+            pill.textContent = `📊 ${sessionTurns} giliran · ${sessionTotalTokens.toLocaleString('id-ID')} token`;
+            const banner = document.getElementById('quotaBanner');
+            banner.style.display = (sessionTurns >= 10 || sessionTotalTokens >= 25000) ? 'flex' : 'none';
+        }
+
+        function resetChatSession() {
+            if (isStreaming && activeAbortController) {
+                activeAbortController.abort();
+            }
+            chatHistory = [];
+            lastInteractionId = null;
+            sessionTotalTokens = 0;
+            sessionTurns = 0;
+            updateSessionBadge();
+            removeAttachment();
+            chatBox.innerHTML = `
+                <div class="chat-bubble bot">
+                    ✨ Sesi konsultasi baru telah dimulai (memori percakapan direset agar kuota tetap hemat). Silakan ketik pertanyaan atau gunakan Kalkulator Prompt di atas.
+                </div>
+            `;
+        }
+
         // 1. Modal Helper
         function showModal(type, title, text) {
             const icon = document.getElementById("modalIcon");
-            if(type === 'success') {
+            if (type === 'success') {
                 icon.className = "modal-icon success";
                 icon.innerHTML = '<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>';
             } else {
@@ -508,7 +746,7 @@
             let specificTopic = document.getElementById('buildSpecificTopic').value;
             const task = document.getElementById('buildTask').value;
             
-            if(specificTopic.trim() === '') specificTopic = "[Detail angka / konsep matematika / latar cerita]";
+            if (specificTopic.trim() === '') specificTopic = "[Detail angka / konsep matematika / latar cerita]";
             
             document.getElementById('resultPrompt').value = `${role}\n\nDomain Materi: ${topic}\nLevel Kognitif: ${level}\nJenis Konteks: ${contextType}\nSub-Materi/Fokus: ${specificTopic}\n\nTugas: ${task}`;
         }
@@ -520,72 +758,241 @@
             document.querySelector('.chat-container').scrollIntoView({ behavior: 'smooth' });
         }
 
-        // 3. Logika Chat & MathJax
+        // 3. Safe Markdown + LaTeX Formatter (melindungi rumus $...$ dan $$...$$)
+        function escapeHtml(str) {
+            return str
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
+        }
+
+        function renderMarkdownWithMath(rawText) {
+            if (!rawText) return '';
+            const placeholders = [];
+            const hold = (html) => {
+                const key = `@@PLACEHOLDER_${placeholders.length}@@`;
+                placeholders.push(html);
+                return key;
+            };
+
+            let text = rawText.replace(/\r\n/g, '\n');
+
+            // 1. Lindungi fenced code blocks ```...```
+            text = text.replace(/```(\w*)\n([\s\S]*?)```/g, (_, lang, code) => {
+                return hold(`<pre><code>${escapeHtml(code.trimEnd())}</code></pre>`);
+            });
+
+            // 2. Lindungi display math $$...$$ dan \[...\]
+            text = text.replace(/\$\$([\s\S]*?)\$\$/g, (m) => hold(escapeHtml(m)));
+            text = text.replace(/\\\[([\s\S]*?)\\\]/g, (m) => hold(escapeHtml(m)));
+
+            // 3. Lindungi inline math $...$ dan \(...\)
+            text = text.replace(/(?<!\\)\$([^\n$]+?)\$/g, (m) => hold(escapeHtml(m)));
+            text = text.replace(/\\\(([\s\S]*?)\\\)/g, (m) => hold(escapeHtml(m)));
+
+            // 4. Lindungi inline code `...`
+            text = text.replace(/`([^`\n]+)`/g, (_, code) => hold(`<code>${escapeHtml(code)}</code>`));
+
+            // 5. Escape sisa HTML
+            text = escapeHtml(text);
+
+            // 6. Headings (###, ##, #)
+            text = text.replace(/^###\s+(.*)$/gm, '<h4>$1</h4>');
+            text = text.replace(/^##\s+(.*)$/gm, '<h3>$1</h3>');
+            text = text.replace(/^#\s+(.*)$/gm, '<h3>$1</h3>');
+
+            // 7. Bold & Italic
+            text = text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+            text = text.replace(/(^|[^*])\*([^*\n]+?)\*(?!\*)/g, '$1<em>$2</em>');
+
+            // 8. Bullet lists sederhana
+            text = text.replace(/^[-•]\s+(.*)$/gm, '• $1');
+
+            // 9. Newlines -> <br> (hindari <br> berlebihan setelah heading/pre)
+            text = text.replace(/\n/g, '<br>');
+            text = text.replace(/(<\/h[34]>)<br>/g, '$1');
+
+            // 10. Kembalikan placeholders (gunakan fungsi agar $$ pada LaTeX tidak diubah oleh String.replace)
+            placeholders.forEach((html, idx) => {
+                text = text.replace(`@@PLACEHOLDER_${idx}@@`, () => html);
+            });
+
+            return text;
+        }
+
         function handleEnter(e) {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
-                sendMessage();
+                if (!isStreaming) sendMessage();
             }
         }
 
-        function appendMessage(sender, text) {
-            const bubble = document.createElement("div");
-            bubble.classList.add("chat-bubble", sender);
-            
-            let formattedText = text;
-            if(sender === 'bot') {
-                formattedText = formattedText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-                formattedText = formattedText.replace(/\*(.*?)\*/g, '<em>$1</em>');
+        function handleSendOrStop() {
+            if (isStreaming && activeAbortController) {
+                activeAbortController.abort();
+                return;
             }
-            formattedText = formattedText.replace(/\n/g, '<br>');
-            bubble.innerHTML = formattedText;
+            sendMessage();
+        }
+
+        function setStreamingState(active) {
+            isStreaming = active;
+            const sendBtn = document.getElementById('sendBtn');
+            if (active) {
+                sendBtn.textContent = '⏹ STOP';
+                sendBtn.classList.add('streaming');
+                sendBtn.disabled = false;
+            } else {
+                sendBtn.textContent = 'KIRIM';
+                sendBtn.classList.remove('streaming');
+                sendBtn.disabled = false;
+            }
+        }
+
+        function appendUserMessage(displayHtml) {
+            const bubble = document.createElement("div");
+            bubble.classList.add("chat-bubble", "user");
+            bubble.innerHTML = displayHtml;
             chatBox.appendChild(bubble);
             chatBox.scrollTop = chatBox.scrollHeight;
-
-            // Trigger MathJax untuk merapikan rumus matematika secara otomatis
-            if (window.MathJax && sender === 'bot') {
-                MathJax.typesetPromise([bubble]).catch(function (err) {
-                    console.error('MathJax render error:', err.message);
-                });
-            }
+            return bubble;
         }
 
-        function appendLoading() {
+        function createBotStreamBubble() {
             const bubble = document.createElement("div");
             bubble.classList.add("chat-bubble", "bot");
-            bubble.id = "loadingBubble";
-            bubble.innerHTML = '<div class="loading-dots"><span></span><span></span><span></span></div>';
+            bubble.innerHTML = `
+                <div class="stream-status">
+                    <div class="loading-dots"><span></span><span></span><span></span></div>
+                    <span class="status-label">Menghubungkan ke Gemini...</span>
+                </div>
+                <div class="bot-content"></div>
+                <div class="bot-code-exec"></div>
+                <div class="bot-meta-bar" style="display:none;"></div>
+            `;
             chatBox.appendChild(bubble);
             chatBox.scrollTop = chatBox.scrollHeight;
+            return bubble;
         }
 
-        function removeLoading() {
-            const loading = document.getElementById("loadingBubble");
-            if (loading) loading.remove();
-        }
-
-        // --- API KEY SEKARANG DIKIRIM MELALUI HEADER x-goog-api-key ---
-        async function fetchGeminiAPI(modelName, payload, userApiKey) {
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent`;
-            
-            const response = await fetch(url, {
-                method: "POST",
-                headers: { 
-                    "Content-Type": "application/json",
-                    "x-goog-api-key": userApiKey
-                },
-                body: JSON.stringify(payload)
+        function copyBotText(btn, rawText) {
+            navigator.clipboard.writeText(rawText).then(() => {
+                const orig = btn.textContent;
+                btn.textContent = '✔️ Tersalin';
+                setTimeout(() => { btn.textContent = orig; }, 1600);
+            }).catch(() => {
+                showModal('error', 'Gagal Menyalin', 'Browser tidak mengizinkan penyalinan otomatis.');
             });
-            
-            const data = await response.json();
-            
+        }
+
+        // --- GEMINI INTERACTIONS API (STREAMING SSE) ---
+        async function streamGeminiInteraction(payload, userApiKey, signal, callbacks) {
+            const response = await fetch(INTERACTIONS_ENDPOINT, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'x-goog-api-key': userApiKey
+                },
+                body: JSON.stringify(payload),
+                signal
+            });
+
             if (!response.ok) {
-                // Tangkap spesifik pesan error dari server Google
-                const errMsg = data.error?.message || `HTTP Error ${response.status}`;
-                throw new Error(errMsg);
+                let errMsg = `HTTP Error ${response.status}`;
+                try {
+                    const errJson = await response.json();
+                    errMsg = errJson.error?.message || errMsg;
+                } catch (_) {}
+                const err = new Error(errMsg);
+                err.status = response.status;
+                throw err;
             }
-            
-            return data.candidates?.[0]?.content?.parts?.[0]?.text;
+
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder('utf-8');
+            let buffer = '';
+            let fullText = '';
+            let interactionId = null;
+            let usage = null;
+            let codeExecOutputs = [];
+
+            const processEventBlock = (block) => {
+                const lines = block.split('\n');
+                let dataStr = '';
+                for (const line of lines) {
+                    if (line.startsWith('data:')) {
+                        dataStr += line.slice(5).trim();
+                    }
+                }
+                if (!dataStr || dataStr === '[DONE]') return;
+
+                let evt;
+                try {
+                    evt = JSON.parse(dataStr);
+                } catch (_) {
+                    return;
+                }
+
+                const eventType = evt.event_type;
+
+                if (eventType === 'interaction.created') {
+                    interactionId = evt.interaction?.id || interactionId;
+                } else if (eventType === 'step.start') {
+                    const stepType = evt.step?.type;
+                    if (stepType === 'thought') {
+                        callbacks.onStatus('Sedang menganalisis soal...');
+                    } else if (stepType === 'code_execution_call') {
+                        callbacks.onStatus('🧮 Memverifikasi hitungan dengan Python...');
+                    } else if (stepType === 'model_output') {
+                        callbacks.onStatus('');
+                    }
+                } else if (eventType === 'step.delta') {
+                    const delta = evt.delta;
+                    if (!delta) return;
+                    if (delta.type === 'text' && delta.text) {
+                        fullText += delta.text;
+                        callbacks.onTextDelta(fullText);
+                    } else if (delta.type === 'code_execution_result' && delta.result) {
+                        codeExecOutputs.push(delta.result);
+                    }
+                } else if (eventType === 'interaction.completed') {
+                    interactionId = evt.interaction?.id || interactionId;
+                    usage = evt.interaction?.usage || null;
+                    // Ambil hasil code_execution jika tersedia di steps akhir
+                    const steps = evt.interaction?.steps || [];
+                    for (const step of steps) {
+                        if (step.type === 'code_execution_result' && step.result) {
+                            const resStr = typeof step.result === 'string' ? step.result : JSON.stringify(step.result);
+                            if (!codeExecOutputs.includes(resStr)) {
+                                codeExecOutputs.push(resStr);
+                            }
+                        }
+                        if (!fullText && step.type === 'model_output' && Array.isArray(step.content)) {
+                            for (const c of step.content) {
+                                if (c.type === 'text' && c.text) fullText += c.text;
+                            }
+                        }
+                    }
+                } else if (eventType === 'error' || evt.error) {
+                    throw new Error(evt.error?.message || 'Terjadi kesalahan pada stream AI.');
+                }
+            };
+
+            while (true) {
+                const { value, done } = await reader.read();
+                if (done) break;
+                buffer += decoder.decode(value, { stream: true });
+                const blocks = buffer.split('\n\n');
+                buffer = blocks.pop() || '';
+                for (const block of blocks) {
+                    if (block.trim()) processEventBlock(block);
+                }
+            }
+            if (buffer.trim()) {
+                processEventBlock(buffer);
+            }
+
+            return { text: fullText, interactionId, usage, codeExecOutputs };
         }
 
         async function sendMessage() {
@@ -596,91 +1003,238 @@
             }
 
             const nama = document.getElementById('namaGuru').value.trim();
-            if(!nama) {
+            if (!nama) {
                 showModal('error', 'Nama Belum Diisi', 'Mohon isi Nama Lengkap Anda di atas sebelum mulai menggunakan Klinik AI.');
                 return;
             }
 
             const inputEl = document.getElementById("userInput");
-            const sendBtn = document.getElementById("sendBtn");
             const text = inputEl.value.trim();
             
-            // Cegah pengiriman jika teks dan file sama-sama kosong
             if (!text && !attachedFile) return;
 
-            // Merakit Array 'parts' untuk instruksi pengguna
-            const userParts = [];
-            if (text) {
-                userParts.push({ text: text });
-            }
-            // Jika ada file (gambar/pdf) yang diunggah, sisipkan ke dalam request inlineData
-            if (attachedFile) {
-                userParts.push({
-                    inlineData: {
-                        mimeType: attachedFile.mimeType,
-                        data: attachedFile.data
-                    }
+            // Susun input untuk Interactions API
+            let interactionInput;
+            const currentFile = attachedFile;
+            if (currentFile) {
+                interactionInput = [];
+                if (text) {
+                    interactionInput.push({ type: 'text', text: text });
+                } else {
+                    interactionInput.push({ type: 'text', text: 'Tolong analisis lampiran ini sesuai konteks pembelajaran matematika SMP/MTs.' });
+                }
+                interactionInput.push({
+                    type: currentFile.type, // 'image' atau 'document'
+                    mime_type: currentFile.mime_type,
+                    data: currentFile.data
                 });
+            } else {
+                interactionInput = text;
             }
 
-            // Membangun tampilan pesan di sisi layar pengguna
-            let displayMsg = text;
-            if (attachedFile) {
-                displayMsg += `<br><small style="color: #6b7280; margin-top: 10px; display: block;"><em>[📎 Berhasil melampirkan file dokumen/gambar]</em></small>`;
+            // Tampilkan pesan pengguna di layar
+            let displayMsg = escapeHtml(text || '(Mengirim lampiran)').replace(/\n/g, '<br>');
+            if (currentFile) {
+                displayMsg += `<br><small style="color: #475569; margin-top: 8px; display: block;"><em>[📎 Terlampir: ${escapeHtml(currentFile.name)} · ${currentFile.sizeLabel}]</em></small>`;
             }
-            appendMessage("user", displayMsg);
+            appendUserMessage(displayMsg);
 
-            // Mereset area input setelah dikirim ke atas layar
             inputEl.value = "";
-            sendBtn.disabled = true;
-            appendLoading();
-            removeAttachment(); // Kosongkan variabel file
-            
-            chatHistory.push({ role: "user", parts: userParts });
+            removeAttachment();
 
-            // --- SYSTEM PROMPT: AI DILARANG BERTELE-TELE ---
-            const formatInstruction = "Gunakan format penulisan LaTeX (bungkus dengan $ untuk inline dan $$ untuk blok equation) pada semua rumus/angka matematika.";
-            const systemPrompt = `Kamu adalah Asisten AI Heuristic-Mat yang membantu guru MTs. Jawablah LANGSUNG KE INTI tanpa basa-basi.
-PENTING:
-1. JANGAN PERNAH memberikan salam pembuka (seperti "Assalamu'alaikum" atau "Halo"). Langsung berikan jawaban yang diminta!
-2. Jawablah dengan RINGKAS dan PADAT.
-3. Pedomani standar soal TKA Matematika SMP (Bilangan, Aljabar, Geometri, Data Peluang) dan Level Kognitif (L1, L2, L3).
-4. Gunakan Bahasa Indonesia profesional namun langsung sasaran. ${formatInstruction}`;
+            chatHistory.push({ role: "user", text: text || `[Lampiran: ${currentFile?.name}]` });
 
-            const payload = {
-                contents: chatHistory,
-                systemInstruction: { parts: [{ text: systemPrompt }] }
-            };
+            // System Instruction ringkas & padat agar irit token input & output
+            const enableCodeExec = document.getElementById('enableCodeExec').checked;
+            const codeHint = enableCodeExec
+                ? ' Gunakan tool code_execution untuk memverifikasi setiap perhitungan numerik/aljabar agar kunci jawaban 100% tepat.'
+                : '';
 
-            // Menggunakan jajaran model Gemini generasi 3.x
-            // Kita coba model yang ringan dan efisien dulu.
-            const modelsToTry = ["gemini-3.1-flash-lite", "gemini-3.1-flash"];
+            const systemInstruction = `Kamu adalah Asisten AI HEURISTIC-MAT untuk guru Matematika SMP/MTs.
+ATURAN KETAT:
+1. Langsung ke inti jawaban TANPA salam pembuka/basa-basi.
+2. Jawab ringkas, terstruktur, dan akurat sesuai standar TKA Matematika SMP (Bilangan, Aljabar, Geometri & Pengukuran, Data & Peluang; Level L1, L2, L3).
+3. Tulis semua rumus matematika dalam LaTeX ($...$ untuk inline, $$...$$ untuk baris terpisah).${codeHint}`;
+
+            const selectedModeKey = document.getElementById('aiModeSelect').value;
+            const modeConfig = AI_MODES[selectedModeKey] || AI_MODES.hemat;
+
+            const botBubble = createBotStreamBubble();
+            const statusWrap = botBubble.querySelector('.stream-status');
+            const statusLabel = botBubble.querySelector('.status-label');
+            const contentEl = botBubble.querySelector('.bot-content');
+            const codeExecEl = botBubble.querySelector('.bot-code-exec');
+            const metaBarEl = botBubble.querySelector('.bot-meta-bar');
+
+            activeAbortController = new AbortController();
+            setStreamingState(true);
+
             let success = false;
             let errorMessage = "";
+            let finalResult = null;
+            let usedModel = "";
+            let wasAborted = false;
 
-            for (let model of modelsToTry) {
-                try {
-                    let aiResponse = await fetchGeminiAPI(model, payload, userApiKey);
-                    if (aiResponse) {
-                        removeLoading();
-                        appendMessage("bot", aiResponse);
-                        chatHistory.push({ role: "model", parts: [{ text: aiResponse }] });
-                        success = true;
-                        break; 
+            // Coba berurutan sesuai rantai fallback hemat kuota
+            for (const candidate of modeConfig.chain) {
+                const buildPayload = (usePrevId) => {
+                    const payload = {
+                        model: candidate.model,
+                        input: interactionInput,
+                        system_instruction: systemInstruction,
+                        stream: true,
+                        generation_config: {
+                            thinking_level: candidate.thinking_level,
+                            max_output_tokens: candidate.max_output_tokens
+                        }
+                    };
+                    if (usePrevId && lastInteractionId) {
+                        payload.previous_interaction_id = lastInteractionId;
                     }
-                } catch (err) {
-                    errorMessage = err.message;
-                    console.warn(`Gagal memanggil model ${model}. Mencoba model cadangan...`, err);
+                    if (enableCodeExec) {
+                        payload.tools = [{ type: 'code_execution' }];
+                    }
+                    return payload;
+                };
+
+                // Jika previous_interaction_id kedaluwarsa (>24 jam di free tier) atau tidak cocok saat ganti model, coba ulang 1x tanpa previous_interaction_id
+                const attempts = lastInteractionId ? [true, false] : [false];
+
+                for (const usePrevId of attempts) {
+                    try {
+                        statusWrap.style.display = 'inline-flex';
+                        statusLabel.textContent = `Menjawab dengan ${candidate.model}...`;
+                        contentEl.innerHTML = '';
+
+                        const result = await streamGeminiInteraction(
+                            buildPayload(usePrevId),
+                            userApiKey,
+                            activeAbortController.signal,
+                            {
+                                onStatus: (msg) => {
+                                    if (msg) {
+                                        statusWrap.style.display = 'inline-flex';
+                                        statusLabel.textContent = msg;
+                                    } else {
+                                        statusWrap.style.display = 'none';
+                                    }
+                                },
+                                onTextDelta: (partialText) => {
+                                    statusWrap.style.display = 'none';
+                                    contentEl.innerHTML = renderMarkdownWithMath(partialText);
+                                    chatBox.scrollTop = chatBox.scrollHeight;
+                                }
+                            }
+                        );
+
+                        if (result.text) {
+                            finalResult = result;
+                            usedModel = candidate.model;
+                            success = true;
+                            break;
+                        }
+                    } catch (err) {
+                        if (err.name === 'AbortError') {
+                            wasAborted = true;
+                            break;
+                        }
+                        errorMessage = err.message || 'Kesalahan tidak diketahui';
+                        console.warn(`Model ${candidate.model} (prevId=${usePrevId}) gagal:`, errorMessage);
+                        // Jika error 400/404 karena previous_interaction_id tidak valid, lanjut ke attempt berikutnya (tanpa prevId)
+                        if (usePrevId && (err.status === 400 || err.status === 404)) {
+                            lastInteractionId = null;
+                            continue;
+                        }
+                        // Untuk error lain (429 rate limit / model unavailable), pindah ke model cadangan
+                        break;
+                    }
                 }
+
+                if (success || wasAborted) break;
             }
 
-            if (!success) {
-                removeLoading();
-                appendMessage("bot", `⚠️ <strong>Koneksi Gagal.</strong><br>Pesan Kesalahan Google: <em style="color: #ef4444;">${errorMessage}</em><br><br>Kemungkinan masalah:<br>1. API Key tidak valid.<br>2. Format file yang dikirim tidak didukung / terlalu besar.<br>3. Google memblokir pemanggilan model ini (API version issue).`);
+            statusWrap.style.display = 'none';
+            setStreamingState(false);
+            activeAbortController = null;
+
+            if (wasAborted) {
+                const partial = contentEl.textContent.trim();
+                if (!partial) {
+                    contentEl.innerHTML = '<em style="color:#64748b;">⏹ Pengiriman dihentikan oleh pengguna.</em>';
+                    chatHistory.pop();
+                } else {
+                    contentEl.innerHTML += '<br><small style="color:#d97706;"><em>⏹ (Dihentikan sebagian oleh pengguna untuk menghemat kuota)</em></small>';
+                    chatHistory.push({ role: "model", text: partial });
+                }
+                inputEl.focus();
+                return;
+            }
+
+            if (success && finalResult) {
+                contentEl.innerHTML = renderMarkdownWithMath(finalResult.text);
+                if (finalResult.interactionId) {
+                    lastInteractionId = finalResult.interactionId;
+                }
+                chatHistory.push({ role: "model", text: finalResult.text });
+
+                // Tampilkan verifikasi hitungan jika code_execution dipakai
+                if (finalResult.codeExecOutputs && finalResult.codeExecOutputs.length > 0) {
+                    const outText = finalResult.codeExecOutputs.join('\n').trim();
+                    if (outText) {
+                        codeExecEl.innerHTML = `
+                            <details class="code-exec-details">
+                                <summary>🧮 Hasil Verifikasi Kalkulator Python (Klik untuk lihat)</summary>
+                                <pre style="margin-top:8px; margin-bottom:0;"><code>${escapeHtml(outText)}</code></pre>
+                            </details>
+                        `;
+                    }
+                }
+
+                // Tampilkan badge transparansi token & tombol salin
+                const usage = finalResult.usage || {};
+                const totalTok = usage.total_tokens || 0;
+                const cachedTok = usage.total_cached_tokens || 0;
+                sessionTurns += 1;
+                sessionTotalTokens += totalTok;
+                updateSessionBadge();
+
+                let badgesHtml = `<span class="meta-badge">⚡ ${usedModel}</span>`;
+                if (totalTok > 0) {
+                    badgesHtml += `<span>${totalTok.toLocaleString('id-ID')} token</span>`;
+                }
+                if (cachedTok > 0) {
+                    badgesHtml += `<span class="meta-badge cached">💾 ${cachedTok.toLocaleString('id-ID')} hemat cache</span>`;
+                }
+                if (finalResult.codeExecOutputs && finalResult.codeExecOutputs.length > 0) {
+                    badgesHtml += `<span class="meta-badge verified">🧮 Terverifikasi</span>`;
+                }
+
+                metaBarEl.innerHTML = `<div class="bot-meta-info">${badgesHtml}</div>`;
+                const copyBtn = document.createElement('button');
+                copyBtn.type = 'button';
+                copyBtn.className = 'btn-copy-msg';
+                copyBtn.textContent = '📋 Salin';
+                copyBtn.onclick = () => copyBotText(copyBtn, finalResult.text);
+                metaBarEl.appendChild(copyBtn);
+                metaBarEl.style.display = 'flex';
+
+                // Render MathJax rapi setelah streaming selesai
+                if (window.MathJax && MathJax.typesetPromise) {
+                    MathJax.typesetPromise([contentEl]).catch(function (err) {
+                        console.error('MathJax render error:', err.message);
+                    });
+                }
+            } else {
+                const isQuotaError = /429|quota|rate|limit|exhausted/i.test(errorMessage);
+                const extraAdvice = isQuotaError
+                    ? `<br><br>💡 <strong>Saran Cepat:</strong> Kuota per menit API Key gratis sedang penuh. Tunggu <strong>30–60 detik</strong>, pastikan Anda memilih <strong>⚡ Mode Hemat</strong>, lalu kirim ulang.`
+                    : `<br><br>Kemungkinan masalah:<br>1. API Key tidak valid atau belum aktif.<br>2. Koneksi internet terputus.<br>3. File lampiran terlalu besar atau rusak.`;
+
+                contentEl.innerHTML = `⚠️ <strong>Koneksi Gagal.</strong><br>Pesan Server Google: <em style="color: #ef4444;">${escapeHtml(errorMessage)}</em>${extraAdvice}`;
                 chatHistory.pop();
             }
 
-            sendBtn.disabled = false;
+            chatBox.scrollTop = chatBox.scrollHeight;
             inputEl.focus();
         }
 
@@ -697,9 +1251,9 @@ PENTING:
                 chatContentArea.innerHTML = "";
                 const bubbles = document.querySelectorAll('#chatBox .chat-bubble');
                 bubbles.forEach(bubble => {
-                    if(bubble.id === 'loadingBubble') return;
-                    
                     const isUser = bubble.classList.contains('user');
+                    const contentSource = isUser ? bubble.innerHTML : (bubble.querySelector('.bot-content')?.innerHTML || bubble.innerHTML);
+                    
                     const div = document.createElement('div');
                     div.style.marginBottom = "15px";
                     div.style.padding = "15px";
@@ -707,7 +1261,7 @@ PENTING:
                     div.style.backgroundColor = isUser ? "#eff6ff" : "#f1f5f9";
                     div.style.border = isUser ? "1px solid #bfdbfe" : "1px solid #e2e8f0";
                     div.style.color = "#1e293b";
-                    div.innerHTML = `<strong>${isUser ? "Anda (Guru):" : "Asisten AI:"}</strong><br><div style="margin-top:8px;">${bubble.innerHTML}</div>`;
+                    div.innerHTML = `<strong>${isUser ? "Anda (Guru):" : "Asisten AI:"}</strong><br><div style="margin-top:8px;">${contentSource}</div>`;
                     chatContentArea.appendChild(div);
                 });
 
@@ -785,12 +1339,12 @@ PENTING:
             const nama = document.getElementById('namaGuru').value.trim();
             const instansi = document.getElementById('instansiGuru').value.trim();
             
-            if(!nama || !instansi) {
+            if (!nama || !instansi) {
                 showModal('error', 'Data Belum Lengkap', 'Mohon isi Nama Lengkap dan Asal Instansi Anda sebelum menyimpan riwayat konsultasi ini.');
                 return;
             }
 
-            if(chatHistory.length === 0) {
+            if (chatHistory.length === 0) {
                 showModal('error', 'Riwayat Chat Kosong', 'Anda belum melakukan konsultasi apapun dengan AI.');
                 return;
             }
@@ -802,16 +1356,16 @@ PENTING:
 
             let rawText = "";
             document.querySelectorAll('#chatBox .chat-bubble').forEach(bubble => {
-                if(bubble.id === 'loadingBubble') return;
                 const isUser = bubble.classList.contains('user');
-                let plainText = bubble.innerHTML.replace(/<br>/g, '\n').replace(/<\/?[^>]+(>|$)/g, ""); 
+                const sourceEl = isUser ? bubble : (bubble.querySelector('.bot-content') || bubble);
+                let plainText = sourceEl.innerHTML.replace(/<br>/g, '\n').replace(/<\/?[^>]+(>|$)/g, ""); 
                 rawText += (isUser ? "GURU: " : "AI: ") + plainText + "\n\n";
             });
 
             const formData = { nama: nama, instansi: instansi, riwayat_chat: rawText };
 
             try {
-                if(GOOGLE_SCRIPT_URL_CHAT === 'TARUH_URL_WEB_APP_CHAT_ANDA_DISINI') {
+                if (GOOGLE_SCRIPT_URL_CHAT === 'TARUH_URL_WEB_APP_CHAT_ANDA_DISINI') {
                     console.warn("URL App Script Chat belum diisi. Simulasi jalan.");
                     await generateChatPDF(true);
                     showModal('success', 'Riwayat Berhasil Disimpan', 'Simulasi berhasil. (URL Google Script Anda belum diatur). Salinan PDF diunduh otomatis.');
@@ -835,7 +1389,19 @@ PENTING:
             }
         }
 
-        // --- FUNGSI SIMPAN API KEY ---
+        // --- FUNGSI API KEY (SIMPAN / TAMPILKAN / HAPUS) ---
+        function toggleApiKeyVisibility() {
+            const input = document.getElementById('apiKeyInput');
+            const btn = document.getElementById('toggleKeyBtn');
+            if (input.type === 'password') {
+                input.type = 'text';
+                btn.textContent = '🙈';
+            } else {
+                input.type = 'password';
+                btn.textContent = '👁️';
+            }
+        }
+
         function simpanApiKey() {
             const key = document.getElementById('apiKeyInput').value.trim();
             const statusEl = document.getElementById('apiKeyStatus');
@@ -852,6 +1418,15 @@ PENTING:
             }
         }
 
+        function hapusApiKey() {
+            localStorage.removeItem('heuristicMat_ApiKey');
+            document.getElementById('apiKeyInput').value = '';
+            const statusEl = document.getElementById('apiKeyStatus');
+            statusEl.style.display = 'block';
+            statusEl.style.color = '#64748b';
+            statusEl.innerHTML = '🗑️ API Key telah dihapus dari memori browser ini.';
+        }
+
         // --- MUAT ULANG API KEY OTOMATIS SAAT HALAMAN DIBUKA ---
         document.addEventListener('DOMContentLoaded', () => {
             const savedKey = localStorage.getItem('heuristicMat_ApiKey');
@@ -862,6 +1437,8 @@ PENTING:
                 statusEl.style.color = '#3b82f6';
                 statusEl.innerHTML = '💡 API Key Anda sebelumnya telah dimuat ulang secara otomatis.';
             }
+            updateModeHint();
+            updateSessionBadge();
         });
     </script>
     <!-- Script Hamburger Menu Navigasi Responsif -->
