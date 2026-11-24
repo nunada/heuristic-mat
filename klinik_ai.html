@@ -452,15 +452,15 @@
                     <div class="mode-selector-group">
                         <label for="aiModeSelect">Mode AI:</label>
                         <select id="aiModeSelect" class="mode-select" onchange="updateModeHint()">
-                            <option value="hemat" selected>⚡ Mode Hemat (Cepat &amp; Paling Irit Kuota)</option>
-                            <option value="seimbang">⚖️ Mode Seimbang (Gemini 4 · Soal L2–L3 &amp; Baca Foto)</option>
-                            <option value="penalaran">🧠 Mode Penalaran L3 (Gemini 4 · Analisis Mendalam)</option>
+                            <option value="hemat" selected>⚡ Mode Hemat (Gemini 3.5 Flash-Lite · Paling Irit Kuota)</option>
+                            <option value="seimbang">⚖️ Mode Seimbang (Gemini 3.6 Flash · Soal L2–L3 &amp; Baca Foto)</option>
+                            <option value="penalaran">🧠 Mode Penalaran L3 (Gemini 3.6 Flash · Analisis Mendalam)</option>
                         </select>
                     </div>
                     <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-                        <label class="tool-toggle" title="Otomatis menyertakan gambar diagram vektor (SVG) pada soal Geometri, Grafik, atau Data &amp; Peluang. Gratis tanpa kuota gambar tambahan.">
+                        <label class="tool-toggle" title="Wajib menyertakan gambar diagram/grafik vektor (SVG) pada jawaban AI (bangun geometri, grafik fungsi, garis bilangan, atau diagram data). Gratis tanpa kuota gambar tambahan.">
                             <input type="checkbox" id="enableDiagram" checked>
-                            <span>📐 Gambar Diagram Otomatis</span>
+                            <span>📐 Sertakan Diagram / Grafik (SVG)</span>
                         </label>
                         <label class="tool-toggle" title="Aktifkan agar AI menjalankan kalkulator Python di server untuk mengecek ketepatan hitungan matematika (tanpa biaya tambahan).">
                             <input type="checkbox" id="enableCodeExec">
@@ -585,27 +585,22 @@
                 hint: 'Menggunakan <strong>Gemini 3.5 Flash-Lite</strong> (berpikir minimal). Paling cepat &amp; paling hemat kuota API Key gratis — ideal untuk membuat soal L1/L2, LKM, dan scaffolding.',
                 chain: [
                     { model: 'gemini-3.5-flash-lite', thinking_level: 'minimal', max_output_tokens: 2400 },
-                    { model: 'gemini-3.1-flash-lite', thinking_level: 'minimal', max_output_tokens: 2400 },
-                    { model: 'gemini-3.8-flash', thinking_level: 'low', max_output_tokens: 2600 }
+                    { model: 'gemini-3.6-flash', thinking_level: 'low', max_output_tokens: 2600 }
                 ]
             },
             seimbang: {
                 label: 'Mode Seimbang',
-                hint: 'Menggunakan <strong>Gemini 4 Hydrogen</strong> (cadangan otomatis: Gemini 3.8 Flash). Cerdas &amp; tajam untuk soal HOTS L2–L3, menggambar diagram geometri, serta membaca foto soal/PDF.',
+                hint: 'Menggunakan <strong>Gemini 3.6 Flash</strong> (berpikir rendah). Cepat, tajam, dan stabil di API Key gratis untuk soal L2–L3, menggambar diagram SVG, serta membaca foto soal/PDF.',
                 chain: [
-                    { model: 'gemini-4-hydrogen', thinking_level: 'low', max_output_tokens: 3000 },
-                    { model: 'gemini-3.8-flash', thinking_level: 'low', max_output_tokens: 3000 },
-                    { model: 'gemini-3.6-flash', thinking_level: 'low', max_output_tokens: 2800 },
+                    { model: 'gemini-3.6-flash', thinking_level: 'low', max_output_tokens: 3000 },
                     { model: 'gemini-3.5-flash-lite', thinking_level: 'low', max_output_tokens: 2600 }
                 ]
             },
             penalaran: {
                 label: 'Mode Penalaran L3',
-                hint: 'Menggunakan <strong>Gemini 4 Hydrogen</strong> (berpikir menengah, cadangan otomatis: Gemini 3.8 Flash). Cocok untuk soal L3 penalaran kompleks &amp; pembuktian. <em>Catatan: memakai lebih banyak token dari Mode Hemat.</em>',
+                hint: 'Menggunakan <strong>Gemini 3.6 Flash</strong> (berpikir menengah). Cocok untuk soal L3 penalaran kompleks, HOTS, &amp; pembuktian. <em>Catatan: memakai sedikit lebih banyak token dari Mode Hemat.</em>',
                 chain: [
-                    { model: 'gemini-4-hydrogen', thinking_level: 'medium', max_output_tokens: 4000 },
-                    { model: 'gemini-3.8-flash', thinking_level: 'medium', max_output_tokens: 4000 },
-                    { model: 'gemini-3.6-flash', thinking_level: 'medium', max_output_tokens: 3600 },
+                    { model: 'gemini-3.6-flash', thinking_level: 'medium', max_output_tokens: 4000 },
                     { model: 'gemini-3.5-flash-lite', thinking_level: 'medium', max_output_tokens: 3200 }
                 ]
             }
@@ -1146,15 +1141,22 @@
             
             if (!text && !attachedFile) return;
 
+            const enableCodeExec = document.getElementById('enableCodeExec').checked;
+            const enableDiagram = document.getElementById('enableDiagram').checked;
+
             // Susun input untuk Interactions API
+            const diagramTurnNudge = enableDiagram
+                ? '\n\n[Instruksi Visual: Sertakan tepat 1 ilustrasi/diagram/grafik matematika yang relevan dalam format blok kode ```svg ... ``` dengan viewBox="0 0 360 240".]'
+                : '';
+
             let interactionInput;
             const currentFile = attachedFile;
             if (currentFile) {
                 interactionInput = [];
                 if (text) {
-                    interactionInput.push({ type: 'text', text: text });
+                    interactionInput.push({ type: 'text', text: text + diagramTurnNudge });
                 } else {
-                    interactionInput.push({ type: 'text', text: 'Tolong analisis lampiran ini sesuai konteks pembelajaran matematika SMP/MTs.' });
+                    interactionInput.push({ type: 'text', text: 'Tolong analisis lampiran ini sesuai konteks pembelajaran matematika SMP/MTs.' + diagramTurnNudge });
                 }
                 interactionInput.push({
                     type: currentFile.type, // 'image' atau 'document'
@@ -1162,10 +1164,10 @@
                     data: currentFile.data
                 });
             } else {
-                interactionInput = text;
+                interactionInput = text + diagramTurnNudge;
             }
 
-            // Tampilkan pesan pengguna di layar
+            // Tampilkan pesan pengguna di layar (bersih tanpa instruksi visual internal)
             let displayMsg = escapeHtml(text || '(Mengirim lampiran)').replace(/\n/g, '<br>');
             if (currentFile) {
                 displayMsg += `<br><small style="color: #475569; margin-top: 8px; display: block;"><em>[📎 Terlampir: ${escapeHtml(currentFile.name)} · ${currentFile.sizeLabel}]</em></small>`;
@@ -1178,13 +1180,11 @@
             chatHistory.push({ role: "user", text: text || `[Lampiran: ${currentFile?.name}]` });
 
             // System Instruction ringkas & padat agar irit token input & output
-            const enableCodeExec = document.getElementById('enableCodeExec').checked;
-            const enableDiagram = document.getElementById('enableDiagram').checked;
             const codeHint = enableCodeExec
                 ? '\n4. VERIFIKASI HITUNGAN: Gunakan tool code_execution untuk memverifikasi setiap perhitungan numerik/aljabar agar kunci jawaban 100% tepat.'
                 : '';
             const diagramHint = enableDiagram
-                ? `\n${enableCodeExec ? '5' : '4'}. GAMBAR DIAGRAM SVG: Jika soal berkaitan dengan Geometri & Pengukuran (segitiga, sudut, lingkaran, bangun datar/ruang, koordinat, transformasi), Data & Peluang (diagram batang/garis/lingkaran), grafik fungsi, atau pengguna meminta gambar/sketsa, WAJIB sertakan 1 gambar diagram SVG yang jelas dan rapi dalam blok kode \`\`\`svg ... \`\`\` tepat di bagian soal. Gunakan viewBox="0 0 360 240", garis tebal warna gelap (#1e293b), aksen biru (#2563eb), tanda siku-siku/sudut jika relevan, serta label huruf & ukuran (<text font-size="14" font-family="sans-serif" fill="#0f172a">) yang terbaca jelas dan tidak bertumpuk.`
+                ? `\n${enableCodeExec ? '5' : '4'}. GAMBAR DIAGRAM SVG (WAJIB): Pengguna mengaktifkan opsi diagram. WAJIB sertakan 1 gambar ilustrasi/diagram SVG yang rapi dalam blok kode \`\`\`svg ... \`\`\` pada jawabanmu (misalnya bangun geometri untuk Geometri, grafik parabola/garis bilangan/skema pola barisan untuk Aljabar & Bilangan, atau diagram batang/garis/lingkaran untuk Data & Peluang). Gunakan viewBox="0 0 360 240", garis tebal warna gelap (#1e293b), aksen biru (#2563eb), serta label teks (<text font-size="14" font-family="sans-serif" fill="#0f172a">) yang terbaca jelas dan tidak saling bertumpuk.`
                 : '';
 
             const systemInstruction = `Kamu adalah Asisten AI HEURISTIC-MAT untuk guru Matematika SMP/MTs.
