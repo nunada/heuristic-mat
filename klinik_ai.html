@@ -136,8 +136,18 @@
         .meta-badge { background: #e2e8f0; color: #334155; padding: 2px 8px; border-radius: 12px; font-weight: bold; }
         .meta-badge.cached { background: #d1fae5; color: #065f46; }
         .meta-badge.verified { background: #dbeafe; color: #1e40af; }
+        .meta-badge.fallback { background: #fef3c7; color: #92400e; cursor: help; }
         .btn-copy-msg { background: #ffffff; border: 1px solid #cbd5e1; color: #334155; padding: 3px 10px; border-radius: 6px; font-size: 0.95em; cursor: pointer; font-weight: bold; transition: 0.2s; }
         .btn-copy-msg:hover { background: #eff6ff; border-color: #3b82f6; color: #1d4ed8; }
+
+        /* Inline SVG Diagram Box */
+        .ai-diagram-box { margin: 14px 0; padding: 14px; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 10px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+        .ai-diagram-canvas { display: flex; justify-content: center; align-items: center; overflow-x: auto; }
+        .ai-diagram-canvas svg { max-width: 100%; height: auto; max-height: 300px; display: block; margin: 0 auto; }
+        .ai-diagram-actions { margin-top: 10px; padding-top: 8px; border-top: 1px dashed #e2e8f0; display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; }
+        .btn-download-diagram { background: #f8fafc; border: 1px solid #cbd5e1; color: #1e3a8a; padding: 5px 12px; border-radius: 6px; font-size: 0.82em; font-weight: bold; cursor: pointer; transition: 0.2s; display: inline-flex; align-items: center; gap: 5px; }
+        .btn-download-diagram:hover { background: #eff6ff; border-color: #3b82f6; color: #1d4ed8; }
+        .diagram-loading { margin: 10px 0; padding: 12px; background: #f1f5f9; border: 1px dashed #94a3b8; border-radius: 8px; color: #475569; font-size: 0.9em; font-style: italic; text-align: center; }
 
         .code-exec-details { margin: 8px 0 12px 0; background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 8px 12px; font-size: 0.88em; }
         .code-exec-details summary { cursor: pointer; font-weight: bold; color: #1e40af; }
@@ -443,14 +453,20 @@
                         <label for="aiModeSelect">Mode AI:</label>
                         <select id="aiModeSelect" class="mode-select" onchange="updateModeHint()">
                             <option value="hemat" selected>⚡ Mode Hemat (Cepat &amp; Paling Irit Kuota)</option>
-                            <option value="seimbang">⚖️ Mode Seimbang (Gemini 4 · Soal L2–L3 &amp; Gambar)</option>
+                            <option value="seimbang">⚖️ Mode Seimbang (Gemini 4 · Soal L2–L3 &amp; Baca Foto)</option>
                             <option value="penalaran">🧠 Mode Penalaran L3 (Gemini 4 · Analisis Mendalam)</option>
                         </select>
                     </div>
-                    <label class="tool-toggle" title="Aktifkan agar AI menjalankan kalkulator Python di server untuk mengecek ketepatan hitungan matematika (tanpa biaya tambahan).">
-                        <input type="checkbox" id="enableCodeExec">
-                        <span>🧮 Verifikasi Hitungan Otomatis</span>
-                    </label>
+                    <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                        <label class="tool-toggle" title="Otomatis menyertakan gambar diagram vektor (SVG) pada soal Geometri, Grafik, atau Data &amp; Peluang. Gratis tanpa kuota gambar tambahan.">
+                            <input type="checkbox" id="enableDiagram" checked>
+                            <span>📐 Gambar Diagram Otomatis</span>
+                        </label>
+                        <label class="tool-toggle" title="Aktifkan agar AI menjalankan kalkulator Python di server untuk mengecek ketepatan hitungan matematika (tanpa biaya tambahan).">
+                            <input type="checkbox" id="enableCodeExec">
+                            <span>🧮 Verifikasi Hitungan Otomatis</span>
+                        </label>
+                    </div>
                     <div class="mode-hint" id="modeHintText">
                         Menggunakan <strong>Gemini 3.5 Flash-Lite</strong> (berpikir minimal). Paling cepat &amp; paling hemat kuota API Key gratis — ideal untuk membuat soal L1/L2, LKM, dan scaffolding.
                     </div>
@@ -568,27 +584,29 @@
                 label: 'Mode Hemat',
                 hint: 'Menggunakan <strong>Gemini 3.5 Flash-Lite</strong> (berpikir minimal). Paling cepat &amp; paling hemat kuota API Key gratis — ideal untuk membuat soal L1/L2, LKM, dan scaffolding.',
                 chain: [
-                    { model: 'gemini-3.5-flash-lite', thinking_level: 'minimal', max_output_tokens: 1800 },
-                    { model: 'gemini-3.1-flash-lite', thinking_level: 'minimal', max_output_tokens: 1800 },
-                    { model: 'gemini-4-hydrogen', thinking_level: 'low', max_output_tokens: 2048 }
+                    { model: 'gemini-3.5-flash-lite', thinking_level: 'minimal', max_output_tokens: 2400 },
+                    { model: 'gemini-3.1-flash-lite', thinking_level: 'minimal', max_output_tokens: 2400 },
+                    { model: 'gemini-3.8-flash', thinking_level: 'low', max_output_tokens: 2600 }
                 ]
             },
             seimbang: {
                 label: 'Mode Seimbang',
-                hint: 'Menggunakan <strong>Gemini 4 Hydrogen</strong> (berpikir rendah). Cerdas &amp; tajam untuk soal HOTS L2–L3 serta membaca foto soal/PDF dengan pemakaian token tetap terkontrol.',
+                hint: 'Menggunakan <strong>Gemini 4 Hydrogen</strong> (cadangan otomatis: Gemini 3.8 Flash). Cerdas &amp; tajam untuk soal HOTS L2–L3, menggambar diagram geometri, serta membaca foto soal/PDF.',
                 chain: [
-                    { model: 'gemini-4-hydrogen', thinking_level: 'low', max_output_tokens: 2400 },
-                    { model: 'gemini-3.5-flash-lite', thinking_level: 'low', max_output_tokens: 2200 },
-                    { model: 'gemini-3.1-flash-lite', thinking_level: 'low', max_output_tokens: 2200 }
+                    { model: 'gemini-4-hydrogen', thinking_level: 'low', max_output_tokens: 3000 },
+                    { model: 'gemini-3.8-flash', thinking_level: 'low', max_output_tokens: 3000 },
+                    { model: 'gemini-3.6-flash', thinking_level: 'low', max_output_tokens: 2800 },
+                    { model: 'gemini-3.5-flash-lite', thinking_level: 'low', max_output_tokens: 2600 }
                 ]
             },
             penalaran: {
                 label: 'Mode Penalaran L3',
-                hint: 'Menggunakan <strong>Gemini 4 Hydrogen</strong> (berpikir menengah). Cocok untuk soal L3 penalaran kompleks &amp; pembuktian. <em>Catatan: memakai lebih banyak token dari Mode Hemat.</em>',
+                hint: 'Menggunakan <strong>Gemini 4 Hydrogen</strong> (berpikir menengah, cadangan otomatis: Gemini 3.8 Flash). Cocok untuk soal L3 penalaran kompleks &amp; pembuktian. <em>Catatan: memakai lebih banyak token dari Mode Hemat.</em>',
                 chain: [
-                    { model: 'gemini-4-hydrogen', thinking_level: 'medium', max_output_tokens: 3500 },
-                    { model: 'gemini-4-argon', thinking_level: 'medium', max_output_tokens: 3500 },
-                    { model: 'gemini-3.5-flash-lite', thinking_level: 'medium', max_output_tokens: 3000 }
+                    { model: 'gemini-4-hydrogen', thinking_level: 'medium', max_output_tokens: 4000 },
+                    { model: 'gemini-3.8-flash', thinking_level: 'medium', max_output_tokens: 4000 },
+                    { model: 'gemini-3.6-flash', thinking_level: 'medium', max_output_tokens: 3600 },
+                    { model: 'gemini-3.5-flash-lite', thinking_level: 'medium', max_output_tokens: 3200 }
                 ]
             }
         };
@@ -794,6 +812,74 @@
                 .replace(/>/g, '&gt;');
         }
 
+        function sanitizeSvg(svgCode) {
+            if (!svgCode) return '';
+            let clean = svgCode.trim();
+            // Hapus elemen/atribut berbahaya (XSS-safe)
+            clean = clean.replace(/<script[\s\S]*?<\/script>/gi, '');
+            clean = clean.replace(/<foreignObject[\s\S]*?<\/foreignObject>/gi, '');
+            clean = clean.replace(/<(iframe|object|embed)[\s\S]*?(\/>|<\/\1>)/gi, '');
+            clean = clean.replace(/\son[a-z]+\s*=\s*("[^"]*"|'[^']*'|[^\s>]+)/gi, '');
+            clean = clean.replace(/javascript\s*:/gi, '');
+            // Pastikan punya xmlns agar bisa dirender & diekspor ke PNG
+            if (!/xmlns=/i.test(clean)) {
+                clean = clean.replace(/<svg\b/i, '<svg xmlns="http://www.w3.org/2000/svg"');
+            }
+            return clean;
+        }
+
+        function wrapDiagramHtml(svgCode) {
+            const cleanSvg = sanitizeSvg(svgCode);
+            if (!/^<svg\b/i.test(cleanSvg)) {
+                return `<pre><code>${escapeHtml(svgCode)}</code></pre>`;
+            }
+            return `<div class="ai-diagram-box"><div class="ai-diagram-canvas">${cleanSvg}</div><div class="ai-diagram-actions"><button type="button" class="btn-download-diagram" onclick="downloadDiagramPng(this)" title="Unduh gambar diagram sebagai PNG agar mudah ditempel ke Word atau lembar soal">⬇️ Unduh Gambar (PNG)</button></div></div>`;
+        }
+
+        function downloadDiagramPng(btn) {
+            const box = btn.closest('.ai-diagram-box');
+            const svgEl = box ? box.querySelector('svg') : null;
+            if (!svgEl) return;
+
+            const serializer = new XMLSerializer();
+            let svgStr = serializer.serializeToString(svgEl);
+            if (!svgStr.includes('xmlns=')) {
+                svgStr = svgStr.replace('<svg', '<svg xmlns="http://www.w3.org/2000/svg"');
+            }
+
+            const vb = svgEl.viewBox && svgEl.viewBox.baseVal;
+            const width = (vb && vb.width > 0) ? vb.width : (svgEl.getBoundingClientRect().width || 360);
+            const height = (vb && vb.height > 0) ? vb.height : (svgEl.getBoundingClientRect().height || 240);
+
+            const scale = 2;
+            const canvas = document.createElement('canvas');
+            canvas.width = Math.round(width * scale);
+            canvas.height = Math.round(height * scale);
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            const blob = new Blob([svgStr], { type: 'image/svg+xml;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const img = new Image();
+            img.onload = () => {
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                URL.revokeObjectURL(url);
+                const a = document.createElement('a');
+                a.download = `diagram_matematika_${Date.now()}.png`;
+                a.href = canvas.toDataURL('image/png');
+                a.click();
+            };
+            img.onerror = () => {
+                URL.revokeObjectURL(url);
+                const a = document.createElement('a');
+                a.download = `diagram_matematika_${Date.now()}.svg`;
+                a.href = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgStr);
+                a.click();
+            };
+            img.src = url;
+        }
+
         function renderMarkdownWithMath(rawText) {
             if (!rawText) return '';
             const placeholders = [];
@@ -805,7 +891,26 @@
 
             let text = rawText.replace(/\r\n/g, '\n');
 
-            // 1. Lindungi fenced code blocks ```...```
+            // 1a. Render blok diagram SVG ```svg ... ```
+            text = text.replace(/```(?:svg|xml)\s*\n([\s\S]*?)```/gi, (match, code) => {
+                if (/<svg\b[\s\S]*?<\/svg>/i.test(code)) {
+                    const svgMatch = code.match(/<svg\b[\s\S]*?<\/svg>/i);
+                    return hold(wrapDiagramHtml(svgMatch[0]));
+                }
+                return hold(`<pre><code>${escapeHtml(code.trimEnd())}</code></pre>`);
+            });
+
+            // 1b. Saat streaming, sembunyikan sementara blok ```svg yang belum selesai agar rapi
+            text = text.replace(/```svg\s*\n[\s\S]*$/i, () => {
+                return hold(`<div class="diagram-loading">📐 Sedang menggambar diagram...</div>`);
+            });
+
+            // 1c. Render blok <svg>...</svg> langsung jika AI tidak membungkusnya dengan ```svg
+            text = text.replace(/<svg\b[\s\S]*?<\/svg>/gi, (svgBlock) => {
+                return hold(wrapDiagramHtml(svgBlock));
+            });
+
+            // 1d. Lindungi fenced code blocks ```...``` lainnya
             text = text.replace(/```(\w*)\n([\s\S]*?)```/g, (_, lang, code) => {
                 return hold(`<pre><code>${escapeHtml(code.trimEnd())}</code></pre>`);
             });
@@ -1074,18 +1179,23 @@
 
             // System Instruction ringkas & padat agar irit token input & output
             const enableCodeExec = document.getElementById('enableCodeExec').checked;
+            const enableDiagram = document.getElementById('enableDiagram').checked;
             const codeHint = enableCodeExec
-                ? ' Gunakan tool code_execution untuk memverifikasi setiap perhitungan numerik/aljabar agar kunci jawaban 100% tepat.'
+                ? '\n4. VERIFIKASI HITUNGAN: Gunakan tool code_execution untuk memverifikasi setiap perhitungan numerik/aljabar agar kunci jawaban 100% tepat.'
+                : '';
+            const diagramHint = enableDiagram
+                ? `\n${enableCodeExec ? '5' : '4'}. GAMBAR DIAGRAM SVG: Jika soal berkaitan dengan Geometri & Pengukuran (segitiga, sudut, lingkaran, bangun datar/ruang, koordinat, transformasi), Data & Peluang (diagram batang/garis/lingkaran), grafik fungsi, atau pengguna meminta gambar/sketsa, WAJIB sertakan 1 gambar diagram SVG yang jelas dan rapi dalam blok kode \`\`\`svg ... \`\`\` tepat di bagian soal. Gunakan viewBox="0 0 360 240", garis tebal warna gelap (#1e293b), aksen biru (#2563eb), tanda siku-siku/sudut jika relevan, serta label huruf & ukuran (<text font-size="14" font-family="sans-serif" fill="#0f172a">) yang terbaca jelas dan tidak bertumpuk.`
                 : '';
 
             const systemInstruction = `Kamu adalah Asisten AI HEURISTIC-MAT untuk guru Matematika SMP/MTs.
 ATURAN KETAT:
 1. Langsung ke inti jawaban TANPA salam pembuka/basa-basi.
 2. Jawab ringkas, terstruktur, dan akurat sesuai standar TKA Matematika SMP (Bilangan, Aljabar, Geometri & Pengukuran, Data & Peluang; Level L1, L2, L3).
-3. Tulis semua rumus matematika dalam LaTeX ($...$ untuk inline, $$...$$ untuk baris terpisah).${codeHint}`;
+3. Tulis semua rumus matematika dalam LaTeX ($...$ untuk inline, $$...$$ untuk baris terpisah).${codeHint}${diagramHint}`;
 
             const selectedModeKey = document.getElementById('aiModeSelect').value;
             const modeConfig = AI_MODES[selectedModeKey] || AI_MODES.hemat;
+            const primaryModel = modeConfig.chain[0].model;
 
             const botBubble = createBotStreamBubble();
             const statusWrap = botBubble.querySelector('.stream-status');
@@ -1099,6 +1209,7 @@ ATURAN KETAT:
 
             let success = false;
             let errorMessage = "";
+            let firstFailureReason = "";
             let finalResult = null;
             let usedModel = "";
             let wasAborted = false;
@@ -1167,6 +1278,9 @@ ATURAN KETAT:
                             break;
                         }
                         errorMessage = err.message || 'Kesalahan tidak diketahui';
+                        if (candidate.model === primaryModel && !firstFailureReason) {
+                            firstFailureReason = errorMessage;
+                        }
                         console.warn(`Model ${candidate.model} (prevId=${usePrevId}) gagal:`, errorMessage);
                         // Jika error 400/404 karena previous_interaction_id tidak valid, lanjut ke attempt berikutnya (tanpa prevId)
                         if (usePrevId && (err.status === 400 || err.status === 404)) {
@@ -1227,6 +1341,12 @@ ATURAN KETAT:
                 updateSessionBadge();
 
                 let badgesHtml = `<span class="meta-badge">⚡ ${usedModel}</span>`;
+                if (usedModel !== primaryModel) {
+                    const shortReason = /429|quota|rate|limit|exhausted/i.test(firstFailureReason)
+                        ? 'kuota sementara penuh'
+                        : 'sedang tidak tersedia';
+                    badgesHtml += `<span class="meta-badge fallback" title="Model utama (${primaryModel}) ${shortReason}: ${escapeHtml(firstFailureReason)}">↪️ Cadangan (${primaryModel} ${shortReason})</span>`;
+                }
                 if (totalTok > 0) {
                     badgesHtml += `<span>${totalTok.toLocaleString('id-ID')} token</span>`;
                 }
@@ -1280,7 +1400,9 @@ ATURAN KETAT:
                 const bubbles = document.querySelectorAll('#chatBox .chat-bubble');
                 bubbles.forEach(bubble => {
                     const isUser = bubble.classList.contains('user');
-                    const contentSource = isUser ? bubble.innerHTML : (bubble.querySelector('.bot-content')?.innerHTML || bubble.innerHTML);
+                    const sourceClone = (isUser ? bubble : (bubble.querySelector('.bot-content') || bubble)).cloneNode(true);
+                    sourceClone.querySelectorAll('.ai-diagram-actions').forEach(el => el.remove());
+                    const contentSource = sourceClone.innerHTML;
                     
                     const div = document.createElement('div');
                     div.style.marginBottom = "15px";
